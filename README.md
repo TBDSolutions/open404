@@ -1,0 +1,13 @@
+open404
+=======
+The cost and utilization data reported by Michigan’s CMHs (also known as the 404 report) has potential to be a beneficial tool in improving services for the populations served by the CMHs.  Currently, this data is officially reported to the Michigan legislature, however the data is not being analyzed extensively by individuals within DCH or the CMHs themselves for decision-making purposes.  Given the current changes to Michigan’s Medicaid system (e.g., moving from 18 PIHPs to 10,the expansion of Medicaid), it would stand to reason that public health officials would find utility in using data to understand current service use, cost trends and inconsistencies across the state for vulnerable populations.  With this goal in mind, we set out to compile, format, and analyze the Michigan cost and utilization reports.
+
+Formatting
+•	Compilation of individual Excel files into one master dataset
+•	Creation of new variables: Fiscal Year, PIHP, Units per 1,000, and Service 
+•	Standardization of unit variable to hours, such that 1.00 = 1 hour
+•	Aggregation of data based on population or region
+•	Creation of new datasets placing “Service” in columns instead of rows
+
+Currently, there are three Excel files for each fiscal year (we had access to 2006-2012).  These files are for each population: mentally ill adults, mentally ill children, and developmentally disabled individuals.  Each CMH sends an individual Excel file per population to MDCH, who then compiles the data for each fiscal year.  However the excel files are not currently formatted in a manner that is conducive for data analysis, therefore we had to format and compile them.  To facilitate the formatting and analysis of the 404, the data was loaded into R, an open-source statistical software .  
+After compiling the Excel files in R, we created additional variables and added them to the dataset: fiscal year, PIHP, and units per 1,000 people .  The units per 1,000 variable is meant to serve as a standardized utilization rate that allows for meaningful comparisons across CMHs / PIHPs with differently sized populations.  We also chose to standardize the units across all services.  In raw form, the units vary in size and type.  That is, units reported might be anything from “45 minutes” to “# of tests.”  To compare utilization and cost across services, the unit type had to be standardized to a comparable, quantitative variable.  We chose to convert all numeric units to hours, such that 1.oo unit = 1 hour.  Unit types that did not contain any numeric information, e.g., # of tests, were not included in our formatting and subsequent analyses.
