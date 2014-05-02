@@ -7,26 +7,39 @@
 
 ## Aggregating this way will allow for easier analysis
 
+## Load Master from GitHub (for those who don't already have it in the workspace)
+
+Master <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master', sep=',', header=TRUE)
+
 install.packages('plyr')
 library(plyr)
 
+## Create subMaster dataframe, excluding services with 0 cases, units, and cost.
+subMaster<-data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(1:15)))
+
+#Output subMaster .csv file
+write.csv(subMaster, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\subMaster")
 
 ##There are multiple HCPCS codes per Service, and so the calculated rates do not end up acurately reflecting the 
 ##totals.  Therefore, they will be re-calculated and added to the dataframes later.
 
 #Creating a data frame that sums the variables at each level of service, region, population, unit hour and year
-Agg_PIHP<-ddply(Master, .(FY, PIHP, Service, FirstofService.Description, Population, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
+Agg_PIHP<-ddply(subMaster, .(FY, PIHP, Service, FirstofService.Description, Population, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
                 SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-                Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+                CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
                 CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
+#Output Agg_PIHP .csv file
+#write.csv(Agg_PIHP, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Agg_PIHP")
 
 #Creating a data frame that sums the variables at each level of service, CMH, population, unit hour and year
-Agg_CMH<-ddply(Master, .(FY, CMHSP, Service, FirstofService.Description, Population, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
+Agg_CMH<-ddply(subMaster, .(FY, CMHSP, Service, FirstofService.Description, Population, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
                SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-               Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+               CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
                CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
+#Output Agg_CMH .csv file
+#write.csv(Agg_CMH, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Agg_CMH")
 
 #Printing first 10 rows of dataframes just to see what they look like
 
@@ -37,57 +50,57 @@ head(Agg_CMH, n=10)
 ####################################################################################################
 
 ##Creating subset dataframes from Master so analysis can be performed for each population##
-
-MIC <-data.frame(subset(Master, Master$Population == "MIC", select = c(1:15)))
-attach(MIC)
-
+MIC <-data.frame(subset(subMaster, Population == "MIC", select = c(1:15)))
 #Removing 'Population' since whole dataframe is MIC
 MIC$Population<-NULL
+#Output MIC .csv file
+#write.csv(MIC, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\MIC")
 
-MIA <-data.frame(subset(Master, Master$Population == "MIA", select = c(1:15)))
-attach(MIA)
-
+MIA <-data.frame(subset(subMaster, Population == "MIA", select = c(1:15)))
 #Removing 'Population' since whole dataframe is MIA
 MIA$Population<-NULL
+#Output MIA .csv file
+#write.csv(MIA, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\MIA")
 
-DD <-data.frame(subset(Master, Master$Population == "DD", select = c(1:15)))
-attach(DD)
-
+DD <-data.frame(subset(subMaster, Population == "DD", select = c(1:15)))
 #Removing 'Population' since whole dataframe is DD
 DD$Population<-NULL
+#Output DD .csv file
+#write.csv(DD, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\DD")
 
 ################################
 
 #Creating aggregate dataframes for each population at the level of CMH and PIHP
+  #These not printed to .csv
 
 DD_CMH<-ddply(DD, .(FY, CMHSP, Service, FirstofService.Description, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
               SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-              Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+              CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
               CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 DD_PIHP<-ddply(DD, .(FY, PIHP, Service, FirstofService.Description, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
                SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-               Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+               CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
                CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 MIC_CMH<-ddply(MIC, .(FY, CMHSP, FirstofService.Description, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
                SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-               Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+               CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
                CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 MIC_PIHP<-ddply(MIC, .(FY, PIHP, Service,FirstofService.Description, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
                 SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-                Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+                CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
                 CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 MIA_CMH<-ddply(MIA, .(FY, CMHSP, Service,FirstofService.Description, Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
                SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-               Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+               CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
                CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 MIA_PIHP<-ddply(MIA, .(FY, PIHP, Service, FirstofService.Description,Unit_Hours), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
                 SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-                Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+                CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
                 CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 #Printing first 10 rows to see an example of what the dataframes look like
@@ -106,7 +119,7 @@ head(MIA_CMH, n=10)
 #Getting rid of Unit_Hours to get equal #s of rows
 PIHP<-ddply(Master, .(FY, PIHP, Service), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
             SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-            Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+            CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
             CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 #Dental is not included because values only go until 2009
@@ -114,27 +127,27 @@ PIHP<-ddply(Master, .(FY, PIHP, Service), summarize, sumOfUnits=round(sum(SumOfU
 
 #Creating data frames for every service and then merging into 1 df
 
-LocalHosp<-data.frame(subset(PIHP, Service == "Local Hospitalization", select = c(1:10)))
-CareCoord<-data.frame(subset(PIHP, Service == "Care Coordination", select = c(1:10)))
-CLS<-data.frame(subset(PIHP, Service == "Community Living Supports", select = c(1:10)))
-Employment<-data.frame(subset(PIHP, Service == "Employment Services", select = c(1:10)))
-Health<-data.frame(subset(PIHP, Service == "Health Services", select = c(1:10)))
-OTPTSLT<-data.frame(subset(PIHP, Service == "OT/PT/SLT", select = c(1:10)))
-Prevention<-data.frame(subset(PIHP, Service == "Prevention", select = c(1:10)))
-StateHosp<-data.frame(subset(PIHP, Service == "State Hospitalization", select = c(1:10)))
-Crisis<-data.frame(subset(PIHP, Service == "Crisis Services", select = c(1:10)))
-Residential<-data.frame(subset(PIHP, Service == "Residential Treatment", select = c(1:10)))
-SUD<-data.frame(subset(PIHP, Service == "Substance Abuse Outpatient", select = c(1:10)))
-Behavioral<-data.frame(subset(PIHP, Service == "Behavioral Treatment", select = c(1:10)))
-Medication<-data.frame(subset(PIHP, Service == "Medication", select = c(1:10)))
-Outpatient<-data.frame(subset(PIHP, Service == "Outpatient Therapy", select = c(1:10)))
-Respite<-data.frame(subset(PIHP, Service == "Respite", select = c(1:10)))
-Peer<-data.frame(subset(PIHP, Service == "Peer Services", select = c(1:10)))
-Screening<-data.frame(subset(PIHP, Service == "Screening & Assessment", select = c(1:10)))
-Ancillary<-data.frame(subset(PIHP, Service == "Ancillary Services / ECT", select = c(1:10)))
-Family<-data.frame(subset(PIHP, Service == "Family Services", select = c(1:10)))
-Transportation<-data.frame(subset(PIHP, Service == "Transportation", select = c(1:10)))
-Monitoring<-data.frame(subset(PIHP, Service == "Monitoring", select = c(1:10)))
+LocalHosp<-data.frame(subset(PIHP, Service == "Local Hospitalization", select = c(1:9)))
+CareCoord<-data.frame(subset(PIHP, Service == "Care Coordination", select = c(1:9)))
+CLS<-data.frame(subset(PIHP, Service == "Community Living Supports", select = c(1:9)))
+Employment<-data.frame(subset(PIHP, Service == "Employment Services", select = c(1:9)))
+Health<-data.frame(subset(PIHP, Service == "Health Services", select = c(1:9)))
+OTPTSLT<-data.frame(subset(PIHP, Service == "OT/PT/SLT", select = c(1:9)))
+Prevention<-data.frame(subset(PIHP, Service == "Prevention", select = c(1:9)))
+StateHosp<-data.frame(subset(PIHP, Service == "State Hospitalization", select = c(1:9)))
+Crisis<-data.frame(subset(PIHP, Service == "Crisis Services", select = c(1:9)))
+Residential<-data.frame(subset(PIHP, Service == "Residential Treatment", select = c(1:9)))
+SUD<-data.frame(subset(PIHP, Service == "Substance Abuse Outpatient", select = c(1:9)))
+Behavioral<-data.frame(subset(PIHP, Service == "Behavioral Treatment", select = c(1:9)))
+Medication<-data.frame(subset(PIHP, Service == "Medication", select = c(1:9)))
+Outpatient<-data.frame(subset(PIHP, Service == "Outpatient Therapy", select = c(1:9)))
+Respite<-data.frame(subset(PIHP, Service == "Respite", select = c(1:9)))
+Peer<-data.frame(subset(PIHP, Service == "Peer Services", select = c(1:9)))
+Screening<-data.frame(subset(PIHP, Service == "Screening & Assessment", select = c(1:9)))
+Ancillary<-data.frame(subset(PIHP, Service == "Ancillary Services / ECT", select = c(1:9)))
+Family<-data.frame(subset(PIHP, Service == "Family Services", select = c(1:9)))
+Transportation<-data.frame(subset(PIHP, Service == "Transportation", select = c(1:9)))
+Monitoring<-data.frame(subset(PIHP, Service == "Monitoring", select = c(1:9)))
 
 #Merging all of the service dataframes
 Services_PIHP<-data.frame(LocalHosp, CareCoord, CLS, Employment, Health,
@@ -153,147 +166,126 @@ my_changes <-
   c(sumOfUnits = "LocalUnits", 
     SumOfCases = "LocalCases",
     SumOfCost = "LocalCost",
-    Unitsper1000 = "LocalUnits1000",
     CostCase = "LocalCostCase",
     CostUnits = "LocalCostUnits",   
     UnitsCase = "LocalUnitsCase",
     sumOfUnits.1 = "CareUnits", 
     SumOfCases.1 = "CareCases",
     SumOfCost.1 = "CareCost",
-    Unitsper1000.1 = "CareUnits1000",
     CostCase.1 = "CareCostCase",
     CostUnits.1 = "CareCostUnits",   
     UnitsCase.1 = "CareUnitsCase",
     sumOfUnits.2 = "CLSUnits", 
     SumOfCases.2 = "CLSCases",
     SumOfCost.2 = "CLSCost",
-    Unitsper1000.2 = "CLSUnits1000",
     CostCase.2 = "CLSCostCase",
     CostUnits.2 = "CLSCostUnits",   
     UnitsCase.2 = "CLSUnitsCase",
     sumOfUnits.3 = "EmpUnits", 
     SumOfCases.3 = "EmpCases",
     SumOfCost.3 = "EmpCost",
-    Unitsper1000.3 = "EmpUnits1000",
     CostCase.3 = "EmpCostCase",
     CostUnits.3 = "EmpCostUnits",   
     UnitsCase.3 = "EmpUnitsCase",
     sumOfUnits.4 = "HealthUnits", 
     SumOfCases.4 = "HealthCases",
     SumOfCost.4 = "HealthCost",
-    Unitsper1000.4 = "HealthUnits1000",
     CostCase.4 = "HealthCostCase",
     CostUnits.4 = "HealthCostUnits",   
     UnitsCase.4 = "HealthUnitsCase",
     sumOfUnits.5 = "OTUnits", 
     SumOfCases.5 = "OTCases",
     SumOfCost.5 = "OTCost",
-    Unitsper1000.5 = "OTUnits1000",
     CostCase.5 = "OTCostCase",
     CostUnits.5 = "OTCostUnits",   
     UnitsCase.5 = "OTUnitsCase",
     sumOfUnits.6 = "PrevUnits", 
     SumOfCases.6 = "PrevCases",
     SumOfCost.6 = "PrevCost",
-    Unitsper1000.6 = "PrevUnits1000",
     CostCase.6 = "PrevCostCase",
     CostUnits.6 = "PrevCostUnits",   
     UnitsCase.6 = "PrevUnitsCase",
     sumOfUnits.7 = "StateUnits", 
     SumOfCases.7 = "StateCases",
     SumOfCost.7 = "StateCost",
-    Unitsper1000.7 = "StateUnits1000",
     CostCase.7 = "StateCostCase",
     CostUnits.7 = "StateCostUnits",   
     UnitsCase.7 = "StateUnitsCase",
     sumOfUnits.8 = "CrisisUnits", 
     SumOfCases.8 = "CrisisCases",
     SumOfCost.8 = "CrisisCost",
-    Unitsper1000.8 = "CrisisUnits1000",
     CostCase.8 = "CrisisCostCase",
     CostUnits.8 = "CrisisCostUnits",   
     UnitsCase.8 = "CrisisUnitsCase",
     sumOfUnits.9 = "ResUnits", 
     SumOfCases.9 = "ResCases",
     SumOfCost.9 = "ResCost",
-    Unitsper1000.9 = "ResUnits1000",
     CostCase.9 = "ResCostCase",
     CostUnits.9 = "ResCostUnits",   
     UnitsCase.9 = "ResUnitsCase",
     sumOfUnits.10 = "SUDUnits", 
     SumOfCases.10 = "SUDCases",
     SumOfCost.10 = "SUDCost",
-    Unitsper1000.10 = "SUDUnits1000",
     CostCase.10 = "SUDCostCase",
     CostUnits.10 = "SUDCostUnits",   
     UnitsCase.10 = "SUDUnitsCase",
     sumOfUnits.11 = "BehavUnits", 
     SumOfCases.11 = "BehavCases",
     SumOfCost.11 = "BehavCost",
-    Unitsper1000.11 = "BehavUnits1000",
     CostCase.11 = "BehavCostCase",
     CostUnits.11 = "BehavCostUnits",   
     UnitsCase.11 = "BehavUnitsCase",
     sumOfUnits.12 = "MedUnits", 
     SumOfCases.12 = "MedCases",
     SumOfCost.12 = "MedCost",
-    Unitsper1000.12 = "MedUnits1000",
     CostCase.12 = "MedCostCase",
     CostUnits.12 = "MedCostUnits",   
     UnitsCase.12 = "MedUnitsCase",
     sumOfUnits.13 = "OutUnits", 
     SumOfCases.13 = "OutCases",
     SumOfCost.13 = "OutCost",
-    Unitsper1000.13 = "OutUnits1000",
     CostCase.13 = "OutCostCase",
     CostUnits.13 = "OutCostUnits",   
     UnitsCase.13 = "OutUnitsCase",
     sumOfUnits.14 = "RespiteUnits", 
     SumOfCases.14 = "RespiteCases",
     SumOfCost.14 = "RespiteCost",
-    Unitsper1000.14 = "RespiteUnits1000",
     CostCase.14 = "RespiteCostCase",
     CostUnits.14 = "RespiteCostUnits",   
     UnitsCase.14 = "RespiteUnitsCase",
     sumOfUnits.15 = "PeerUnits", 
     SumOfCases.15 = "PeerCases",
     SumOfCost.15 = "PeerCost",
-    Unitsper1000.15 = "PeerUnits1000",
     CostCase.15 = "PeerCostCase",
     CostUnits.15 = "PeerCostUnits",   
     UnitsCase.15 = "PeerUnitsCase",
     sumOfUnits.16 = "ScreenUnits", 
     SumOfCases.16 = "ScreenCases",
     SumOfCost.16 = "ScreenCost",
-    Unitsper1000.16 = "ScreenUnits1000",
     CostCase.16 = "ScreenCostCase",
     CostUnits.16 = "ScreenCostUnits",   
     UnitsCase.16 = "ScreenUnitsCase",
     sumOfUnits.17 = "AncillUnits", 
     SumOfCases.17 = "AncillCases",
     SumOfCost.17 = "AncillCost",
-    Unitsper1000.17 = "AncillUnits1000",
     CostCase.17 = "AncillCostCase",
     CostUnits.17 = "AncillCostUnits",   
     UnitsCase.17 = "AncillUnitsCase",
     sumOfUnits.18 = "FamUnits", 
     SumOfCases.18 = "FamCases",
     SumOfCost.18 = "FamCost",
-    Unitsper1000.18 = "FamUnits1000",
     CostCase.18 = "FamCostCase",
     CostUnits.18 = "FamCostUnits",   
     UnitsCase.18 = "FamUnitsCase",
     sumOfUnits.19 = "TransUnits", 
     SumOfCases.19 = "TransCases",
     SumOfCost.19 = "TransCost",
-    Unitsper1000.19 = "TransUnits1000",
     CostCase.19 = "TransCostCase",
     CostUnits.19 = "TransCostUnits",   
     UnitsCase.19 = "TransUnitsCase",
     sumOfUnits.20 = "MonitUnits", 
     SumOfCases.20 = "MonitCases",
     SumOfCost.20 = "MonitCost",
-    Unitsper1000.20 = "MonitUnits1000",
     CostCase.20 = "MonitCostCase",
     CostUnits.20 = "MonitCostUnits",   
     UnitsCase.20 = "MonitUnitsCase")
@@ -390,13 +382,15 @@ Services_PIHP$Population.21<-NULL
 #Printing first 10 rows to see an example of the dataframe
 head(Services_PIHP, n=10)
 
+#Output Services_PIHP .csv file
+#write.csv(Services_PIHP, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Services_PIHP")
 
 #############################################
 
 #Creating a data frame that sums the variables at each level of service, CMH, PIHP and year
 CMH<-ddply(Master, .(FY, CMHSP, PIHP, Service), summarize, sumOfUnits=round(sum(SumOfUnits),2), 
            SumOfCases=round(sum(SumOfCases),2), SumOfCost=round(sum(SumOfCost),2),
-           Unitsper1000=round(sum(Unitsper1000),2),CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
+           CostUnits=round(sum(SumOfCost) / sum(SumOfUnits),2),
            CostCase=round(sum(SumOfCost) / sum(SumOfCases),2),UnitsCase=round(sum(SumOfUnits) / sum(SumOfCases),2))
 
 #Creating data frames for every service and then merging into 1 df
@@ -405,27 +399,27 @@ CMH<-ddply(Master, .(FY, CMHSP, PIHP, Service), summarize, sumOfUnits=round(sum(
 #reported by a few CMHs
 #DentalTest<-data.frame(subset(CMH, Service=="Dental", select=c(1:9)))
 
-LocalHosp<-data.frame(subset(CMH, Service == "Local Hospitalization", select = c(1:11)))
-CareCoord<-data.frame(subset(CMH, Service == "Care Coordination", select = c(1:11)))
-CLS<-data.frame(subset(CMH, Service == "Community Living Supports", select = c(1:11)))
-Employment<-data.frame(subset(CMH, Service == "Employment Services", select = c(1:11)))
-Health<-data.frame(subset(CMH, Service == "Health Services", select = c(1:11)))
-OTPTSLT<-data.frame(subset(CMH, Service == "OT/PT/SLT", select = c(1:11)))
-Prevention<-data.frame(subset(CMH, Service == "Prevention", select = c(1:11)))
-StateHosp<-data.frame(subset(CMH, Service == "State Hospitalization", select = c(1:11)))
-Crisis<-data.frame(subset(CMH, Service == "Crisis Services", select = c(1:11)))
-Residential<-data.frame(subset(CMH, Service == "Residential Treatment", select = c(1:11)))
-SUD<-data.frame(subset(CMH, Service == "Substance Abuse Outpatient", select = c(1:11)))
-Behavioral<-data.frame(subset(CMH, Service == "Behavioral Treatment", select = c(1:11)))
-Medication<-data.frame(subset(CMH, Service == "Medication", select = c(1:11)))
-Outpatient<-data.frame(subset(CMH, Service == "Outpatient Therapy", select = c(1:11)))
-Respite<-data.frame(subset(CMH, Service == "Respite", select = c(1:11)))
-Peer<-data.frame(subset(CMH, Service == "Peer Services", select = c(1:11)))
-Screening<-data.frame(subset(CMH, Service == "Screening & Assessment", select = c(1:11)))
-Ancillary<-data.frame(subset(CMH, Service == "Ancillary Services / ECT", select = c(1:11)))
-Family<-data.frame(subset(CMH, Service == "Family Services", select = c(1:11)))
-Transportation<-data.frame(subset(CMH, Service == "Transportation", select = c(1:11)))
-Monitoring<-data.frame(subset(CMH, Service == "Monitoring", select = c(1:11)))
+LocalHosp<-data.frame(subset(CMH, Service == "Local Hospitalization", select = c(1:10)))
+CareCoord<-data.frame(subset(CMH, Service == "Care Coordination", select = c(1:10)))
+CLS<-data.frame(subset(CMH, Service == "Community Living Supports", select = c(1:10)))
+Employment<-data.frame(subset(CMH, Service == "Employment Services", select = c(1:10)))
+Health<-data.frame(subset(CMH, Service == "Health Services", select = c(1:10)))
+OTPTSLT<-data.frame(subset(CMH, Service == "OT/PT/SLT", select = c(1:10)))
+Prevention<-data.frame(subset(CMH, Service == "Prevention", select = c(1:10)))
+StateHosp<-data.frame(subset(CMH, Service == "State Hospitalization", select = c(1:10)))
+Crisis<-data.frame(subset(CMH, Service == "Crisis Services", select = c(1:10)))
+Residential<-data.frame(subset(CMH, Service == "Residential Treatment", select = c(1:10)))
+SUD<-data.frame(subset(CMH, Service == "Substance Abuse Outpatient", select = c(1:10)))
+Behavioral<-data.frame(subset(CMH, Service == "Behavioral Treatment", select = c(1:10)))
+Medication<-data.frame(subset(CMH, Service == "Medication", select = c(1:10)))
+Outpatient<-data.frame(subset(CMH, Service == "Outpatient Therapy", select = c(1:10)))
+Respite<-data.frame(subset(CMH, Service == "Respite", select = c(1:10)))
+Peer<-data.frame(subset(CMH, Service == "Peer Services", select = c(1:10)))
+Screening<-data.frame(subset(CMH, Service == "Screening & Assessment", select = c(1:10)))
+Ancillary<-data.frame(subset(CMH, Service == "Ancillary Services / ECT", select = c(1:10)))
+Family<-data.frame(subset(CMH, Service == "Family Services", select = c(1:10)))
+Transportation<-data.frame(subset(CMH, Service == "Transportation", select = c(1:10)))
+Monitoring<-data.frame(subset(CMH, Service == "Monitoring", select = c(1:10)))
 
 #Merging all of the service dataframes
 Services_CMH<-data.frame(LocalHosp, CareCoord, CLS, Employment, Health,
@@ -444,147 +438,126 @@ my_changes <-
   c(sumOfUnits = "LocalUnits", 
     SumOfCases = "LocalCases",
     SumOfCost = "LocalCost",
-    Unitsper1000 = "LocalUnits1000",
     CostCase = "LocalCostCase",
     CostUnits = "LocalCostUnits",   
     UnitsCase = "LocalUnitsCase",
     sumOfUnits.1 = "CareUnits", 
     SumOfCases.1 = "CareCases",
     SumOfCost.1 = "CareCost",
-    Unitsper1000.1 = "CareUnits1000",
     CostCase.1 = "CareCostCase",
     CostUnits.1 = "CareCostUnits",   
     UnitsCase.1 = "CareUnitsCase",
     sumOfUnits.2 = "CLSUnits", 
     SumOfCases.2 = "CLSCases",
     SumOfCost.2 = "CLSCost",
-    Unitsper1000.2 = "CLSUnits1000",
     CostCase.2 = "CLSCostCase",
     CostUnits.2 = "CLSCostUnits",   
     UnitsCase.2 = "CLSUnitsCase",
     sumOfUnits.3 = "EmpUnits", 
     SumOfCases.3 = "EmpCases",
     SumOfCost.3 = "EmpCost",
-    Unitsper1000.3 = "EmpUnits1000",
     CostCase.3 = "EmpCostCase",
     CostUnits.3 = "EmpCostUnits",   
     UnitsCase.3 = "EmpUnitsCase",
     sumOfUnits.4 = "HealthUnits", 
     SumOfCases.4 = "HealthCases",
     SumOfCost.4 = "HealthCost",
-    Unitsper1000.4 = "HealthUnits1000",
     CostCase.4 = "HealthCostCase",
     CostUnits.4 = "HealthCostUnits",   
     UnitsCase.4 = "HealthUnitsCase",
     sumOfUnits.5 = "OTUnits", 
     SumOfCases.5 = "OTCases",
     SumOfCost.5 = "OTCost",
-    Unitsper1000.5 = "OTUnits1000",
     CostCase.5 = "OTCostCase",
     CostUnits.5 = "OTCostUnits",   
     UnitsCase.5 = "OTUnitsCase",
     sumOfUnits.6 = "PrevUnits", 
     SumOfCases.6 = "PrevCases",
     SumOfCost.6 = "PrevCost",
-    Unitsper1000.6 = "PrevUnits1000",
     CostCase.6 = "PrevCostCase",
     CostUnits.6 = "PrevCostUnits",   
     UnitsCase.6 = "PrevUnitsCase",
     sumOfUnits.7 = "StateUnits", 
     SumOfCases.7 = "StateCases",
     SumOfCost.7 = "StateCost",
-    Unitsper1000.7 = "StateUnits1000",
     CostCase.7 = "StateCostCase",
     CostUnits.7 = "StateCostUnits",   
     UnitsCase.7 = "StateUnitsCase",
     sumOfUnits.8 = "CrisisUnits", 
     SumOfCases.8 = "CrisisCases",
     SumOfCost.8 = "CrisisCost",
-    Unitsper1000.8 = "CrisisUnits1000",
     CostCase.8 = "CrisisCostCase",
     CostUnits.8 = "CrisisCostUnits",   
     UnitsCase.8 = "CrisisUnitsCase",
     sumOfUnits.9 = "ResUnits", 
     SumOfCases.9 = "ResCases",
     SumOfCost.9 = "ResCost",
-    Unitsper1000.9 = "ResUnits1000",
     CostCase.9 = "ResCostCase",
     CostUnits.9 = "ResCostUnits",   
     UnitsCase.9 = "ResUnitsCase",
     sumOfUnits.10 = "SUDUnits", 
     SumOfCases.10 = "SUDCases",
     SumOfCost.10 = "SUDCost",
-    Unitsper1000.10 = "SUDUnits1000",
     CostCase.10 = "SUDCostCase",
     CostUnits.10 = "SUDCostUnits",   
     UnitsCase.10 = "SUDUnitsCase",
     sumOfUnits.11 = "BehavUnits", 
     SumOfCases.11 = "BehavCases",
     SumOfCost.11 = "BehavCost",
-    Unitsper1000.11 = "BehavUnits1000",
     CostCase.11 = "BehavCostCase",
     CostUnits.11 = "BehavCostUnits",   
     UnitsCase.11 = "BehavUnitsCase",
     sumOfUnits.12 = "MedUnits", 
     SumOfCases.12 = "MedCases",
     SumOfCost.12 = "MedCost",
-    Unitsper1000.12 = "MedUnits1000",
     CostCase.12 = "MedCostCase",
     CostUnits.12 = "MedCostUnits",   
     UnitsCase.12 = "MedUnitsCase",
     sumOfUnits.13 = "OutUnits", 
     SumOfCases.13 = "OutCases",
     SumOfCost.13 = "OutCost",
-    Unitsper1000.13 = "OutUnits1000",
     CostCase.13 = "OutCostCase",
     CostUnits.13 = "OutCostUnits",   
     UnitsCase.13 = "OutUnitsCase",
     sumOfUnits.14 = "RespiteUnits", 
     SumOfCases.14 = "RespiteCases",
     SumOfCost.14 = "RespiteCost",
-    Unitsper1000.14 = "RespiteUnits1000",
     CostCase.14 = "RespiteCostCase",
     CostUnits.14 = "RespiteCostUnits",   
     UnitsCase.14 = "RespiteUnitsCase",
     sumOfUnits.15 = "PeerUnits", 
     SumOfCases.15 = "PeerCases",
     SumOfCost.15 = "PeerCost",
-    Unitsper1000.15 = "PeerUnits1000",
     CostCase.15 = "PeerCostCase",
     CostUnits.15 = "PeerCostUnits",   
     UnitsCase.15 = "PeerUnitsCase",
     sumOfUnits.16 = "ScreenUnits", 
     SumOfCases.16 = "ScreenCases",
     SumOfCost.16 = "ScreenCost",
-    Unitsper1000.16 = "ScreenUnits1000",
     CostCase.16 = "ScreenCostCase",
     CostUnits.16 = "ScreenCostUnits",   
     UnitsCase.16 = "ScreenUnitsCase",
     sumOfUnits.17 = "AncillUnits", 
     SumOfCases.17 = "AncillCases",
     SumOfCost.17 = "AncillCost",
-    Unitsper1000.17 = "AncillUnits1000",
     CostCase.17 = "AncillCostCase",
     CostUnits.17 = "AncillCostUnits",   
     UnitsCase.17 = "AncillUnitsCase",
     sumOfUnits.18 = "FamUnits", 
     SumOfCases.18 = "FamCases",
     SumOfCost.18 = "FamCost",
-    Unitsper1000.18 = "FamUnits1000",
     CostCase.18 = "FamCostCase",
     CostUnits.18 = "FamCostUnits",   
     UnitsCase.18 = "FamUnitsCase",
     sumOfUnits.19 = "TransUnits", 
     SumOfCases.19 = "TransCases",
     SumOfCost.19 = "TransCost",
-    Unitsper1000.19 = "TransUnits1000",
     CostCase.19 = "TransCostCase",
     CostUnits.19 = "TransCostUnits",   
     UnitsCase.19 = "TransUnitsCase",
     sumOfUnits.20 = "MonitUnits", 
     SumOfCases.20 = "MonitCases",
     SumOfCost.20 = "MonitCost",
-    Unitsper1000.20 = "MonitUnits1000",
     CostCase.20 = "MonitCostCase",
     CostUnits.20 = "MonitCostUnits",   
     UnitsCase.20 = "MonitUnitsCase")
@@ -678,9 +651,10 @@ Services_CMH$PIHP.19<-NULL
 Services_CMH$PIHP.20<-NULL
 Services_CMH$PIHP.21<-NULL
 
+#Output Services_CMH .csv file
+#write.csv(Services_CMH, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Services_CMH")
 
 #########################################################
-
 #Repeating above processes for each population ##########
 
 #########
