@@ -1520,19 +1520,19 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'T1001'='Screening & Assessment';
                  'T1023'='Screening & Assessment';
                  'T2011'='Screening & Assessment';
-                 '90772'='Medication';
-                 '90782'='Medication';
-                 '90788'='Medication';
-                 '90862'='Medication';
-                 '96372'='Medication';
-                 '99211'='Medication';
-                 '99506'='Medication';
-                 '99605'='Medication';
-                 'G0351'='Medication';
-                 'H0020'='Medication';
-                 'H0033'='Medication';
-                 'M0064'='Medication';
-                 'T1999'='Medication';
+                 '90772'='Medication Administration';
+                 '90782'='Medication Administration';
+                 '90788'='Medication Administration';
+                 '90862'='Medication Management';
+                 '96372'='Medication Administration';
+                 '99211'='Medication Administration';
+                 '99506'='Medication Administration';
+                 '99605'='Medication Administration';
+                 'G0351'='Medication Administration';
+                 'H0020'='Pharmaceuticals';
+                 'H0033'='Pharmaceuticals';
+                 'M0064'='Medication Management';
+                 'T1999'='Pharmaceuticals';
                  'H0045'='Respite';
                  'S5150'='Respite';
                  'S5151'='Respite';
@@ -1541,7 +1541,7 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'T2036'='Respite';
                  'T2037'='Respite';
                  'H0019'='Residential Treatment';
-                 'H2016'='Community Living Supports';
+                 'H2016'='Residential Treatment';
                  'S9976'='Residential Treatment';
                  'T1020'='Residential Treatment';
                  'H0022'='Substance Abuse Outpatient';
@@ -1599,7 +1599,7 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'H0023'='Peer Services';
                  'H0038'='Peer Services';
                  'H0046'='Peer Services';
-                 'H2030'='Peer Services';
+                 'H2030'='Clubhouse';
                  'T1012'='Peer Services';
                  'A0080'='Transportation';
                  'A0090'='Transportation';
@@ -1620,8 +1620,8 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'T2004'='Transportation';
                  'T2005'='Transportation';
                  'A0140'='Transportation';
-                 'S5160'='Monitoring';
-                 'S5161'='Monitoring';
+                 'S5160'='Equipment';
+                 'S5161'='Equipment';
                  '97761'='Equipment';
                  '97762'='Equipment';
                  'E1399'='Equipment';
@@ -1668,10 +1668,10 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'H2027'='Outpatient Therapy';
                  'H2035'='Substance Abuse Outpatient';
                  'H2036'='Substance Abuse Outpatient';
-                 'H0010'='Crisis Services';
-                 'H0012'='Crisis Services';
-                 'H0014'='Crisis Services';
-                 'H0018'='Crisis Services';
+                 'H0010'='Sub-Acute Detoxification';
+                 'H0012'='Sub-Acute Detoxification';
+                 'H0014'='Sub-Acute Detoxification';
+                 'H0018'='Residential Treatment';
                  'H2011'='Crisis Services';
                  'H2020'='Crisis Services';
                  'S9484'='Crisis Services';
@@ -1755,14 +1755,14 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  '97811'='Health Services';
                  'K0739'='Ancillary Services / ECT';
                  'ALL'='Other';
-                 'T5999'='Other';
+                 'T5999'='Equipment';
                  '1'='State Hospitalization';
                  '2'='Local Hospitalization';
                  '3'='Ancillary Services / ECT';
                  '4'='Peer Services';
                  '5'='Medication';
                  '6'='Crisis Services';
-                 '7'='Crisis Services';
+                 '7'='Partial Hospitalization';
                  '8'='Other';
                  'G0409'='Peer Services';
                  'H0037'='Medication';
@@ -1854,5 +1854,5 @@ Master<-Master[c(2,14,1,3:13)]
 # head(Master, n=10)
 
 #Output Master .csv file
-# write.csv(Master, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master")
+#write.csv(Master, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master")
 
