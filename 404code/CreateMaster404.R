@@ -1765,8 +1765,8 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  '7'='Partial Hospitalization';
                  '8'='Other';
                  'G0409'='Peer Services';
-                 'H0037'='Medication';
-                 'H2010'='Medication';
+                 'H0037'='Medication Management';
+                 'H2010'='Medication Management';
                  'H0050'='Outpatient Therapy'")
 table(Service)
 
