@@ -1760,7 +1760,7 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  '2'='Local Hospitalization';
                  '3'='Ancillary Services / ECT';
                  '4'='Peer Services';
-                 '5'='Medication';
+                 '5'='Pharmaceuticals';
                  '6'='Crisis Services';
                  '7'='Partial Hospitalization';
                  '8'='Other';
@@ -1773,8 +1773,45 @@ table(Service)
 #attaching "Service" to "Master" dataframe
 Master<-cbind(Master, Service) 
 
-#reordering the columns
-Master<-Master[c(1,2,3,13,4:12)]
+#Grouping Service into even more general categories (variable named 'ServiceType')
+library("car")
+ServiceType <-recode(Master$Service,
+                     "'Ancillary Services / ECT'='Hospital-based Services';
+                      'Assessment'='Screening & Assessment';
+                      'Behavioral Treatment'='Outpatient Treatment';
+                       'Care Coordination'='Care Coordination';
+                       'Clubhouse'='Employment Services';
+                       'Community Living Supports'='Home & Community Based Services';
+                       'Crisis Services'='Crisis and Respite';
+                       'Dental'='Physical Health Services';
+                       'Equipment'='Equipment';
+                       'Family Services'='Outpatient Treatment';
+                       'Fiscal Intermediary Services'='Care Coordination';
+                       'Health Services'='Physical Health Services';
+                       'Laboratory'='Screening & Assessment';
+                       'Local Hospitalization'='Hospital-based Services';
+                       'Medication Administration'='Medication';
+                       'Medication Management'='Medication';
+                       'OT/PT/SLT'='Physical Health Services';
+                       'Other'='Other';
+                       'Outpatient Therapy'='Outpatient Treatment';
+                       'Partial Hospitalization'='Crisis and Respite';
+                       'Peer Services'='Care Coordination';
+                       'Pharmaceuticals'='Medication';
+                       'Prevention'='Outpatient Treatment';
+                      'Residential Treatment'='Home & Community Based Services';
+                      'Respite'='Crisis and Respite';
+                      'Skill-Building/Non-Vocational'='Employment Services';
+                      'State Hospitalization'='Hospital-based Services';
+                      'State Mental Retardation Facility'='Hospital-based Services';
+                      'Sub-Acute Detoxification'='Hospital-based Services';
+                      'Substance Abuse Outpatient'='Outpatient Treatment';
+                      'Transportation'='Transportation';
+                      'Vocational Services'='Employment Services'")
+table(ServiceType)
+
+#attaching "ServiceType" to "Master" dataframe
+Master<-cbind(Master, ServiceType)
 
 ## Adding PIHP regions to the dataset ##
 
@@ -1840,8 +1877,8 @@ PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
 Master<-cbind(Master,PIHP)
 #table(Master$PIHP)
 
-#Reordering the Columns
-Master<-Master[c(2,14,1,3:13)]
+#reordering the columns
+Master<-Master[c(1,2,15,1,3,14,13,4:12)]
 
 #Calculating Units per 1000 to standardize utilization across CMH/PIHPs
 
