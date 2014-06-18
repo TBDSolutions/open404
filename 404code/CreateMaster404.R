@@ -1417,13 +1417,12 @@ Unit_Hours <-recode(Master$UnitType,
 #table(Unit_Hours)
 Master<-cbind(Master, Unit_Hours)
 
-#Dropping Revenue code, unit type, and first of modifier; not needed for analysis
+#Dropping Revenue code, unit type; not needed for analysis
 Master$FirstOfRevenue.Code<-NULL
-Master$FirstOfModifier<-NULL
 Master$UnitType<-NULL
 
 #Reordering the columns
-Master<-Master[c(1,2,3,4,5,12,6,7,8,9,10,11)]
+Master<-Master[c(1,2,3,4,5,12,6,7,8,9,10,11,12)]
 
 ## Creating a "Service" variable to group the service descriptions##
 ## This creates meaningful groups for analysis ##
@@ -1435,55 +1434,65 @@ Master$FirstOfHCPCS.Code<-as.character(Master$FirstOfHCPCS.Code)
 Master$FirstofService.Description<-as.character(Master$FirstofService.Description)
 
 #Using "ifelse" to replace NA HCPCS codes with fake codes
-Master$FirstOfHCPCS.Code<-ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="State Mental Retardation Facility - Inpatient (ICF/MR) PT65",0,
-                                 ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="State Psychiatric Hospital - Inpatient PT22", 1,
-                                        ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Local Psychiatric Hospital/IMD PT68"|
-                                                 Master$FirstofService.Description== "Local Psychiatric Hospital - Acute Community PT73" | Master$FirstofService.Description=="Extended Observation Beds ", 2,
-                                               ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description =="Inpatient Hospital Ancillary Services - Room and Board" |
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Leave of Absence" |
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Pharmacy" | 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Medical/Surgical Supplies and Devices"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Laboratory"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services -EKG/ECG"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - EEG"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Room and Board"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Psychiatric/Psychological Treatments/Services"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Other Diagnosis Services"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Other Therapeutic Services"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Radiology"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Respiratory Services"| 
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services -Physical Therapy"|
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Occupational Therapy"|
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Speech-Language Pathology"|
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Emergency Room"|
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Pulmonary Function"|
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Audiology"|
-                                                        Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Magnetic Resonance Technology (MRT)"|
-                                                        Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Pharmacy"|
-                                                        Master$FirstofService.Description== "Additional Codes-ECT Facility Charge" | 
-                                                        Master$FirstofService.Description=="ECT Anesthesia" |
-                                                        Master$FirstofService.Description=="ECT Recovery Room", 3,
-                                                      ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Peer Directed and Operated Support Services",4,
-                                                             ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Pharmacy (Drugs and Other Biologicals)",5,
-                                                                    ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Crisis Observation Care",6,
-                                                                           ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Outpatient Partial Hospitalization",7,
-                                                                                  ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Other", 8, Master$FirstOfHCPCS.Code)))))))))
+Master$FirstOfHCPCS.Code<-ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="State Mental Retardation Facility - Inpatient (ICF/MR) PT65",'X01',
+                            ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="State Psychiatric Hospital - Inpatient PT22", "X02",
+                              ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Local Psychiatric Hospital/IMD PT68", "X03",
+                                ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Local Psychiatric Hospital - Acute Community PT73", "X04", 
+                                  ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Extended Observation Beds ", "X05",
+                                    ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description =="Inpatient Hospital Ancillary Services - Room and Board", "X06",
+                                      ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Leave of Absence", "X07", 
+                                        ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Pharmacy", "X08", 
+                                          ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Medical/Surgical Supplies and Devices", "X09",
+                                            ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Laboratory", "X10",
+                                              ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services -EKG/ECG", "X11",
+                                                ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - EEG", "X12", 
+                                                  ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Room and Board", "X13",
+                                                    ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Psychiatric/Psychological Treatments/Services", "X14", 
+                                                      ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Other Diagnosis Services", "X15", 
+                                                        ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Other Therapeutic Services", "X16",
+                                                          ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Radiology", "X17",
+                                                            ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Respiratory Services", "X18",
+                                                              ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services -Physical Therapy", "X19",
+                                                                ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Occupational Therapy", "X20",
+                                                                  ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Speech-Language Pathology", "X21",
+                                                                    ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Emergency Room", "X22",
+                                                                      ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Pulmonary Function", "X23",
+                                                                        ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Audiology", "X24",
+                                                                          ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Inpatient Hospital Ancillary Services - Magnetic Resonance Technology (MRT)", "X25",
+                                                                            ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Inpatient Hospital Ancillary Services - Pharmacy", "X26",
+                                                                              ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description== "Additional Codes-ECT Facility Charge" , "X27", 
+                                                                                ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="ECT Anesthesia", "X28",
+                                                                                  ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="ECT Recovery Room", "X29",
+                                                                                    ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Peer Directed and Operated Support Services","X30",
+                                                                                      ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Pharmacy (Drugs and Other Biologicals)","X31",
+                                                                                        ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Crisis Observation Care","X32",
+                                                                                          ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Outpatient Partial Hospitalization","X33",
+                                                                                            ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$FirstofService.Description=="Other","X34", Master$FirstOfHCPCS.Code))))))))))))))))))))))))))))))))))
 
-#table(Master$FirstOfHCPCS.Code)
+# table(Master$FirstOfHCPCS.Code)
 
-#Checking to make sure there are no missing HCPCS codes
+# Checking to make sure there are no missing HCPCS codes
 sum(is.na(Master$FirstOfHCPCS.Code)) #Result is 0
+
+# Make a new variable by concatenating HCPCS.Code and Modifier.  This will be most granular level of service definition
+Master$Code_Mod <- paste(Master$FirstOfHCPCS.Code,Master$FirstOfModifier, sep = "", collapse = NULL)
 
 #Need to change vars back to a factor
 Master$FirstOfHCPCS.Code<-as.factor(Master$FirstOfHCPCS.Code)
 Master$FirstofService.Description<-as.factor(Master$FirstofService.Description)
+Master$Code_Mod<-as.factor(Master$Code_Mod)
 #str(Master$FirstOfHCPCS.Code)
 #str(Master$FirstofService.Description)
+
+Master$UnitPerCase.1<-NULL
+
+#Reordering the columns
+Master<-Master[c(1,2,3,4,5,7,13,8,9,10,11,12,6)]
 
 #Grouping Service.Description into more general categories (variable named 'Service')
 library("car")
 Service <-recode(Master$FirstOfHCPCS.Code,
-                 "'0'='State Mental Retardation Facility';
+                 "'X01'='State Mental Retardation Facility';
                  'T2025'='Fiscal Intermediary Services';
                  'H2000'='Behavioral Treatment';
                  'H2019'='Behavioral Treatment';
@@ -1756,14 +1765,39 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'K0739'='Ancillary Services / ECT';
                  'ALL'='Other';
                  'T5999'='Equipment';
-                 '1'='State Hospitalization';
-                 '2'='Local Hospitalization';
-                 '3'='Ancillary Services / ECT';
-                 '4'='Peer Services';
-                 '5'='Pharmaceuticals';
-                 '6'='Crisis Services';
-                 '7'='Partial Hospitalization';
-                 '8'='Other';
+                 'X02'='State Hospitalization';
+                 'X03'='Local Hospitalization';
+                 'X04'='Local Hospitalization';
+                 'X05'='Ancillary Services / ECT';
+                  'X06'='Ancillary Services / ECT';
+                  'X07'='Ancillary Services / ECT';
+                  'X08'='Ancillary Services / ECT';
+                  'X09'='Ancillary Services / ECT';
+                  'X10'='Ancillary Services / ECT';
+                  'X11'='Ancillary Services / ECT';
+                  'X12'='Ancillary Services / ECT';
+                  'X13'='Ancillary Services / ECT';
+                  'X14'='Ancillary Services / ECT';
+                  'X15'='Ancillary Services / ECT';
+                  'X16'='Ancillary Services / ECT';
+                  'X17'='Ancillary Services / ECT';
+                  'X18'='Ancillary Services / ECT';
+                  'X19'='Ancillary Services / ECT';
+                  'X20'='Ancillary Services / ECT';
+                  'X21'='Ancillary Services / ECT';
+                  'X22'='Ancillary Services / ECT';
+                  'X23'='Ancillary Services / ECT';
+                  'X24'='Ancillary Services / ECT';
+                  'X25'='Ancillary Services / ECT';
+                  'X26'='Ancillary Services / ECT';
+                  'X27'='Ancillary Services / ECT';
+                  'X28'='Ancillary Services / ECT';
+                  'X29'='Ancillary Services / ECT';
+                 'X30'='Peer Services';
+                 'X31'='Pharmaceuticals';
+                 'X32'='Crisis Services';
+                 'X33'='Partial Hospitalization';
+                 'X34'='Other';
                  'G0409'='Peer Services';
                  'H0037'='Medication Management';
                  'H2010'='Medication Management';
@@ -1878,7 +1912,7 @@ Master<-cbind(Master,PIHP)
 #table(Master$PIHP)
 
 #reordering the columns
-Master<-Master[c(1,2,15,1,3,14,13,4:12)]
+Master<-Master[c(2,16,1,3,15,14,4:13)]
 
 #Calculating Units per 1000 to standardize utilization across CMH/PIHPs
 
@@ -1891,5 +1925,5 @@ Master<-Master[c(1,2,15,1,3,14,13,4:12)]
 # head(Master, n=10)
 
 #Output Master .csv file
-# write.csv(Master, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master")
+write.csv(Master, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master")
 
