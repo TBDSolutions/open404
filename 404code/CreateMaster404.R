@@ -1908,11 +1908,22 @@ PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
              'Sanilac'='10';
              'St. Clair'='10'")
 
-Master<-cbind(Master,PIHP)
+PIHPname<-recode(PIHP, "'1'='Northcare';
+                         '2'='NMRE';
+                         '3'='LRP';
+                         '4'='SWMBH';
+                         '5'='MSHN'; 
+                         '6'='CMHPSM';
+                         '7'='DWMHA';
+                         '8'='OCCMHA';
+                         '9'='MCMHS';
+                         '10'='Region10'")
+
+Master<-cbind(Master,PIHP,PIHPname)
 #table(Master$PIHP)
 
 #reordering the columns
-Master<-Master[c(2,16,1,3,15,14,4:13)]
+Master<-Master[c(2,16,17,1,3,15,14,4:13)]
 
 #Calculating Units per 1000 to standardize utilization across CMH/PIHPs
 
