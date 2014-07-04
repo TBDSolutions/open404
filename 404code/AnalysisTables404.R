@@ -15,7 +15,7 @@ install.packages('plyr')
 library(plyr)
 
 ## Create subMaster dataframe, excluding services with 0 cases, units, and cost.
-subMaster<-data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(1:16)))
+subMaster<-data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(2:18)))
 
 #Output subMaster .csv file
 write.csv(subMaster, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\subMaster")
