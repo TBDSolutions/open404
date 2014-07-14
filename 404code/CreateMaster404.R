@@ -1414,7 +1414,7 @@ Unit_Hours <-recode(Master$UnitType,
                     'Per session One day partial day'='8.00';
                     'Per session One night'='8.00'")
 
-#table(Unit_Hours)
+# table(Unit_Hours)
 Master<-cbind(Master, Unit_Hours)
 
 #Dropping Revenue code, unit type; not needed for analysis
@@ -1422,7 +1422,7 @@ Master$FirstOfRevenue.Code<-NULL
 Master$UnitType<-NULL
 
 #Reordering the columns
-Master<-Master[c(1,2,3,4,5,12,6,7,8,9,10,11,12)]
+Master<-Master[c(1:6,13,7:12)]
 
 ## Creating a "Service" variable to group the service descriptions##
 ## This creates meaningful groups for analysis ##
@@ -1476,6 +1476,7 @@ sum(is.na(Master$FirstOfHCPCS.Code)) #Result is 0
 
 # Make a new variable by concatenating HCPCS.Code and Modifier.  This will be most granular level of service definition
 Master$Code_Mod <- paste(Master$FirstOfHCPCS.Code,Master$FirstOfModifier, sep = "", collapse = NULL)
+# TO DO: Shave off NAs concatenated to end
 
 #Need to change vars back to a factor
 Master$FirstOfHCPCS.Code<-as.factor(Master$FirstOfHCPCS.Code)
@@ -1484,10 +1485,10 @@ Master$Code_Mod<-as.factor(Master$Code_Mod)
 #str(Master$FirstOfHCPCS.Code)
 #str(Master$FirstofService.Description)
 
-Master$UnitPerCase.1<-NULL
+#Master$UnitPerCase.1<-NULL
 
 #Reordering the columns
-Master<-Master[c(1,2,3,4,5,7,13,8,9,10,11,12,6)]
+Master<-Master[c(2,1,3:6,14,7:13)]
 
 #Grouping Service.Description into more general categories (variable named 'Service')
 library("car")
@@ -1923,7 +1924,7 @@ Master<-cbind(Master,PIHP,PIHPname)
 #table(Master$PIHP)
 
 #reordering the columns
-Master<-Master[c(2,16,17,1,3,15,14,4:13)]
+Master<-Master[c(1,17,18,2,3,16,15,4:14)]
 
 #Calculating Units per 1000 to standardize utilization across CMH/PIHPs
 
