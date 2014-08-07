@@ -1476,7 +1476,10 @@ sum(is.na(Master$FirstOfHCPCS.Code)) #Result is 0
 
 # Make a new variable by concatenating HCPCS.Code and Modifier.  This will be most granular level of service definition
 Master$Code_Mod <- paste(Master$FirstOfHCPCS.Code,Master$FirstOfModifier, sep = "", collapse = NULL)
-# TO DO: Shave off NAs concatenated to end
+
+# Remove NA values from Code_Mod
+Master$Code_Mod <- as.character(Master$Code_Mod)
+Master$Code_Mod <-gsub(pattern="NA", replacement="", x=Master$Code_Mod)
 
 #Need to change vars back to a factor
 Master$FirstOfHCPCS.Code<-as.factor(Master$FirstOfHCPCS.Code)
