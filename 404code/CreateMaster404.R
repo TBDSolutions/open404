@@ -26,6 +26,8 @@
 ## When adding future data, just repeat the upload and formatting code described
 ## below, changing the FY code to correspond to the current year being loaded in
 
+library(plyr)
+
 ##########################################################################################
 ## Reading in each individual dataset, beginning with FY 2006, developmentally disabled ##
 ##########################################################################################
@@ -471,6 +473,66 @@ dd_2012<- transform(dd_2012, SumOfCases = as.numeric(SumOfCases), SumOfUnits = a
                     SumOfCost = as.numeric(SumOfCost))
 
 #######################################################################
+## Repeating Process for DD 2013 ######################################
+#######################################################################
+dd_2013<-read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/CMH-DD_FY2013.csv', sep=',', header=TRUE)
+attach(dd_2013)
+
+#structure of dataframe
+#str(dd_2013)
+
+#deleting Text4, will create new CMHSP variable
+dd_2013$Text4<-NULL
+
+#adding NA's where there is missing data
+dd_2013[dd_2013=='']<-NA
+
+#deleting rows with all NA
+dd_2013<-dd_2013[rowSums(is.na(dd_2013)) !=ncol(dd_2013),]
+
+#renaming variables
+NewNames<-c(SumofDD.Cases = 'SumOfCases', SumOfDD.Units = 'SumOfUnits', SumofDD.Cost = 'SumOfCost')
+dd_2013<-rename(dd_2013, NewNames)
+
+#creating FY variable and binding it to dataframe
+FY<-gl(n=1, k=18768, length=18768, label = c('2013'))
+
+#formatting the CMHSP variable so it appears on every row instead of just a few
+CMHSP<-gl(n=46, k=408, length=18768, label=c('Allegan', 'AuSable Valley', 'Barry', 'Bay-Arenac',
+                                             'Berrien', 'Clinton Eaton Ingham', 'CMH for Central Michigan',
+                                             'Copper County', 'Detroit-Wayne', 'Genesee', 'Gogebic', 'Gratiot',
+                                             'Hiawatha', 'Huron', 'Ionia', 'Kalamazoo', 'Lapeer', 'Lenawee', 
+                                             'Lifeways', 'Livingston', 'Macomb','Manistee-Benzie', 'Monroe',
+                                             'Montcalm','Muskegon','Networy180', 'Newaygo', 'North country',
+                                             'Northeast Michigan', 'Northern Lakes', 'Northpointe', 'Oakland',
+                                             'Ottawa', 'Pathways', 'Pines', 'Saginaw','Sanilac', 
+                                             'Shiawassee', 'St. Clair', 'St. Joseph', 'Summit Pointe', 'Tuscola',
+                                             'Van Buren', 'Washtenaw', 'West Michigan', 'Woodlands'))
+#creating population variable
+Population<-gl(n=1, k=18768, length=18768, label=c('DD'))
+
+#binding new variables to dataframe
+dd_2013<-cbind(dd_2013, CMHSP, FY, Population)
+
+#reordering columns 
+dd_2013<-dd_2013[c(12, 13, 14, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)]
+
+#Removing characters from the vectors
+dd_2013$SumOfCost<-gsub("$", fixed=TRUE, "", dd_2013$SumOfCost)
+dd_2013$SumOfCost<-gsub(".00", fixed=TRUE, "", dd_2013$SumOfCost)
+dd_2013$SumOfCost<-gsub(",", fixed=TRUE, "", dd_2013$SumOfCost)
+
+dd_2013$SumOfCases<-gsub(".00", fixed=TRUE, "", dd_2013$SumOfCases)
+dd_2013$SumOfCases<-gsub(",", fixed=TRUE, "", dd_2013$SumOfCases)
+
+dd_2013$SumOfUnits<-gsub(".00", fixed=TRUE, "", dd_2013$SumOfUnits)
+dd_2013$SumOfUnits<-gsub(",", fixed=TRUE, "", dd_2013$SumOfUnits)
+
+#changing sumofcases, cost, and units to numeric
+dd_2013<- transform(dd_2013, SumOfCases = as.numeric(SumOfCases), SumOfUnits = as.numeric(SumOfUnits), 
+                    SumOfCost = as.numeric(SumOfCost))
+
+#######################################################################
 ## Repeating Process for MIA 2006 #####################################
 #######################################################################
 MIA_2006<-read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/CMH-MIA_FY2006.csv', sep=',', header=TRUE)
@@ -892,6 +954,63 @@ MIA_2012$SumOfUnits<-gsub(",", fixed=TRUE, "", MIA_2012$SumOfUnits)
 
 #changing sumofcases, cost, and units to numeric
 MIA_2012<- transform(MIA_2012, SumOfCases = as.numeric(SumOfCases), SumOfUnits = as.numeric(SumOfUnits), 
+                     SumOfCost = as.numeric(SumOfCost))
+
+#######################################################################
+## Repeating Process for MIA 2013 #####################################
+#######################################################################
+MIA_2013<-read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/CMH-MIA_FY2013.csv', sep=',', header=TRUE)
+attach(MIA_2013)
+
+#structure of dataframe
+#str(MIA_2013)
+
+#deleting CMHName, will create new CMHSP variable
+MIA_2013$CMHName<-NULL
+
+#adding NA's where there is missing data
+MIA_2013[MIA_2013=='']<-NA
+
+#deleting rows with all NA
+MIA_2013<-MIA_2013[rowSums(is.na(MIA_2013)) !=ncol(MIA_2013),]
+
+#renaming variables
+NewNames<-c(SumofMIA.Cases = 'SumOfCases', FirstofMIA.Units = 'SumOfUnits', SumofMIA.Cost = 'SumOfCost')
+MIA_2013<-rename(MIA_2013, NewNames)
+
+#creating FY variable and binding it to dataframe
+MIA_2013$FY<-gl(n=1, k=15962, length=15962, label = c('2013'))
+
+#formatting the CMHSP variable so it appears on every row instead of just a few
+MIA_2013$CMHSP<-gl(n=46, k=347, length=15962, label=c('Allegan', 'AuSable Valley', 'Barry', 'Bay-Arenac',
+                                             'Berrien', 'Clinton Eaton Ingham', 'CMH for Central Michigan',
+                                             'Copper County', 'Detroit-Wayne', 'Genesee', 'Gogebic', 'Gratiot',
+                                             'Hiawatha', 'Huron', 'Ionia', 'Kalamazoo', 'Lapeer', 'Lenawee', 
+                                             'Lifeways', 'Livingston', 'Macomb','Manistee-Benzie', 'Monroe',
+                                             'Montcalm','Muskegon','Networy180', 'Newaygo', 'North country',
+                                             'Northeast Michigan', 'Northern Lakes', 'Northpointe', 'Oakland',
+                                             'Ottawa', 'Pathways', 'Pines', 'Saginaw','Sanilac', 
+                                             'Shiawassee', 'St. Clair', 'St. Joseph', 'Summit Pointe', 'Tuscola',
+                                             'Van Buren', 'Washtenaw', 'West Michigan', 'Woodlands'))
+#creating population variable
+MIA_2013$Population<-gl(n=1, k=15962, length=15962, label=c('MIA'))
+
+#reordering columns 
+MIA_2013<-MIA_2013[c(12, 13, 14, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)]
+
+#Removing characters from the vectors
+MIA_2013$SumOfCost<-gsub("$", fixed=TRUE, "", MIA_2013$SumOfCost)
+MIA_2013$SumOfCost<-gsub(".00", fixed=TRUE, "", MIA_2013$SumOfCost)
+MIA_2013$SumOfCost<-gsub(",", fixed=TRUE, "", MIA_2013$SumOfCost)
+
+MIA_2013$SumOfCases<-gsub(".00", fixed=TRUE, "", MIA_2013$SumOfCases)
+MIA_2013$SumOfCases<-gsub(",", fixed=TRUE, "", MIA_2013$SumOfCases)
+
+MIA_2013$SumOfUnits<-gsub(".00", fixed=TRUE, "", MIA_2013$SumOfUnits)
+MIA_2013$SumOfUnits<-gsub(",", fixed=TRUE, "", MIA_2013$SumOfUnits)
+
+#changing sumofcases, cost, and units to numeric
+MIA_2013<- transform(MIA_2013, SumOfCases = as.numeric(SumOfCases), SumOfUnits = as.numeric(SumOfUnits), 
                      SumOfCost = as.numeric(SumOfCost))
 
 #######################################################################
@@ -1322,12 +1441,62 @@ MIC_2012<- transform(MIC_2012, SumOfCases = as.numeric(SumOfCases), SumOfUnits =
                      SumOfCost = as.numeric(SumOfCost))
 
 #######################################################################
+## Repeating Process for MIC 2013 #####################################
+#######################################################################
+MIC_2013<-read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/CMH-MIC_FY2013.csv', sep=',', header=TRUE)
+attach(MIC_2013)
+
+#structure of dataframe
+#str(MIC_2013)
+
+## THIS BLOCK DIFFERENT THAN OTHER DATASETS DUE TO IRREGULAR COUNTS OF SVS PER CMH
+#adding NA's where there is missing data
+MIC_2013[MIC_2013=='']<-NA
+
+#deleting rows with all NA
+MIC_2013<-MIC_2013[rowSums(is.na(MIC_2013)) !=ncol(MIC_2013),]
+
+library(zoo)
+MIC_2013$CMHName <- na.locf(MIC_2013$CMHName)
+
+MIC_2013 <- subset(MIC_2013, is.na(MIC_2013$FirstofService.Description) == F)
+
+#renaming variables
+NewNames<-c(CMHName = 'CMHSP', SumofMIC.Cases = 'SumOfCases', FirstofMIC.Units = 'SumOfUnits', SumofMIC.Cost = 'SumOfCost')
+MIC_2013<-rename(MIC_2013, NewNames)
+
+#creating FY variable and binding it to dataframe
+MIC_2013$FY<-gl(n=1, k=18122, length=18122, label = c('2013'))
+
+#creating population variable
+MIC_2013$Population<-gl(n=1, k=18122, length=18122, label=c('MIC'))
+
+#reordering columns 
+MIC_2013<-MIC_2013[c(13, 14, 1:12)]
+
+## END DIFF CODE BLOCK
+
+#Removing characters from the vectors
+MIC_2013$SumOfCost<-gsub("$", fixed=TRUE, "", MIC_2013$SumOfCost)
+MIC_2013$SumOfCost<-gsub(".00", fixed=TRUE, "", MIC_2013$SumOfCost)
+MIC_2013$SumOfCost<-gsub(",", fixed=TRUE, "", MIC_2013$SumOfCost)
+
+MIC_2013$SumOfCases<-gsub(".00", fixed=TRUE, "", MIC_2013$SumOfCases)
+MIC_2013$SumOfCases<-gsub(",", fixed=TRUE, "", MIC_2013$SumOfCases)
+
+MIC_2013$SumOfUnits<-gsub(".00", fixed=TRUE, "", MIC_2013$SumOfUnits)
+MIC_2013$SumOfUnits<-gsub(",", fixed=TRUE, "", MIC_2013$SumOfUnits)
+
+#changing sumofcases, cost, and units to numeric
+MIC_2013<- transform(MIC_2013, SumOfCases = as.numeric(SumOfCases), SumOfUnits = as.numeric(SumOfUnits), 
+                     SumOfCost = as.numeric(SumOfCost))
+
+#######################################################################
 ## Stacking Dataframes to create master 404 ###########################
 #######################################################################
-Master<-rbind(MIA_2006, MIA_2007, MIA_2008, MIA_2009, MIA_2010, MIA_2011,
-              MIC_2006, MIC_2007, MIC_2008, MIC_2009, MIC_2010, MIC_2011,
-              dd_2006, dd_2007, dd_2008, dd_2009, dd_2010, dd_2011, MIC_2012, 
-              MIA_2012, dd_2012)
+Master<-rbind(MIA_2006, MIA_2007, MIA_2008, MIA_2009, MIA_2010, MIA_2011,MIA_2012,MIA_2013,
+              MIC_2006, MIC_2007, MIC_2008, MIC_2009, MIC_2010, MIC_2011,MIC_2012,MIC_2013,
+              dd_2006, dd_2007, dd_2008, dd_2009, dd_2010, dd_2011, dd_2012, dd_2013)
 
 attach(Master)
 
