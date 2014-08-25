@@ -25,7 +25,9 @@ addPercentTotal <- function(){
     cmh_2011 <- mutate(cmh_2011, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     cmh_2012 <- filter(subMaster, FY==2012 & CMHSP==CMH)
     cmh_2012 <- mutate(cmh_2012, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    newCMH <- rbind(cmh_2006, cmh_2007, cmh_2008, cmh_2009, cmh_2010, cmh_2011, cmh_2012)
+    cmh_2013 <- filter(subMaster, FY==2013 & CMHSP==CMH)
+    cmh_2013 <- mutate(cmh_2013, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    newCMH <- rbind(cmh_2006, cmh_2007, cmh_2008, cmh_2009, cmh_2010, cmh_2011, cmh_2012, cmh_2013)
     return(newCMH)
   }
   # Now use percTot...

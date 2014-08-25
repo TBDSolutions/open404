@@ -11,8 +11,9 @@
 
 Master <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master', sep=',', header=TRUE)
 
-# install.packages('plyr')
+# install.packages('plyr' and 'dplyr')
 library(plyr)
+library(dplyr)
 
 ## Create subMaster dataframe, excluding services with 0 cases, units, and cost.
 
@@ -22,17 +23,19 @@ subMaster <- data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOf
 # Add column for Annual Line Item Units as % of Total Units, per CMHSP
 
 source('function_addPercentTotal.R')
-
 subMaster <- addPercentTotal()
 
-# Create unique "Year-CMH" key to merge
-subMaster$Key <- paste(byCMHSP$Year,byCMHSP$CMHSP, sep = "", collapse = NULL)
-FY10to12$Key <- paste(FY10to12$FY,FY10to12$CMHSP, sep = "", collapse = NULL)
-merged <- merge(byCMHSP, FY10to12, by.x = "Key", by.y = "Key")
+# Read in unique counts of people served from 2006-2013
+unique_06to13 <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/TotalServed_FY06-13.csv")
+unique_06to13$TotalServed <- as.integer(unique_06to13$TotalServed)
 
-# Make an empty variable
-merged["subPop"] <- NA
-merged$subPop <- as.numeric(merged$subPop)
+# Create unique key to merge
+subMaster$Key <- paste(subMaster$FY,subMaster$CMHSP, sep = "", collapse = NULL)
+unique_06to13$Key <- paste(unique_06to13$FY,unique_06to13$CMHSP, sep = "", collapse = NULL)
+merged <- merge(subMaster, unique_06to13, by.x = "Key", by.y = "Key", all.x = TRUE)
+
+levels(as.factor(merged$Key))
+levels(as.factor(subMaster$FY))
 
 # create a data.table with Population as the key
 library(data.table)
