@@ -7,50 +7,12 @@
 
 ## Aggregating this way will allow for easier analysis
 
-## Load Master from GitHub (for those who don't already have it in the workspace)
+# Load Master from GitHub (for those who don't already have it in the workspace)
+  Master <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master', sep=',', header=TRUE)
 
-Master <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master', sep=',', header=TRUE)
-
-# install.packages('plyr' and 'dplyr')
-library(plyr)
-library(dplyr)
-
-## Create subMaster dataframe, excluding services with 0 cases, units, and cost.
-
-subMaster <- data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(2:19)))
-
-# Add column for Annual Line Item Cost as % of Total Cost, per CMHSP
-# Add column for Annual Line Item Units as % of Total Units, per CMHSP
-
-source('function_addPercentTotal.R')
-subMaster <- addPercentTotal()
-
-# Read in unique counts of people served from 2006-2013
-unique_06to13 <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/TotalServed_FY06-13.csv")
-unique_06to13$TotalServed <- as.integer(unique_06to13$TotalServed)
-
-# Create unique key to merge
-subMaster$Key <- paste(subMaster$FY,subMaster$CMHSP, sep = "", collapse = NULL)
-unique_06to13$Key <- paste(unique_06to13$FY,unique_06to13$CMHSP, sep = "", collapse = NULL)
-merged <- merge(subMaster, unique_06to13, by.x = "Key", by.y = "Key", all.x = TRUE)
-
-levels(as.factor(merged$Key))
-levels(as.factor(subMaster$FY))
-
-# create a data.table with Population as the key
-library(data.table)
-merged <- data.table(merged, key = 'Population')
-# where the population is DD, use Total Population
-merged[.('DD'), subPop := TotalPop]
-# and where the population is MIA, use over 18 Population
-merged[.('MIA'), subPop := Over18]
-# and where the population is MIC, use under 18 Population
-merged[.('MIC'), subPop := Under18]
-
-#Output subMaster .csv file
-write.csv(subMaster, 
-          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\subMaster",
-          row.names = FALSE)
+# Install.packages('plyr' and 'dplyr')
+  library(plyr)
+  library(dplyr)
 
 ##There are multiple HCPCS codes per Service, and so the calculated rates do not end up acurately reflecting the 
 ##totals.  Therefore, they will be re-calculated and added to the dataframes later.
