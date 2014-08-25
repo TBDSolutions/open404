@@ -11,14 +11,43 @@
 
 Master <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master', sep=',', header=TRUE)
 
-install.packages('plyr')
+# install.packages('plyr')
 library(plyr)
 
 ## Create subMaster dataframe, excluding services with 0 cases, units, and cost.
-subMaster<-data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(2:18)))
+
+subMaster <- data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(2:19)))
+
+# Add column for Annual Line Item Cost as % of Total Cost, per CMHSP
+# Add column for Annual Line Item Units as % of Total Units, per CMHSP
+
+source('function_addPercentTotal.R')
+
+subMaster <- addPercentTotal()
+
+# Create unique "Year-CMH" key to merge
+subMaster$Key <- paste(byCMHSP$Year,byCMHSP$CMHSP, sep = "", collapse = NULL)
+FY10to12$Key <- paste(FY10to12$FY,FY10to12$CMHSP, sep = "", collapse = NULL)
+merged <- merge(byCMHSP, FY10to12, by.x = "Key", by.y = "Key")
+
+# Make an empty variable
+merged["subPop"] <- NA
+merged$subPop <- as.numeric(merged$subPop)
+
+# create a data.table with Population as the key
+library(data.table)
+merged <- data.table(merged, key = 'Population')
+# where the population is DD, use Total Population
+merged[.('DD'), subPop := TotalPop]
+# and where the population is MIA, use over 18 Population
+merged[.('MIA'), subPop := Over18]
+# and where the population is MIC, use under 18 Population
+merged[.('MIC'), subPop := Under18]
 
 #Output subMaster .csv file
-write.csv(subMaster, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\subMaster")
+write.csv(subMaster, 
+          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\subMaster",
+          row.names = FALSE)
 
 ##There are multiple HCPCS codes per Service, and so the calculated rates do not end up acurately reflecting the 
 ##totals.  Therefore, they will be re-calculated and added to the dataframes later.

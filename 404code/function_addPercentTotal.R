@@ -1,5 +1,5 @@
 # Function to create new variables, 
-# Serv_Perc_Tot (units per service description as % of total units per CMHSP/FY)
+# Unit_Perc_Tot (units per service description as % of total units per CMHSP/FY)
 # Cost_Perc_Tot (cost per service description as % of total cost per CMHSP/FY)
 
 addPercentTotal <- function(){
@@ -7,24 +7,24 @@ addPercentTotal <- function(){
     # create filtered dataframes for each year; 
     # create % of total units per CMHSP/year variable; 
     # create % of total cost per CMHSP/year variable;
-    # bind Serv_Perc_Tot & Cost_Perc_Tot columns to cmh_yr;
+    # bind Unit_Perc_Tot & Cost_Perc_Tot columns to cmh_yr;
     # stack the years back up for the CMHSP;
     # return 
     library(dplyr)
     cmh_2006 <- filter(subMaster, FY==2006 & CMHSP==CMH)
-    cmh_2006 <- mutate(cmh_2006, Serv_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    cmh_2006 <- mutate(cmh_2006, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     cmh_2007 <- filter(subMaster, FY==2007 & CMHSP==CMH)
-    cmh_2007 <- mutate(cmh_2007, Serv_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    cmh_2007 <- mutate(cmh_2007, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     cmh_2008 <- filter(subMaster, FY==2008 & CMHSP==CMH)
-    cmh_2008 <- mutate(cmh_2008, Serv_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    cmh_2008 <- mutate(cmh_2008, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     cmh_2009 <- filter(subMaster, FY==2009 & CMHSP==CMH)
-    cmh_2009 <- mutate(cmh_2009, Serv_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    cmh_2009 <- mutate(cmh_2009, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     cmh_2010 <- filter(subMaster, FY==2010 & CMHSP==CMH)
-    cmh_2010 <- mutate(cmh_2010, Serv_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    cmh_2010 <- mutate(cmh_2010, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     cmh_2011 <- filter(subMaster, FY==2011 & CMHSP==CMH)
-    cmh_2011 <- mutate(cmh_2011, Serv_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    cmh_2011 <- mutate(cmh_2011, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     cmh_2012 <- filter(subMaster, FY==2012 & CMHSP==CMH)
-    cmh_2012 <- mutate(cmh_2012, Serv_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    cmh_2012 <- mutate(cmh_2012, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
     newCMH <- rbind(cmh_2006, cmh_2007, cmh_2008, cmh_2009, cmh_2010, cmh_2011, cmh_2012)
     return(newCMH)
   }
@@ -56,7 +56,7 @@ addPercentTotal <- function(){
   sub_Muskegon <- percTot(CMH="Muskegon")
   sub_Network180 <- percTot(CMH="Network180")
   sub_Newaygo <- percTot(CMH="Newaygo")
-  sub_NorthCountry <- percTot(CMH="North country")
+  sub_NorthCountry <- percTot(CMH="North Country")
   sub_Northeast <- percTot(CMH="Northeast Michigan")       
   sub_NorthernLakes <- percTot(CMH="Northern Lakes")           
   sub_Northpointe <- percTot(CMH="Northpointe")              
@@ -88,9 +88,9 @@ addPercentTotal <- function(){
 } 
 
 # This version can be used in R but doesn't translate to Rmd
-subMaster <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/subMaster', sep=',', header=TRUE)
+  # subMaster <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/subMaster', sep=',', header=TRUE)
 # Add new columns for units and cost of services as percent of total CMHSP per FY
 # Be sure addPercentTotal function is defined in the working environment
-subMasterPlus <- addPercentTotal()
+  # subMasterPlus <- addPercentTotal()
 # Save the results for easier use...
-write.csv(subMasterPlus, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\subMasterPlus")
+  # write.csv(subMasterPlus, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\subMasterPlus")

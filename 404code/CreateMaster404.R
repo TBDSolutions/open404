@@ -1598,6 +1598,8 @@ Master<-Master[c(1:6,13,7:12)]
 
 #First need to add in fake HCPCS codes so I can create a "Service" variable based on HCPCS code
 
+Master <- subset(Master, is.na(Master$FirstofService.Description) == F)
+
 #To use ifelse, first need to change variables to character
 Master$FirstOfHCPCS.Code<-as.character(Master$FirstOfHCPCS.Code)
 Master$FirstofService.Description<-as.character(Master$FirstofService.Description)
@@ -2015,9 +2017,9 @@ ServiceType <-recode(Master$Service,
                       'Substance Abuse Outpatient'='Outpatient Treatment';
                       'Transportation'='Transportation';
                       'Vocational Services'='Employment Services'")
-table(ServiceType)
+# table(ServiceType)
 
-#attaching "ServiceType" to "Master" dataframe
+# attaching "ServiceType" to "Master" dataframe
 Master<-cbind(Master, ServiceType)
 
 ## Adding PIHP regions to the dataset ##
@@ -2029,7 +2031,7 @@ library(car)
 
 Master$CMHSP<-recode(Master$CMHSP, "'Copper County'='Copper Country';
                      'Networy180'='Network180';
-                     'North country '='North Country'")
+                     'North country '='North Country'; 'North country'='North Country'")
 
 #table(Master$CMHSP)
 
@@ -2098,10 +2100,10 @@ Master<-cbind(Master,PIHP,PIHPname)
 #reordering the columns
 Master<-Master[c(1,17,18,2,3,16,15,4:14)]
 
-#Calculating Units per 1000 to standardize utilization across CMH/PIHPs
+# Calculating Units per 1000 to standardize utilization across CMH/PIHPs
 
-#This makes comparisons between two CMH/PIHPs that have very different
-#population sizes meaningful. Need unique counts per CMHSP per year.
+# This makes comparisons between two CMH/PIHPs that have very different
+# population sizes meaningful. Need unique counts per CMHSP per year.
 
 # Master$Unitsper1000<-(Master$SumOfUnits/(x*1000))
 
@@ -2109,5 +2111,7 @@ Master<-Master[c(1,17,18,2,3,16,15,4:14)]
 # head(Master, n=10)
 
 #Output Master .csv file
-write.csv(Master, file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master")
+write.csv(Master, 
+          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master",
+          row.names = FALSE)
 
