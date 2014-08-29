@@ -39,6 +39,9 @@
 # Percentage of people served receiving this service
   subMaster$Perc_Svd <- round((subMaster$SumOfCases/subMaster$TotalServed)*100, digits = 1)
 
+# Cost PUPM (Per User Per Month)
+  subMaster$CostPUPM <- round(subMaster$SumOfCost/12, digits = 2)
+  
 # Clean up unnecessary variables left from merge
   subMaster$FY.y <- NULL
   subMaster$FY <- subMaster$FY.x
@@ -50,7 +53,7 @@
   subMaster$Key <- NULL
   
 # Reordering the columns
-  subMaster<-subMaster[c(22,1:2,23,3:21)]
+  subMaster<-subMaster[c(22,1:2,23,3:21,24)]
 
 # Output subMaster .csv file
   write.csv(subMaster,
