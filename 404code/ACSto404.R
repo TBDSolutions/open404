@@ -287,7 +287,8 @@ calc404pop <- function(census_key) {
                           FirstOfHCPCS.Code,FirstOfModifier,Code_Mod, Unit_Hours,
                           SumOfCases,SumOfUnits,SumOfCost,
                           CostPerCase,CostPerUnit,UnitPerCase,
-                          Unit_Perc_Tot,Cost_Perc_Tot, CostPUPM,
+                          Unit_Perc_Tot,Cost_Perc_Tot,CostPUPM,
+                          Cost1kSvd,Unit1kSvd,Perc_Svd,
                           Cost1kPop,Srvd1kPop))
   # return the merged and cleaned dataset
   return(merged)

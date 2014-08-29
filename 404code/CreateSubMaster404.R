@@ -30,10 +30,10 @@
   subMaster <- merge(subMaster, unique_06to13, by.x = "Key", by.y = "Key")
 
 # Calculate new variables 
-# Cost per 1,000 people served by the region
+# Cost per 1,000 people served by the CMHSP
   subMaster$Cost1kSvd <- round((subMaster$SumOfCost/subMaster$TotalServed)*1000, digits = 2)
 
-# Units per 1,000 people served by the region
+# Units per 1,000 people served by the CMHSP
   subMaster$Unit1kSvd <- round((subMaster$SumOfUnits/subMaster$TotalServed)*1000, digits = 1)
 
 # Percentage of people served receiving this service

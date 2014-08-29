@@ -11,9 +11,10 @@ data <- getURL("https://raw.githubusercontent.com/j-hagedorn/open404/master/data
 writeLines(data,'temp.csv')
 enriched10to13 <- read.csv('temp.csv')
 
-# Load alt10to12 datafile (with Lifeways corrections for 2012)
-data <- getURL("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/alt10to12",
+# Load alternate10to13 datafile (with Lifeways corrections for 2012)
+data <- getURL("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/alternate10to13",
                ssl.verifypeer=0L, followlocation=1L)
 writeLines(data,'temp.csv')
-alt10to12 <- read.csv('temp.csv')
+alternate10to13 <- read.csv('temp.csv')
 
+levels(subMaster$ServiceType)
