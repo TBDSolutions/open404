@@ -296,7 +296,7 @@ calc404pop <- function(census_key) {
 
 enriched10to13 <- calc404pop(census_key=census_key)
 
-# Output merged10to12 .csv file
+# Output enriched10to13 .csv file
 write.csv(enriched10to13, 
           file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\enriched10to13")
 #####

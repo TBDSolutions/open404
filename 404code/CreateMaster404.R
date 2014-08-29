@@ -26,6 +26,8 @@
 ## When adding future data, just repeat the upload and formatting code described
 ## below, changing the FY code to correspond to the current year being loaded in
 
+createMaster <- function(){
+
 library(plyr)
 
 ##########################################################################################
@@ -48,7 +50,7 @@ dd_2006[dd_2006=='']<-NA
 dd_2006<-dd_2006[rowSums(is.na(dd_2006)) !=ncol(dd_2006),]
 
 #renaming variables
-install.packages('reshape')
+#install.packages('reshape')
 
 library(reshape)
 NewNames<-c(SumofDD.Cases = 'SumOfCases', SumOfDD.Units = 'SumOfUnits', SumofDD.Cost = 'SumOfCost')
@@ -1528,7 +1530,7 @@ Master$UnitType<-gsub("Per session. One night = one session", fixed=TRUE, "Per s
 #For any time ranges, used highest value
 #All values are based on 1.00 = 1 hour
 
-install.packages('car')
+#install.packages('car')
 library("car")
 Unit_Hours <-recode(Master$UnitType,
                     "'' = 'NA';                                                                
@@ -1642,6 +1644,9 @@ Master$FirstOfHCPCS.Code<-ifelse(is.na(Master$FirstOfHCPCS.Code)==TRUE & Master$
 
 # table(Master$FirstOfHCPCS.Code)
 
+# Fix formatting with newline
+Master$FirstOfHCPCS.Code <- gsub(pattern="90791\n", replacement="90791", x=Master$FirstOfHCPCS.Code)
+
 # Checking to make sure there are no missing HCPCS codes
 sum(is.na(Master$FirstOfHCPCS.Code)) #Result is 0
 
@@ -1658,6 +1663,7 @@ Master$FirstofService.Description<-as.factor(Master$FirstofService.Description)
 Master$Code_Mod<-as.factor(Master$Code_Mod)
 #str(Master$FirstOfHCPCS.Code)
 #str(Master$FirstofService.Description)
+
 
 #Master$UnitPerCase.1<-NULL
 
@@ -1772,14 +1778,14 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'S5111'='Family Services';
                  'T1009'='Family Services';
                  'T1015'='Family Services';
-                 'H0006'='Care Coordination';
-                 'H0032'='Care Coordination';
-                 'H0039'='Care Coordination';
-                 'H2021'='Care Coordination';
-                 'H2022'='Care Coordination';
-                 'T1016'='Care Coordination';
-                 'T1017'='Care Coordination';
-                 'T2023'='Care Coordination';
+                 'H0006'='Case Management';
+                 'H0032'='Case Management';
+                 'H0039'='Interdisciplinary Team';
+                 'H2021'='Interdisciplinary Team';
+                 'H2022'='Interdisciplinary Team';
+                 'T1016'='Supports Coordination';
+                 'T1017'='Case Management';
+                 'T2023'='Case Management';
                  'H0023'='Peer Services';
                  'H0038'='Peer Services';
                  'H0046'='Peer Services';
@@ -1944,9 +1950,9 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'X03'='Local Hospitalization';
                  'X04'='Local Hospitalization';
                  'X05'='Ancillary Services / ECT';
-                  'X06'='Ancillary Services / ECT';
-                  'X07'='Ancillary Services / ECT';
-                  'X08'='Ancillary Services / ECT';
+                 'X06'='Ancillary Services / ECT';
+                 'X07'='Ancillary Services / ECT';
+                 'X08'='Ancillary Services / ECT';
                   'X09'='Ancillary Services / ECT';
                   'X10'='Ancillary Services / ECT';
                   'X11'='Ancillary Services / ECT';
@@ -1976,7 +1982,38 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'G0409'='Peer Services';
                  'H0037'='Medication Management';
                  'H2010'='Medication Management';
-                 'H0050'='Outpatient Therapy'")
+                 'H0050'='Outpatient Therapy';
+                 '90785'='Outpatient Therapy';
+                '90791' = 'Assessment';
+                '90792'='Assessment';
+                '90832'='Outpatient Therapy';
+                '90833'='Outpatient Therapy';
+                '90834'='Outpatient Therapy';
+                '90836'='Outpatient Therapy';
+                '90839'='Outpatient Therapy';
+                '90840'='Outpatient Therapy'; 
+                '99334'='Assessment';
+                '99335'='Assessment'; 
+                '99336'='Assessment'; 
+                '99337'='Assessment';
+                '99347'='Assessment';
+                '99348'='Assessment'; 
+                '99349'='Assessment';
+                '99350'='Assessment'; 
+                'S5108'='Behavioral Treatment';
+                '90837'='Outpatient Therapy';
+                '90838'='Assessment';
+                '99324'='Assessment';
+                '99325'='Assessment';
+                '99326'='Assessment';
+                '99327'='Assessment';
+                '99328'='Assessment';
+                '99341'='Assessment';
+                '99342'='Assessment';
+                '99343'='Assessment';
+                '99344'='Assessment';
+                '99345'='Assessment'")
+
 table(Service)
 
 #attaching "Service" to "Master" dataframe
@@ -1988,7 +2025,9 @@ ServiceType <-recode(Master$Service,
                      "'Ancillary Services / ECT'='Hospital-based Services';
                       'Assessment'='Screening & Assessment';
                       'Behavioral Treatment'='Outpatient Treatment';
-                       'Care Coordination'='Care Coordination';
+                       'Case Management'='Care Coordination';
+                      'Supports Coordination'='Care Coordination';
+                      'Interdisciplinary Team'='Care Coordination';
                        'Clubhouse'='Employment Services';
                        'Community Living Supports'='Home & Community Based Services';
                        'Crisis Services'='Crisis and Respite';
@@ -2031,7 +2070,7 @@ library(car)
 
 Master$CMHSP<-recode(Master$CMHSP, "'Copper County'='Copper Country';
                      'Networy180'='Network180';
-                     'North country '='North Country'; 'North country'='North Country'")
+                     'North country '='North Country'")
 
 #table(Master$CMHSP)
 
@@ -2043,7 +2082,7 @@ PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
              'Pathways'='1';
              'AuSable Valley'='2';
              'Manistee-Benzie'='2';
-             'North country'='2';
+             'North Country'='2';
              'Northeast Michigan'='2';
              'Northern Lakes'='2';
              'Allegan'='3';
@@ -2099,6 +2138,11 @@ Master<-cbind(Master,PIHP,PIHPname)
 
 #reordering the columns
 Master<-Master[c(1,17,18,2,3,16,15,4:14)]
+
+return(Master)
+}
+
+Master <- createMaster()
 
 # Calculating Units per 1000 to standardize utilization across CMH/PIHPs
 
