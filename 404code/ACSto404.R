@@ -34,7 +34,6 @@ calc404pop <- function(census_key) {
   
   MI_2012 <- acs.fetch(endyear = 2012, span = 5, geography=MIbyCounty,  
                        variable = c('B01001_001','B09001_001'), col.names = "auto")
-  
   MI_2011 <- acs.fetch(endyear = 2011, span = 5, geography=MIbyCounty,  
                        variable = c('B01001_001','B09001_001'), col.names = "auto")
   MI_2010 <- acs.fetch(endyear = 2010, span = 5, geography=MIbyCounty,  

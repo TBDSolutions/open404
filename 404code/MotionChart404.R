@@ -14,12 +14,11 @@ source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/load
 ##  WRANGLE  ##
 ###############
 
-# Create subset for NMRE
-
+enriched10to13 <- tbl_df(enriched10to13)
 
 df <- 
 enriched10to13 %>%
-  select(FY,PIHPname,CMHSP,Population, enriched10to13$)
+  select(FY,PIHPname,CMHSP,Population,ServiceType,Service, enriched10to13$)
   
   
 summarise(group_by(NMRE_main, FY, Service, ServiceType),
