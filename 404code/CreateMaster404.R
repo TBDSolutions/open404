@@ -2070,9 +2070,9 @@ library(car)
 
 Master$CMHSP<-recode(Master$CMHSP, "'Copper County'='Copper Country';
                      'Networy180'='Network180';
-                     'North country '='North Country'")
+                     'North country '='North Country'; 'North country'='North Country'")
 
-#table(Master$CMHSP)
+#levels(Master$CMHSP)
 
 PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
              'Network180'='3';

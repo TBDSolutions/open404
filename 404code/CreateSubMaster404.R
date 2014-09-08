@@ -6,7 +6,7 @@
   library(dplyr)
 
 ## Create subMaster dataframe, excluding services with 0 cases, units, and cost.
-  subMaster <- data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(2:19)))
+  subMaster <- data.frame(subset(Master, SumOfCases != 0 | SumOfUnits != 0 | SumOfCost != 0, select = c(1:18)))
 
 # Add Cost_Perc_Tot (Annual Line Item Cost as % of Total Cost, per CMHSP/Population)
 # Add Unit_Perc_Tot (Annual Line Item Units as % of Total Units, per CMHSP/Population)
@@ -53,7 +53,7 @@
   subMaster$Key <- NULL
   
 # Reordering the columns
-  subMaster<-subMaster[c(22,1:2,23,3:21,24)]
+  subMaster<-subMaster[c(23,1:2,24,3:22)]
 
 # Output subMaster .csv file
   write.csv(subMaster,
