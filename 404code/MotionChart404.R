@@ -2,7 +2,6 @@
 ## GET DATA  ##
 ###############
 
-
 # Load packages:
 source("https://raw.githubusercontent.com/j-hagedorn/Beachbox/master/functions/function_libraries.R?token=7065685__eyJzY29wZSI6IlJhd0Jsb2I6ai1oYWdlZG9ybi9CZWFjaGJveC9tYXN0ZXIvZnVuY3Rpb25zL2Z1bmN0aW9uX2xpYnJhcmllcy5SIiwiZXhwaXJlcyI6MTQxMDc0NDExN30%3D--c9554711f3501afb9bea3b5d19d446700b96c814")
 libraries(c("RCurl", "dplyr", "googleVis"))
@@ -16,17 +15,24 @@ source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/load
 
 enriched10to13 <- tbl_df(enriched10to13)
 
-df <- 
+hosp <- 
 enriched10to13 %>%
-  select(FY,PIHPname,CMHSP,Population,ServiceType,Service, enriched10to13$)
+  filter(ServiceType=="Hospital-based Services") %>%
+  mutate(CMH_Disability_Service = (paste(CMHSP,Population,Service, sep = "-")) %>%
+  group_by(CMH_Disability_Service) %>%
+  summarise(UnitPerPerson = round((sum(SumOfUnits)/sum(SumOfCases)),digits=1),
+            CostPerPerson = round((sum(SumOfCost)/sum(SumOfCases)),digits=2),
+            CostPerUnit = round((sum(SumOfCost)/sum(SumOfUnits)),digits=2),
+            CostPUPM = round((sum(SumOfCost)/sum(SumOfCases)/12),digits=2),
+            #Cost1kSvd = 
+            #Unit1kSvd =
+            #Perc_Svd =
+            Cost1kPop <- round(SumOfCost/(subPop/1000),digits = 2),
+            Srvd1kPop <- round(SumOfCases/(subPop/1000),digits = 1)) %>%
+  select(FY,PIHPname,CMHSP,Population,ServiceType,Service,enriched10to13$)
   
+#levels(enriched10to13$ServiceType)
   
-summarise(group_by(NMRE_main, FY, Service, ServiceType),
-                     Units = round((sum(SumOfUnits)), digits=2),
-                     UnitPerPerson = round((sum(SumOfUnits)/sum(SumOfCases)),digits=2),
-                     Cost = round(sum(SumOfCost), digits=2),
-                     CostPerPerson = round((sum(SumOfCost)/sum(SumOfCases)),digits=2),
-                     PeopleServed = round(sum(SumOfCases), digits=2))
 
 ####################
 ##  MOTION CHART: ##
