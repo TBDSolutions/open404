@@ -49,11 +49,11 @@
   subMaster$CMHSP.y <- NULL
   subMaster$CMHSP <- subMaster$CMHSP.x
   subMaster$CMHSP.x <- NULL
-  subMaster$TotalServed <- NULL   # rules of tidy data require excluding this
+  #subMaster$TotalServed <- NULL   # rules of tidy data require excluding this, but need it for dplyr
   subMaster$Key <- NULL
   
 # Reordering the columns
-  subMaster<-subMaster[c(23,1:2,24,3:22)]
+  subMaster<-subMaster[c(24,1:2,25,3:23)]
 
 # Output subMaster .csv file
   write.csv(subMaster,

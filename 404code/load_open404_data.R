@@ -17,3 +17,6 @@ data <- getURL("https://raw.githubusercontent.com/j-hagedorn/open404/master/data
 writeLines(data,'temp.csv')
 alternate10to13 <- read.csv('temp.csv')
 
+# Make "data" value null
+data <- NULL
+
