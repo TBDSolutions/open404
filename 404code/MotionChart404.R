@@ -4,7 +4,8 @@
 
 # Load packages:
 source("https://raw.githubusercontent.com/j-hagedorn/Beachbox/master/functions/function_libraries.R?token=7065685__eyJzY29wZSI6IlJhd0Jsb2I6ai1oYWdlZG9ybi9CZWFjaGJveC9tYXN0ZXIvZnVuY3Rpb25zL2Z1bmN0aW9uX2xpYnJhcmllcy5SIiwiZXhwaXJlcyI6MTQxMDc0NDExN30%3D--c9554711f3501afb9bea3b5d19d446700b96c814")
-libraries(c("RCurl", "dplyr", "googleVis"))
+libraries(c("RCurl", "dplyr", "googleVis","devtools"))
+# install_github('rCharts', 'ramnathv')
 
 # Load 404 clean datasets
 source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/load_open404_data.R")
@@ -15,23 +16,21 @@ source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/load
 
 enriched10to13 <- tbl_df(enriched10to13)
 
-hosp <- 
-enriched10to13 %>%
+hosp <- enriched10to13 %>%
   filter(ServiceType=="Hospital-based Services") %>%
-  mutate(CMH_Disability_Service = (paste(CMHSP,Population,Service, sep = "-")) %>%
-  group_by(CMH_Disability_Service) %>%
+  mutate(CMH_Disability_Service = as.factor(paste(CMHSP,Population,Service, sep = "-"))) %>%
+  group_by(FY,PIHPname,CMHSP,Population,Service,CMH_Disability_Service) %>%
+  select(FY,CMH_Disability_Service,PIHPname,CMHSP,Population,Service,
+         SumOfUnits,SumOfCases,SumOfCost,TotalServed,subPop) %>%
   summarise(UnitPerPerson = round((sum(SumOfUnits)/sum(SumOfCases)),digits=1),
             CostPerPerson = round((sum(SumOfCost)/sum(SumOfCases)),digits=2),
             CostPerUnit = round((sum(SumOfCost)/sum(SumOfUnits)),digits=2),
             CostPUPM = round((sum(SumOfCost)/sum(SumOfCases)/12),digits=2),
-            #Cost1kSvd = 
-            #Unit1kSvd =
-            #Perc_Svd =
-            Cost1kPop <- round(SumOfCost/(subPop/1000),digits = 2),
-            Srvd1kPop <- round(SumOfCases/(subPop/1000),digits = 1)) %>%
-  select(FY,PIHPname,CMHSP,Population,ServiceType,Service,enriched10to13$)
-  
-#levels(enriched10to13$ServiceType)
+            Cost1kSvd = round((sum(SumOfCost)/sum(TotalServed)*1000), digits = 2),
+            Unit1kSvd = round((sum(SumOfUnits)/sum(TotalServed)*1000), digits = 1),
+            Perc_Svd = round((sum(SumOfCases)/sum(TotalServed)*100), digits = 1),
+            Cost1kPop = round(sum(SumOfCost)/(sum(subPop)/1000),digits = 2),
+            Srvd1kPop = round(sum(SumOfCases)/(sum(subPop)/1000),digits = 1)) 
   
 
 ####################
@@ -71,11 +70,18 @@ customState <-'
 ##  SETTINGs      ##
 ####################
 
-library(googleVis)
-motionNMRE <- gvisMotionChart(NMRE_df, idvar='Service', timevar='FY', 
+motionhosp <- gvisMotionChart(hosp, idvar='CMH_Disability_Service', timevar='FY', 
                               options=list(height=600,width=1000, 
                                            state=customState))
 
-plot(motionNMRE)
+plot(motionhosp)
 
 # cat(motionNMRE$html$chart, file="NMRE_motion.html")
+
+hosp13 <- hosp %>%
+  filter(FY==2013)
+
+Bubble <- gvisBubbleChart(hosp13, idvar="CMH_Disability_Service", 
+                          xvar="Perc_Svd", yvar="Cost1kSvd",
+                          colorvar="Service", sizevar="CostPerPerson")
+plot(Bubble)
