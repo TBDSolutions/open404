@@ -101,6 +101,10 @@ hosp4 <- enriched10to13 %>%
 n3 <- nPlot(Perc_Svd ~ CostPerUnit, group = "Population", data = hosp4, type = 'scatterChart')
 n3$xAxis(axisLabel = 'Cost per day for local psych hosp, 2013', width = 62)
 n3$yAxis(axisLabel = '% beneficiaries using local psych hosp, 2013', width = 62)
+#n3$chart(size = '#! function(d){return d.var} !#')
+#p2$chart(tooltipContent = "#! function(key, x, y, e){ 
+#return e.point.screenName + ' Followers: ' + e.point.followersCount +' Friends: ' + e.point.friendsCount
+#} !#")
 n3
 
 n3$save('UnitCostVsPercUse.html', standalone = TRUE)
@@ -134,4 +138,32 @@ n4$setTemplate(script = system.file(
   package = "rCharts"
 ))
 n4
+
+
+
+# Line plot
+pc <- subMaster %>%
+  filter(FirstofService.Description=="Personal Care in Licensed Specialized Residential Setting") %>%
+  #mutate(CMH_Disability = as.factor(paste(CMHSP,Population, sep = "-"))) %>%
+  group_by(FY,CMHSP) %>%
+  select(FY,CMHSP,Service,SumOfUnits,SumOfCases,SumOfCost,TotalServed) %>%
+  summarise(#UnitPerPerson = round((sum(SumOfUnits)/sum(SumOfCases)),digits=1),
+    #CostPerPerson = round((sum(SumOfCost)/sum(SumOfCases)),digits=2),
+    #CostPerUnit = round((sum(SumOfCost)/sum(SumOfUnits)),digits=2),
+    #CostPUPM = round((sum(SumOfCost)/sum(SumOfCases)/12),digits=2),
+    #Cost1kSvd = round((sum(SumOfCost)/max(TotalServed)*1000), digits = 2)#,
+    #Unit1kSvd = round((sum(SumOfUnits)/max(TotalServed)*1000), digits = 1),
+    Perc_Svd = round((sum(SumOfCases)/min(TotalServed)*100), digits = 1)#,
+    #Cost1kPop = round(sum(SumOfCost)/(max(subPop)/1000),digits = 2),
+    #Srvd1kPop = round(sum(SumOfCases)/(max(subPop)/1000),digits = 1)
+  ) 
+
+p1 <- nPlot(Perc_Svd ~ FY, 
+            group = "CMHSP",
+            data = hosp3, 
+            type = 'lineChart') # OR 'lineWithFocusChart'
+p1$yAxis(axisLabel = "% served in licensed residential", width = 62)
+p1$xAxis(axisLabel = "Year")
+p1
+p1$save('PersonalCare06to13.html', standalone = TRUE)
 
