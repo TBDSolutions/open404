@@ -9,11 +9,11 @@ svs_groups <- summarize(group_by(Master, FirstOfHCPCS.Code, FirstofService.Descr
                         n_distinct(FirstofService.Description))
 
 svs_groups <- 
-  Master %>%
+  subMaster %>%
   #filter(FirstofService.Description=='Assessment for Autism') %>%
-  group_by(Service,FirstofService.Description,FirstOfHCPCS.Code) %>%
+  group_by(ServiceType,Service,FirstofService.Description,FirstOfHCPCS.Code) %>%
   summarize(n_distinct(FirstOfHCPCS.Code)) %>%
-  arrange(Service)
+  arrange(ServiceType)
 
 svs_groups <- arrange(svs_groups, FirstOfHCPCS.Code, FirstofService.Description)
 

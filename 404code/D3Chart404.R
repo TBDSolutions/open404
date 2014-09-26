@@ -227,3 +227,15 @@ a1$yAxis(axisLabel = "Cost per unit, Local Acute Psych Inpt", width = 62)
 a1$xAxis(axisLabel = "Year")
 a1
 a1$save('localacute06to13.html', standalone = TRUE)
+
+
+
+#######
+# PARAMETERS...
+
+# interactive dropdown controls:
+
+$addControls("x", value = "CostPerUnit", values = names(comphosp))
+$addControls("y", value = "UnitPerPerson", values = names(comphosp))
+$addControls("color", value = "FirstofService.Description", values = names(comphosp))
+$addFilters("Population")
