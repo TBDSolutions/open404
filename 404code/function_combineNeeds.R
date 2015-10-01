@@ -1,5 +1,6 @@
 combineNeeds <- function(directory) {
   ## 'directory' is a char vector of len 1 indicating location of CSV files
+  library(readxl)
   files <- list.files(directory,full.names = TRUE) # make list of full file names
   n <- length(files)
   df <- data.frame() #create empty data frame
@@ -78,7 +79,9 @@ combineNeeds <- function(directory) {
   return(df)
 }
 
-needs <- combineNeeds(directory = "network_adequacy/data/needsAssess")
+needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessment/data")
+
+# directory <- "C:/Users/Josh/SkyDrive/Projects/NeedsAssessment/data"
 
 needphase <-
 needs %>%
