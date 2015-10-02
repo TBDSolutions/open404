@@ -6,7 +6,8 @@ combineNeeds <- function(directory) {
   df <- data.frame() #create empty data frame
   for (i in 1:n) {
     # loop through files, rbinding them together
-    x <- read.csv(files[i], header = F, fill = T, na.strings = "", strip.white = T)
+    
+    try(x <- read_excel(files[i],  col_names = F, sheet = 1))
     CMHSP <- as.character(x[1,6])
     FY <- as.character(x[2,2])
     library(stringr)
@@ -15,14 +16,19 @@ combineNeeds <- function(directory) {
     x <- x[-8:-10,] #remove rows 8-10
     library(dplyr)
     library(tidyr)
+    try(
     x <-
       x %>%
       mutate(CMHSP = CMHSP, FY = FY) %>%
-      select(FY, CMHSP, Item = V1, Desc = V2, DD = V3, MIA = V4, MIC = V5, Other = V6) %>%
+      select(FY, CMHSP, Item = X1, Desc = X2, DD = X3, MIA = X4, MIC = X5, Other = X6) %>%
       filter(Item != "2" & Item != "17") %>%
       gather(Population, People, DD:Other) 
-      
-    df <- rbind(df, x)
+    )
+    
+    ifelse(ncol(df) == ncol(x),
+           yes = df <- rbind(df, x),
+           no = print(paste0("Messy format for ", CMHSP, FY, " file.")))
+    
   }
   df <- subset(df, is.na(Desc) == F)
   df <-
@@ -30,7 +36,7 @@ combineNeeds <- function(directory) {
     mutate(Item = factor(df$Item),
            Desc = factor(df$Desc))
   library(car)
-  df$Name <- recode(needs$Desc,"'Total # of people who telephoned or walked in'='total_in';
+  df$Name <- recode(df$Desc,"'Total # of people who telephoned or walked in'='total_in';
                                 '# referred out due to non MH needs (of row 1)'='out_nonMH';
                                 '# seeking substance abuse services (of row 1)'='seeking_SUD';
                                 'Total # who requested services the CMHSP provides (of row1)'='req_CMHsvc';
