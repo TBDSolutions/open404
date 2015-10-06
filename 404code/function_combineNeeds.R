@@ -1,21 +1,24 @@
 combineNeeds <- function(directory) {
   ## 'directory' is a char vector of len 1 indicating location of CSV files
   library(readxl)
+  library(dplyr)
+  library(tidyr)
+  library(stringr)
   files <- list.files(directory,full.names = TRUE) # make list of full file names
   n <- length(files)
   df <- data.frame() #create empty data frame
+  
   for (i in 1:n) {
     # loop through files, rbinding them together
     
     try(x <- read_excel(files[i],  col_names = F, sheet = 1))
     CMHSP <- as.character(x[1,6])
     FY <- as.character(x[2,2])
-    library(stringr)
+    
     FY <- str_sub(FY, start = -4L, end = -1L) #extract last 4 chars for Fiscal Year
     x <- x[-1:-6,] #remove rows 1-6
     x <- x[-8:-10,] #remove rows 8-10
-    library(dplyr)
-    library(tidyr)
+    
     try(
     x <-
       x %>%
@@ -30,6 +33,7 @@ combineNeeds <- function(directory) {
            no = print(paste0("Messy format for ", CMHSP, FY, " file.")))
     
   }
+  
   df <- subset(df, is.na(Desc) == F)
   df <-
     df %>%
