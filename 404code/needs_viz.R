@@ -1,70 +1,70 @@
 # NEEDS ASSMT
-library(rCharts)
-needs12 <-
-  needspread %>%
-  filter(FY == 2012)
-n1 <- nPlot(throughput ~ CMHSP, 
-            group = "Population", 
-            data = needs12, 
-            type = "multiBarChart",
-            #ylab = "Cost per 1,000 beneficiaries",
-            id = "Needs Assessment")
-n1$xAxis(axisLabel = 'CMHSP', width = 62)
-n1$yAxis(axisLabel = 'Select y:', width = 62)
-n1$addControls("y", value = "throughput", 
-               values = c("throughput","in_nonMH","in_req","req_screenout",
-                          "assmt_ffs_HP","inelig_rfrMH","elig_urg_imm","elig_wait"))
-n1$chart(color = c("#85D4E3", "#F4B5BD", "#9C964A", "#CDC08C", "#FAD77B"),
-         forceY = c(0,100))
-n1
-require(base64enc)
-n1$save('charts/NeedsAssess_Bar.html', standalone = TRUE)
+# library(rCharts)
+# needs12 <-
+#   needspread %>%
+#   filter(FY == 2012)
+# n1 <- nPlot(throughput ~ CMHSP, 
+#             group = "Population", 
+#             data = needs12, 
+#             type = "multiBarChart",
+#             #ylab = "Cost per 1,000 beneficiaries",
+#             id = "Needs Assessment")
+# n1$xAxis(axisLabel = 'CMHSP', width = 62)
+# n1$yAxis(axisLabel = 'Select y:', width = 62)
+# n1$addControls("y", value = "throughput", 
+#                values = c("throughput","in_nonMH","in_req","req_screenout",
+#                           "assmt_ffs_HP","inelig_rfrMH","elig_urg_imm","elig_wait"))
+# n1$chart(color = c("#85D4E3", "#F4B5BD", "#9C964A", "#CDC08C", "#FAD77B"),
+#          forceY = c(0,100))
+# n1
+# require(base64enc)
+# n1$save('charts/NeedsAssess_Bar.html', standalone = TRUE)
 
 # Process
-proc <- nPlot(Change ~ CMHSP, 
-              group = "Phase", 
-              data = needphase, 
-              type = "multiBarChart",
-              id = "Needs Assessment")
-proc$xAxis(axisLabel = 'CMHSP', width = 62)
-proc$yAxis(axisLabel = 'People who reached phase', width = 62)
-proc$addFilters("Population")
-proc$chart(forceY = c(-100,0))
-proc
-proc$save('charts/AccessProcess_Bar.html', standalone = TRUE)
-
-proc <- nPlot(Running ~ Phase, 
-              group = "CMHSP",
-              data = needphase, 
-              type = 'lineChart') # OR 'lineWithFocusChart'
-proc$yAxis(axisLabel = "% of starting population", width = 62)
-proc$xAxis(axisLabel = "Phase of Access", width = 62)
-proc$addFilters("Population")
-proc
-proc$save('charts/AccessProcess_Line.html', standalone = TRUE)
-
-needphase$CMHpop <- as.factor(needphase$CMHpop)
-BottleRocket <- c("#A42820", "#5F5647", "#9B110E", "#3F5151", "#4E2A1E", "#550307", "#0C1707")
-
-needphaseCMH %>%
-  filter(FY == 2013 & PIHPname == "LRP") %>%
-  droplevels %>%
-  ggvis(x = ~Phase, y = ~Running, stroke = ~CMHSP) %>%
-  layer_points(fill = ~CMHSP) %>%
-  layer_lines() %>%
-  add_axis("x", title = "Access Phase") %>%
-  add_axis("y", title = "% of starting population (2013)") %>%
-  scale_numeric("y",domain = c(0,100))
-
-needphaseCMH %>%
-  filter(FY == 2014 & PIHPname == "MSHN") %>%
-  droplevels %>%
-  ggvis(x = ~Phase, y = ~Running, stroke = ~CMHSP) %>%
-  layer_points(fill = ~CMHSP) %>%
-  layer_lines() %>%
-  add_axis("x", title = "Access Phase") %>%
-  add_axis("y", title = "% of starting population (2014)") %>%
-  scale_numeric("y",domain = c(0,100))
+# proc <- nPlot(Change ~ CMHSP, 
+#               group = "Phase", 
+#               data = needphase, 
+#               type = "multiBarChart",
+#               id = "Needs Assessment")
+# proc$xAxis(axisLabel = 'CMHSP', width = 62)
+# proc$yAxis(axisLabel = 'People who reached phase', width = 62)
+# proc$addFilters("Population")
+# proc$chart(forceY = c(-100,0))
+# proc
+# proc$save('charts/AccessProcess_Bar.html', standalone = TRUE)
+# 
+# proc <- nPlot(Running ~ Phase, 
+#               group = "CMHSP",
+#               data = needphase, 
+#               type = 'lineChart') # OR 'lineWithFocusChart'
+# proc$yAxis(axisLabel = "% of starting population", width = 62)
+# proc$xAxis(axisLabel = "Phase of Access", width = 62)
+# proc$addFilters("Population")
+# proc
+# proc$save('charts/AccessProcess_Line.html', standalone = TRUE)
+# 
+# needphase$CMHpop <- as.factor(needphase$CMHpop)
+# BottleRocket <- c("#A42820", "#5F5647", "#9B110E", "#3F5151", "#4E2A1E", "#550307", "#0C1707")
+# 
+# needphaseCMH %>%
+#   filter(FY == 2013 & PIHPname == "LRP") %>%
+#   droplevels %>%
+#   ggvis(x = ~Phase, y = ~Running, stroke = ~CMHSP) %>%
+#   layer_points(fill = ~CMHSP) %>%
+#   layer_lines() %>%
+#   add_axis("x", title = "Access Phase") %>%
+#   add_axis("y", title = "% of starting population (2013)") %>%
+#   scale_numeric("y",domain = c(0,100))
+# 
+# needphaseCMH %>%
+#   filter(FY == 2014 & PIHPname == "MSHN") %>%
+#   droplevels %>%
+#   ggvis(x = ~Phase, y = ~Running, stroke = ~CMHSP) %>%
+#   layer_points(fill = ~CMHSP) %>%
+#   layer_lines() %>%
+#   add_axis("x", title = "Access Phase") %>%
+#   add_axis("y", title = "% of starting population (2014)") %>%
+#   scale_numeric("y",domain = c(0,100))
 
 ## PARALLEL SETS
 
