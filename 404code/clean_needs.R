@@ -7,7 +7,8 @@ library(ggvis)
 source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/function_combineNeeds_v2.R")
 
 needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessment/data")
-
+# Others doing this would have to download .xls from the folder at:
+# "https://github.com/j-hagedorn/open404/tree/master/data/needs"
 
 # Recode years
   # levels(needs$FY)
