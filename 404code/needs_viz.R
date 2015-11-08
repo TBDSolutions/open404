@@ -81,14 +81,6 @@ needs %>%
 
 ## 
 
-library(googleVis) 
-needSankey <-  
-  gvisSankey(need_network, from="from", to="to", weight="people",
-             options=list(width=800, height=600,
-                          sankey="{link: {color: { fill: '#d799ae' } },
-                               node: { color: { fill: '#a61d4c' },
-                               label: { color: '#871b47' } }}"))
-plot(needSankey)
 
     
 library(networkD3)
@@ -112,12 +104,28 @@ sankeyNetwork(Links = n, Nodes = name_df,
               width = 700,
               fontSize = 12, nodeWidth = 30)
 
-sankeyNetwork(Links = need_network,
-              Nodes = as.data.frame(need_network$from),
-              Source = "from",
-              Target = "to", 
-              Value = "people",
-              fontSize = 12, nodeWidth = 30)
+# make link ids for all levels of to/from options
+links <- unique(c(levels(need_network$from),
+                  levels(need_network$to)))
+name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
+
+# Join link IDs to need_network df
+n <- need_network %>%
+  left_join(name_df, by = c("from" = "name")) %>%
+  rename(from_id  = id) %>%
+  left_join(name_df, by = c("to" = "name")) %>%
+  rename(to_id = id)
+
+sankeyNetwork(Links = n, Nodes = name_df, 
+              Source = "from_id",
+              Target = "to_id", 
+              Value = "people", 
+              NodeID = "name",
+              units = "persons",
+              fontSize = 12, 
+              nodeWidth = 30,
+              width = 700
+              )
 
 
 URL <- "https://cdn.rawgit.com/christophergandrud/networkD3/master/JSONdata/energy.json"

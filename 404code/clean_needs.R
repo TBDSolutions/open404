@@ -1,7 +1,6 @@
-
+library(plyr)
 library(dplyr)
 library(tidyr)
-library(ggvis)
 
 # Source function from GitHub
 source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/function_combineNeeds_v2.R")
@@ -124,12 +123,12 @@ needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessme
 # droplevels(needs)
 # levels(as.factor(needs$CMHSP))
  
-# tst <-
-# needs %>%
-#   group_by(CMHSP, FY) %>%
-#   summarise(n = n()) %>%
-#   group_by(CMHSP) %>%
-#   summarise(n = n())
+tst <-
+needs %>%
+  group_by(CMHSP, FY) %>%
+  summarise(n = n()) %>%
+  group_by(CMHSP, FY) %>%
+  summarise(n = n())
 
   needs$PIHP<-recode(needs$CMHSP, "'Copper Country'='1';
                         'Network180'='3'; 
@@ -199,8 +198,19 @@ needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessme
   
 # Order factor for phase
 library(gdata)
-needs$Phase <- reorder(needs$Phase, new.order=c("Start","Entry","Screening","Eligibility","Waiting"))
+needs$Phase <- reorder(needs$Phase, new.order=c("Start","Entry","Screening","Eligibility","Placement","Waiting"))
 
 needs <- needs %>% select(FY,PIHP:PIHPname,CMHSP:Undup)
 
+needs$People[is.na(needs$People)] <- 0 # Replace NAs with zeroes
 
+# Make a df p
+
+# tst <- needs %>% select(FY, PIHPname, CMHSP, Population, Phase, Name, People)
+# 
+# tst <- ddply(tst, 
+#              c("FY", "PIHPname", "CMHSP", "Population", "Phase", "Name"), 
+#              summarise,
+#              n = sum(People),
+#              .drop = F
+#              )
