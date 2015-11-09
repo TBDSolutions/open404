@@ -123,12 +123,12 @@ needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessme
 # droplevels(needs)
 # levels(as.factor(needs$CMHSP))
  
-tst <-
-needs %>%
-  group_by(CMHSP, FY) %>%
-  summarise(n = n()) %>%
-  group_by(CMHSP, FY) %>%
-  summarise(n = n())
+# tst <-
+# needs %>%
+#   group_by(CMHSP, FY) %>%
+#   summarise(n = n()) %>%
+#   group_by(CMHSP, FY) %>%
+#   summarise(n = n())
 
   needs$PIHP<-recode(needs$CMHSP, "'Copper Country'='1';
                         'Network180'='3'; 
