@@ -1,307 +1,430 @@
-"","ServiceType","Service","FirstofService.Description","FirstOfHCPCS.Code","Modifiers"
-"1","Care Coordination","Case Management","Monitoring of Treatment - Clinician","H0032",1
-"2","Care Coordination","Case Management","Nursing Home Mental Health Monitoring","T1017",1
-"3","Care Coordination","Case Management","Substance Abuse: Case Management","H0006",1
-"4","Care Coordination","Case Management","Targeted Case Management ","T1017",1
-"5","Care Coordination","Case Management","Targeted Case Management (Children's Waiver)","T2023",1
-"6","Care Coordination","Case Management","Treatment Planning","H0032",1
-"7","Care Coordination","Fiscal Intermediary Services","Fiscal Intermediary Services","T2025",1
-"8","Care Coordination","Interdisciplinary Team","Assertive Community Treatment (ACT)","H0039",1
-"9","Care Coordination","Interdisciplinary Team","Wraparound","H2021",1
-"10","Care Coordination","Interdisciplinary Team","Wraparound","H2022",1
-"11","Care Coordination","Interdisciplinary Team","Wraparound (SED Waiver)","H2022",2
-"12","Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0023",1
-"13","Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0038",1
-"14","Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0046",1
-"15","Care Coordination","Peer Services","Peer Directed and Operated Support Services","X30",1
-"16","Care Coordination","Peer Services","Substance Abuse: Recovery Support Services","G0409",1
-"17","Care Coordination","Peer Services","Substance Abuse: Recovery Support Services","H0038",1
-"18","Care Coordination","Peer Services","Substance Abuse: Recovery Support Services","T1012",1
-"19","Care Coordination","Supports Coordination","Supports Coordination","T1016",1
-"20","Care Coordination","Supports Coordination","Supports Coordination/Wrap Facilitation","T1016",1
-"21","Crisis and Respite","Crisis Services","Crisis Intervention","H0030",1
-"22","Crisis and Respite","Crisis Services","Crisis Intervention","H2011",1
-"23","Crisis and Respite","Crisis Services","Crisis Intervention","H2020",1
-"24","Crisis and Respite","Crisis Services","Crisis Intervention","T2034",1
-"25","Crisis and Respite","Crisis Services","Crisis Residential Services","H0018",1
-"26","Crisis and Respite","Crisis Services","Intensive Crisis Stabilization-Enrolled Program","S9484",1
-"27","Crisis and Respite","Crisis Services","Substance Abuse: Residential","H0018",1
-"28","Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","X33",1
-"29","Crisis and Respite","Respite","Respite","H0045",1
-"30","Crisis and Respite","Respite","Respite","S5150",1
-"31","Crisis and Respite","Respite","Respite","S5151",1
-"32","Crisis and Respite","Respite","Respite (Children's Waiver)","H0045",2
-"33","Crisis and Respite","Respite","Respite (Children's Waiver)","S5151",1
-"34","Crisis and Respite","Respite","Respite Care","T2036",1
-"35","Crisis and Respite","Respite","Respite Care","T2037",1
-"36","Crisis and Respite","Respite","Respite Care in the Home (LPN) (Children's Waiver)","S9125",1
-"37","Crisis and Respite","Respite","Respite Care in the Home (RN) (Children's Waiver)","S9125",1
-"38","Employment Services","Clubhouse","Clubhouse Psychosocial Rehabilitation Programs ","H2030",1
-"39","Employment Services","Skill-Building/Non-Vocational","Skill-Building and Out of Home Non Vocational Habilitation","H2014",1
-"40","Employment Services","Vocational Services","Out of Home Prevocational Service","T2015",1
-"41","Employment Services","Vocational Services","Supported Employment Services","H2023",2
-"42","Equipment","Equipment","C/O for Orthotic/Prosth Use ","97762",1
-"43","Equipment","Equipment","C/O for Orthotic/Prosth Use  or Physical Therapy","97762",1
-"44","Equipment","Equipment","Enhanced Medical Equipment-Supplies","E1399",1
-"45","Equipment","Equipment","Enhanced Medical Equipment-Supplies","S5199",1
-"46","Equipment","Equipment","Enhanced Medical Equipment-Supplies","T2028",1
-"47","Equipment","Equipment","Enhanced Medical Equipment-Supplies","T2029",1
-"48","Equipment","Equipment","Enhanced Medical Equipment-Supplies","T2039",1
-"49","Equipment","Equipment","Environmental Modification ","S5165",1
-"50","Equipment","Equipment","Goods and Services ","T5999",2
-"51","Equipment","Equipment","Personal Emergency Response System (PERS)","S5160",1
-"52","Equipment","Equipment","Personal Emergency Response System (PERS)","S5161",1
-"53","Equipment","Equipment","Prosthetic Training (Children's Waiver)","97761",1
-"54","Equipment","Equipment","Wraparound Services","T5999",1
-"55","Home & Community Based Services","Community Living Supports","Chore Services","S5120",1
-"56","Home & Community Based Services","Community Living Supports","Community Living Supports (15 Minutes)","H2015",1
-"57","Home & Community Based Services","Community Living Supports","Community Living Supports (15 Minutes) (SED Waiver)","H2015",1
-"58","Home & Community Based Services","Community Living Supports","Community Living Supports in Independent living/own home","H0043",1
-"59","Home & Community Based Services","Community Living Supports","Foster Care","S5140",1
-"60","Home & Community Based Services","Community Living Supports","Foster Care","S5145",1
-"61","Home & Community Based Services","Community Living Supports","Home Based Services","H0036",2
-"62","Home & Community Based Services","Community Living Supports","Home Based Services","H2033",1
-"63","Home & Community Based Services","Community Living Supports","Home Care Training, Non-Family (Children's Waiver)","S5116",1
-"64","Home & Community Based Services","Community Living Supports","Housing Assistance","T2038",1
-"65","Home & Community Based Services","Residential Treatment","Community Living Supports (Daily)","H2016",3
-"66","Home & Community Based Services","Residential Treatment","Personal Care in Licensed Specialized Residential Setting","T1020",3
-"67","Home & Community Based Services","Residential Treatment","Reidential Room and Board","S9976",1
-"68","Home & Community Based Services","Residential Treatment","Substance Abuse Services: Residential Room and Board","S9976",1
-"69","Home & Community Based Services","Residential Treatment","Substance Abuse: Residential","H0019",1
-"70","Hospital-based Services","Ancillary Services / ECT","Additional Codes-ECT Anesthesia","00104",1
-"71","Hospital-based Services","Ancillary Services / ECT","Additional Codes-ECT Anesthesia","104",1
-"72","Hospital-based Services","Ancillary Services / ECT","Additional Codes-ECT Facility Charge","X27",1
-"73","Hospital-based Services","Ancillary Services / ECT","Additional Codes-ECT Physician","90870",1
-"74","Hospital-based Services","Ancillary Services / ECT","ECT Anesthesia","X28",1
-"75","Hospital-based Services","Ancillary Services / ECT","Inpatient Hospital Ancillary Services - Emergency Room","X22",1
-"76","Hospital-based Services","Ancillary Services / ECT","Inpatient Hospital Ancillary Services - Laboratory","X10",1
-"77","Hospital-based Services","Ancillary Services / ECT","Inpatient Hospital Ancillary Services - Psychiatric/Psychological Treatments/Services","X14",1
-"78","Hospital-based Services","Ancillary Services / ECT","Inpatient Hospital Ancillary Services - Respiratory Services","X18",1
-"79","Hospital-based Services","Local Hospitalization","Local Psychiatric Hospital - Acute Community PT73","X04",1
-"80","Hospital-based Services","Local Hospitalization","Local Psychiatric Hospital/IMD PT68","X03",1
-"81","Hospital-based Services","State Hospitalization","State Psychiatric Hospital - Inpatient PT22","X02",1
-"82","Hospital-based Services","State Mental Retardation Facility","State Mental Retardation Facility - Inpatient (ICF/MR) PT65","X01",1
-"83","Hospital-based Services","Sub-Acute Detoxification","Substance Abuse: Sub-Acute Detoxification","H0010",1
-"84","Hospital-based Services","Sub-Acute Detoxification","Substance Abuse: Sub-Acute Detoxification","H0012",1
-"85","Medication","Medication Administration","Additional Codes-Physician Services  Medication Administration","99211",1
-"86","Medication","Medication Administration","Medicaition Administration (Children's Waiver)","99506",1
-"87","Medication","Medication Administration","Medication Administration","96372",1
-"88","Medication","Medication Administration","Medication Administration","99506",1
-"89","Medication","Medication Administration","Medication Management","99605",1
-"90","Medication","Medication Administration","Psychiatric Evaluation and Medicaid Management","99211",1
-"91","Medication","Medication Management","Comprehensive Medication Services - EBP only","H2010",1
-"92","Medication","Medication Management","Medication Review ","90862",1
-"93","Medication","Medication Management","Medication Review ","M0064",1
-"94","Medication","Medication Management","Substance Abuse: Medication Review","90862",1
-"95","Medication","Pharmaceuticals","Enhanced Medical Supplies or Pharmacy","T1999",1
-"96","Medication","Pharmaceuticals","Pharmacy (Drugs and Other Biologicals)","X31",1
-"97","Medication","Pharmaceuticals","Substance Abuse: Methadone","H0020",1
-"98","Medication","Pharmaceuticals","Substance Abuse: Pharmalogical Support - Suboxane","H0033",1
-"99","Other","Other","Aggregate for 'J' Codes","ALL",1
-"100","Other","Other","Other","X34",1
-"101","Outpatient Treatment","Behavioral Treatment","Applied Behavioral Intervention (ABI).","H2019",1
-"102","Outpatient Treatment","Behavioral Treatment","Behavior Services","H2019",2
-"103","Outpatient Treatment","Behavioral Treatment","Behavior Treatment Plan Review","H2000",1
-"104","Outpatient Treatment","Behavioral Treatment","Behavior Treatment Plan Review - Monitoring Activities","H2000",1
-"105","Outpatient Treatment","Behavioral Treatment","Early Intensive Behavioral Intervention (EIBI)","H2019",1
-"106","Outpatient Treatment","Behavioral Treatment","Home Care Training to Home Care Client","S5108",1
-"107","Outpatient Treatment","Family Services","Family Psycho-Education - EBP","T1015",1
-"108","Outpatient Treatment","Family Services","Family Training","S5111",3
-"109","Outpatient Treatment","Family Services","Family Training - EBP","S5110",1
-"110","Outpatient Treatment","Family Services","Family Training (SED Waiver)","S5111",1
-"111","Outpatient Treatment","Family Services","Family Training/Support EBP only","G0177",1
-"112","Outpatient Treatment","Family Services","Substance Abuse: Child Sitting Services","T1009",1
-"113","Outpatient Treatment","Outpatient Therapy","Assessment","90833",1
-"114","Outpatient Treatment","Outpatient Therapy","Assessment","90836",1
-"115","Outpatient Treatment","Outpatient Therapy","Interactive Complexity - Add On Code","90785",1
-"116","Outpatient Treatment","Outpatient Therapy","Mental Health: Outpatient Care","90832",1
-"117","Outpatient Treatment","Outpatient Therapy","Mental Health: Outpatient Care","90834",1
-"118","Outpatient Treatment","Outpatient Therapy","Mental Health: Outpatient Care","90837",1
-"119","Outpatient Treatment","Outpatient Therapy","Psychotherapy for Crisis Each Additional 30 Minutes","90840",1
-"120","Outpatient Treatment","Outpatient Therapy","Psychotherapy for Crisis First 60 Minutes","90839",1
-"121","Outpatient Treatment","Outpatient Therapy","Substance abuse: Outpatient Care","90832",1
-"122","Outpatient Treatment","Outpatient Therapy","Substance abuse: Outpatient Care","90834",1
-"123","Outpatient Treatment","Outpatient Therapy","Substance abuse: Outpatient Care","90837",1
-"124","Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90846",1
-"125","Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90847",1
-"126","Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90853",1
-"127","Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90857",1
-"128","Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","H0050",1
-"129","Outpatient Treatment","Outpatient Therapy","Substance Abuse: Psychotherapy (Individual Therapy)","90826",1
-"130","Outpatient Treatment","Outpatient Therapy","Therapy-Family Therapy","90846",1
-"131","Outpatient Treatment","Outpatient Therapy","Therapy-Family Therapy","90847",1
-"132","Outpatient Treatment","Outpatient Therapy","Therapy-Family Therapy","90849",2
-"133","Outpatient Treatment","Outpatient Therapy","Therapy-Group Therapy","90853",1
-"134","Outpatient Treatment","Outpatient Therapy","Therapy-Group Therapy","90857",1
-"135","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90810",1
-"136","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90812",1
-"137","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90814",1
-"138","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90815",1
-"139","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90816",1
-"140","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90817",1
-"141","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90818",1
-"142","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90819",1
-"143","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90821",1
-"144","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90822",1
-"145","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90823",1
-"146","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90824",1
-"147","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90826",1
-"148","Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90827",1
-"149","Outpatient Treatment","Prevention","Prevention Services - Direct Model","H0025",1
-"150","Outpatient Treatment","Prevention","Prevention Services - Direct Model","S9482",1
-"151","Outpatient Treatment","Prevention","Prevention Services - Direct Model ","T1027",1
-"152","Outpatient Treatment","Prevention","Prevention Services - Direct Model ","T2024",1
-"153","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Care","H0015",1
-"154","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Care","H2035",1
-"155","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Care","H2036",1
-"156","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90804",1
-"157","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90806",1
-"158","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90807",1
-"159","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90808",1
-"160","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","H0004",1
-"161","Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","H0005",1
-"162","Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90804",1
-"163","Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90805",1
-"164","Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90806",1
-"165","Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90807",1
-"166","Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90808",1
-"167","Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90809",1
-"168","Physical Health Services","Health Services","Additional Codes-Physician Services","99203",1
-"169","Physical Health Services","Health Services","Additional Codes-Physician Services","99205",1
-"170","Physical Health Services","Health Services","Additional Codes-Physician Services","99212",1
-"171","Physical Health Services","Health Services","Additional Codes-Physician Services","99213",1
-"172","Physical Health Services","Health Services","Additional Codes-Physician Services","99214",1
-"173","Physical Health Services","Health Services","Additional Codes-Physician Services","99215",1
-"174","Physical Health Services","Health Services","Additional Codes-Physician Services","99221",1
-"175","Physical Health Services","Health Services","Additional Codes-Physician Services","99222",1
-"176","Physical Health Services","Health Services","Additional Codes-Physician Services","99223",1
-"177","Physical Health Services","Health Services","Additional Codes-Physician Services","99231",1
-"178","Physical Health Services","Health Services","Additional Codes-Physician Services","99232",1
-"179","Physical Health Services","Health Services","Additional Codes-Physician Services","99233",1
-"180","Physical Health Services","Health Services","Additional Codes-Physician Services","99241",1
-"181","Physical Health Services","Health Services","Additional Codes-Physician Services","99242",1
-"182","Physical Health Services","Health Services","Additional Codes-Physician Services","99243",1
-"183","Physical Health Services","Health Services","Additional Codes-Physician Services","99244",1
-"184","Physical Health Services","Health Services","Additional Codes-Physician Services","99245",1
-"185","Physical Health Services","Health Services","Additional Codes-Physician Services","99251",1
-"186","Physical Health Services","Health Services","Additional Codes-Physician Services","99252",1
-"187","Physical Health Services","Health Services","Additional Codes-Physician Services","99253",1
-"188","Physical Health Services","Health Services","Additional Codes-Physician Services","99254",1
-"189","Physical Health Services","Health Services","Additional Codes-Physician Services","99255",1
-"190","Physical Health Services","Health Services","Assessment for Autism","99213",1
-"191","Physical Health Services","Health Services","Assessment for Autism","99214",1
-"192","Physical Health Services","Health Services","Health Services","97804",1
-"193","Physical Health Services","Health Services","Health Services","H0034",1
-"194","Physical Health Services","Health Services","Health Services","S9445",1
-"195","Physical Health Services","Health Services","Health Services","S9446",1
-"196","Physical Health Services","Health Services","Health Services","S9470",1
-"197","Physical Health Services","Health Services","Health Services","T1002",1
-"198","Physical Health Services","Health Services","Private Duty Nursing","S9123",2
-"199","Physical Health Services","Health Services","Private Duty Nursing","S9124",1
-"200","Physical Health Services","Health Services","Private Duty Nursing","T1000",3
-"201","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99201",1
-"202","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99202",1
-"203","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99203",1
-"204","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99204",1
-"205","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99205",1
-"206","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99212",1
-"207","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99213",1
-"208","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99214",1
-"209","Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99215",1
-"210","Physical Health Services","Health Services","Respite Care","T1005",3
-"211","Physical Health Services","Health Services","Respite Care (Children's Waiver & SED Waiver)","T1005",1
-"212","Physical Health Services","Health Services","Respite Care (Children's Waiver)","T1005",1
-"213","Physical Health Services","Health Services","Substance Abuse: Accupuncture","97810",1
-"214","Physical Health Services","Health Services","Substance Abuse: Physician Evaluation","99204",1
-"215","Physical Health Services","Health Services","Substance Abuse: Physician Evaluation","99205",1
-"216","Physical Health Services","OT/PT/SLT","Activity Therapy (Children's Waiver)","G0176",1
-"217","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97110",1
-"218","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97112",1
-"219","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97113",1
-"220","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97116",1
-"221","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97124",1
-"222","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97140",1
-"223","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97150",1
-"224","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97530",1
-"225","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97532",1
-"226","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97533",1
-"227","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97535",1
-"228","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97537",1
-"229","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97542",1
-"230","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97750",1
-"231","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97760",1
-"232","Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","S8990",1
-"233","Physical Health Services","OT/PT/SLT","Occupational Therapy","97003",1
-"234","Physical Health Services","OT/PT/SLT","Occupational Therapy","97003/ 97004",1
-"235","Physical Health Services","OT/PT/SLT","Occupational Therapy","97004",1
-"236","Physical Health Services","OT/PT/SLT","Occupational Therapy","97750",1
-"237","Physical Health Services","OT/PT/SLT","Occupational Therapy","97755",1
-"238","Physical Health Services","OT/PT/SLT","Occupational Therapy","97760",1
-"239","Physical Health Services","OT/PT/SLT","Physical Therapy","97001",1
-"240","Physical Health Services","OT/PT/SLT","Physical Therapy","97002",1
-"241","Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92506",1
-"242","Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92507",1
-"243","Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92508",1
-"244","Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92526",1
-"245","Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92610",1
-"246","Screening & Assessment","Assessment","Alcohol Breath Test for Methadone Clients Only","82075",1
-"247","Screening & Assessment","Assessment","Assessment","90791",1
-"248","Screening & Assessment","Assessment","Assessment","90792",1
-"249","Screening & Assessment","Assessment","Assessment","90838",1
-"250","Screening & Assessment","Assessment","Assessment","99334",1
-"251","Screening & Assessment","Assessment","Assessment","99335",1
-"252","Screening & Assessment","Assessment","Assessment","99336",1
-"253","Screening & Assessment","Assessment","Assessment","99337",1
-"254","Screening & Assessment","Assessment","Assessment","99347",1
-"255","Screening & Assessment","Assessment","Assessment","99348",1
-"256","Screening & Assessment","Assessment","Assessment","99349",1
-"257","Screening & Assessment","Assessment","Assessment","99350",1
-"258","Screening & Assessment","Assessment","Assessment","T1001",1
-"259","Screening & Assessment","Assessment","Assessment-Psychiatric Assessment","90801",1
-"260","Screening & Assessment","Assessment","Assessment-Psychiatric Assessment","90802",1
-"261","Screening & Assessment","Assessment","Assessment ","H0002",1
-"262","Screening & Assessment","Assessment","Assessment ","H0031",1
-"263","Screening & Assessment","Assessment","Assessment for Autism","90791",1
-"264","Screening & Assessment","Assessment","Assessment for Autism","96101",1
-"265","Screening & Assessment","Assessment","Assessment for Autism","96102",1
-"266","Screening & Assessment","Assessment","Assessment for Autism","96118",1
-"267","Screening & Assessment","Assessment","Assessment for Autism","96119",1
-"268","Screening & Assessment","Assessment","Assessment for Autism","H0031",1
-"269","Screening & Assessment","Assessment","Assessment or Health Services","97802",1
-"270","Screening & Assessment","Assessment","Assessment or Health Services","97803",1
-"271","Screening & Assessment","Assessment","Assessments","T1023",1
-"272","Screening & Assessment","Assessment","Assessments-Other","90887",1
-"273","Screening & Assessment","Assessment","Assessments-Other","96105",1
-"274","Screening & Assessment","Assessment","Assessments-Other","96110",1
-"275","Screening & Assessment","Assessment","Assessments-Other","96111",1
-"276","Screening & Assessment","Assessment","Neurobehavioral Status Exam","96116",1
-"277","Screening & Assessment","Assessment","Neurobehavioral Status Exam (Children's Waiver)","96116",1
-"278","Screening & Assessment","Assessment","Neuropsych test Admin w/Comp ","96120",1
-"279","Screening & Assessment","Assessment","Neuropsych test by Psych/Phys ","96118",1
-"280","Screening & Assessment","Assessment","Neuropsych test by Tech ","96119",1
-"281","Screening & Assessment","Assessment","Psychological Testing by Comp ","96103",1
-"282","Screening & Assessment","Assessment","Psychological Testing by Technician ","96102",1
-"283","Screening & Assessment","Assessment","Psychological Testing PSYCH/PHYS ","96101",1
-"284","Screening & Assessment","Assessment","Substance Abuse: Individual Assessment","H0001",1
-"285","Screening & Assessment","Assessment","Substance Abuse: Individual Assessment","H0002",1
-"286","Screening & Assessment","Assessment","Substance Abuse: Psychiatric Evaluation","90801",1
-"287","Screening & Assessment","Assessment","Substance Abuse: Psychiatric Evaluation","90802",1
-"288","Screening & Assessment","Laboratory","Drug Screen for Methadone Clients Only","80100",1
-"289","Screening & Assessment","Laboratory","Drug Screen for Methadone Clients Only","80101",1
-"290","Transportation","Transportation","Additional Codes-Transportation","A0425",1
-"291","Transportation","Transportation","Additional Codes-Transportation","A0427",1
-"292","Transportation","Transportation","Substance Abuse Services: Transportation","T2003",1
-"293","Transportation","Transportation","Substance Abuse: Transportation","A0110",1
-"294","Transportation","Transportation","Transportation","A0080",1
-"295","Transportation","Transportation","Transportation","A0090",1
-"296","Transportation","Transportation","Transportation","A0100",1
-"297","Transportation","Transportation","Transportation","A0110",1
-"298","Transportation","Transportation","Transportation","A0120",1
-"299","Transportation","Transportation","Transportation","A0130",1
-"300","Transportation","Transportation","Transportation","A0170",1
-"301","Transportation","Transportation","Transportation","S0209",1
-"302","Transportation","Transportation","Transportation","S0215",1
-"303","Transportation","Transportation","Transportation","T2001",1
-"304","Transportation","Transportation","Transportation","T2002",1
-"305","Transportation","Transportation","Transportation","T2003",1
-"306","Transportation","Transportation","Transportation","T2004",1
+"ServiceType","Service","Description","Code","Code_Mod","n"
+"Care Coordination","Case Management","Nursing Home Mental Health Monitoring","T1017","T1017SE",570
+"Care Coordination","Case Management","Targeted Case Management ","T1017","T1017",1178
+"Care Coordination","Case Management","Targeted Case Management (Children's Waiver)","T2023","T2023",273
+"Care Coordination","Case Management","Treatment Planning","H0032","H0032",1157
+"Care Coordination","Case Management","Substance Abuse: Case Management","H0006","H0006",12
+"Care Coordination","Case Management","Monitoring of Treatment - Physician","H0032","H0032TS",28
+"Care Coordination","Case Management","Monitoring of Treatment - Clinician","H0032","H0032TS",440
+"Care Coordination","Fiscal Intermediary Services","Fiscal Intermediary Services","T2025","T2025",647
+"Care Coordination","Interdisciplinary Team","Assertive Community Treatment (ACT)","H0039","H0039",629
+"Care Coordination","Interdisciplinary Team","Wraparound","H2021","H2021",461
+"Care Coordination","Interdisciplinary Team","Wraparound","H2022","H2022",113
+"Care Coordination","Interdisciplinary Team","Wraparound (SED Waiver)","H2022","H2022",57
+"Care Coordination","Interdisciplinary Team","Wraparound (SED Waiver)","H2022","H2022TT",8
+"Care Coordination","Peer Services","Peer Directed and Operated Support Services","102","102",192
+"Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0023","H0023",166
+"Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0038","H0038",666
+"Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0046","H0046",19
+"Care Coordination","Peer Services","Substance Abuse: Recovery Support Services","G0409","G0409",1
+"Care Coordination","Peer Services","Substance Abuse: Recovery Support Services","H0038","H0038",4
+"Care Coordination","Peer Services","Substance Abuse: Recovery Support Services","T1012","T1012",8
+"Care Coordination","Supports Coordination","Supports Coordination/Wrap Facilitation","T1016","T1016",1008
+"Care Coordination","Supports Coordination","Supports Coordination","T1016","T1016",129
+"Crisis and Respite","Crisis Services","Crisis Intervention-Non-enrolled Service","H2011","H2011",133
+"Crisis and Respite","Crisis Services","Crisis Residential Services","H0018","H0018",484
+"Crisis and Respite","Crisis Services","Extended Observation Beds ","0762","0762",1
+"Crisis and Respite","Crisis Services","Intensive Crisis Stabilization-Enrolled Program","S9484","S9484",201
+"Crisis and Respite","Crisis Services","Crisis Intervention","H0030","H0030",5
+"Crisis and Respite","Crisis Services","Crisis Intervention","H2011","H2011",1078
+"Crisis and Respite","Crisis Services","Crisis Intervention","H2020","H2020",4
+"Crisis and Respite","Crisis Services","Crisis Intervention","T2034","T2034",35
+"Crisis and Respite","Crisis Services","Crisis Observation Care","0762","0762",1
+"Crisis and Respite","Crisis Services","Crisis Observation Care","762","762",1
+"Crisis and Respite","Crisis Services","Substance Abuse: Residential","H0018","H0018",53
+"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","0912","0912",260
+"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","0913","0913",30
+"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","912","912",58
+"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","913","913",5
+"Crisis and Respite","Respite","Community Living Supports-Therapeutic Camping","T2036","T2036",48
+"Crisis and Respite","Respite","Community Living Supports-Therapeutic Camping","T2037","T2037",28
+"Crisis and Respite","Respite","Respite","H0045","H0045",430
+"Crisis and Respite","Respite","Respite","S5150","S5150",254
+"Crisis and Respite","Respite","Respite","S5151","S5151",251
+"Crisis and Respite","Respite","Respite Care in the Home (LPN) (Children's Waiver)","S9125","S9125TE",14
+"Crisis and Respite","Respite","Respite Care in the Home (RN) (Children's Waiver)","S9125","S9125TD",15
+"Crisis and Respite","Respite","Respite (Children's Waiver)","H0045","H0045TD",3
+"Crisis and Respite","Respite","Respite (Children's Waiver)","H0045","H0045TE",2
+"Crisis and Respite","Respite","Respite (Children's Waiver)","S5151","S5151TT",25
+"Crisis and Respite","Respite","Respite Care","T2036","T2036",153
+"Crisis and Respite","Respite","Respite Care","T2037","T2037",75
+"Employment Services","Clubhouse","Clubhouse Psychosocial Rehabilitation Programs ","H2030","H2030",550
+"Employment Services","Skill-Building/Non-Vocational","Skill-Building and Out of Home Non Vocational Habilitation","H2014","H2014",894
+"Employment Services","Skill-Building/Non-Vocational","Skill-Building and Out of Home Non Vocational Habilitation","H2014","H2014TT",105
+"Employment Services","Vocational Services","Out of Home Prevocational Service","T2015","T2015",162
+"Employment Services","Vocational Services","Supported Employment Services","H2023","H2023",827
+"Employment Services","Vocational Services","Supported Employment Services","H2023","H2023TT",170
+"Equipment","Equipment","C/O for Orthotic/Prosth Use (Children's Waiver)","97762","97762",1
+"Equipment","Equipment","Enhanced Medical Equipment-Supplies","E1399","E1399",196
+"Equipment","Equipment","Enhanced Medical Equipment-Supplies","S5199","S5199",236
+"Equipment","Equipment","Enhanced Medical Equipment-Supplies","T2028","T2028",131
+"Equipment","Equipment","Enhanced Medical Equipment-Supplies","T2029","T2029",149
+"Equipment","Equipment","Enhanced Medical Equipment-Supplies","T2039","T2039",92
+"Equipment","Equipment","Environmental Modification ","S5165","S5165",187
+"Equipment","Equipment","Personal Emergency Response System (PERS)","S5160","S5160",70
+"Equipment","Equipment","Personal Emergency Response System (PERS)","S5161","S5161",187
+"Equipment","Equipment","Prosthetic Training (Children's Waiver)","97761","97761",3
+"Equipment","Equipment","C/O for Orthotic/Prosth Use ","97762","97762",13
+"Equipment","Equipment","Goods and Services ","T5999","T5999",2
+"Equipment","Equipment","Goods and Services ","T5999","T5999HK",6
+"Equipment","Equipment","C/O for Orthotic/Prosth Use  or Physical Therapy","97762","97762",4
+"Equipment","Equipment","Wraparound Services","T5999","T5999",13
+"Home & Community Based Services","Community Living Supports","Chore Services","S5120","S5120",13
+"Home & Community Based Services","Community Living Supports","Community Living Supports (15 Minutes)","H2015","H2015",1172
+"Home & Community Based Services","Community Living Supports","Community Living Supports (15 Minutes)","H2015","H2015TT",136
+"Home & Community Based Services","Community Living Supports","Community Living Supports in Independent living/own home","H0043","H0043",495
+"Home & Community Based Services","Community Living Supports","Community Living Supports in Independent living/own home","H0043","H0043TT",47
+"Home & Community Based Services","Community Living Supports","Foster Care","S5140","S5140",43
+"Home & Community Based Services","Community Living Supports","Foster Care","S5145","S5145",135
+"Home & Community Based Services","Community Living Supports","Home Based Services","H0036","H0036",1019
+"Home & Community Based Services","Community Living Supports","Home Based Services","H0036","H0036ST",35
+"Home & Community Based Services","Community Living Supports","Home Based Services","H2033","H2033",52
+"Home & Community Based Services","Community Living Supports","Home Care Training, Non-Family (Children's Waiver)","S5116","S5116",181
+"Home & Community Based Services","Community Living Supports","Housing Assistance","T2038","T2038",360
+"Home & Community Based Services","Community Living Supports","Community Living Supports (15 Minutes) (SED Waiver)","H2015","H2015TT",39
+"Home & Community Based Services","Residential Treatment","Community Living Supports (Daily)","H2016","H2016",764
+"Home & Community Based Services","Residential Treatment","Community Living Supports (Daily)","H2016","H2016TF",752
+"Home & Community Based Services","Residential Treatment","Community Living Supports (Daily)","H2016","H2016TG",985
+"Home & Community Based Services","Residential Treatment","Personal Care in Licensed Specialized Residential Setting","T1020","T1020",911
+"Home & Community Based Services","Residential Treatment","Personal Care in Licensed Specialized Residential Setting","T1020","T1020TF",780
+"Home & Community Based Services","Residential Treatment","Personal Care in Licensed Specialized Residential Setting","T1020","T1020TG",726
+"Home & Community Based Services","Residential Treatment","Reidential Room and Board","S9976","S9976",134
+"Home & Community Based Services","Residential Treatment","Substance Abuse: Residential","H0019","H0019",31
+"Home & Community Based Services","Residential Treatment","Substance Abuse Services: Residential Room and Board","S9976","S9976",8
+"Home & Community Based Services","Residential Treatment","Residential Room and Board","S9976","S9976",16
+"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Anesthesia","00104","00104",14
+"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Anesthesia","104","104",7
+"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Facility Charge","0901","0901",100
+"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Facility Charge","901","901",29
+"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Physician","90870","90870",67
+"Hospital-based Services","Ancillary Hospital Services","ECT Anesthesia","0370","0370",1
+"Hospital-based Services","Ancillary Hospital Services","ECT Anesthesia","370","370",1
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Emergency Room","0450","0450",35
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Emergency Room","450","450",7
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Laboratory","0300","0300",1
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Medical/Surgical Supplies and Devices","0270","0270",3
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Occupational Therapy","0430","0430",1
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Pharmacy","0250","0250",2
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Pharmacy","0636","0636",1
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Psychiatric/Psychological Treatments/Services","0900","0900",3
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Pulmonary Function","0460","0460",1
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Respiratory Services","0410","0410",4
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services -EKG/ECG","0730","0730",2
+"Hospital-based Services","Inpatient Psychiatric Hospital","Local Psychiatric Hospital - Acute Community PT73","0100","0100PT73",1067
+"Hospital-based Services","Inpatient Psychiatric Hospital","Local Psychiatric Hospital/IMD PT68","0100","0100PT68",851
+"Hospital-based Services","Inpatient Psychiatric Hospital","State Mental Retardation Facility - Inpatient (ICF/MR) PT65","0100","0100PT65",138
+"Hospital-based Services","Inpatient Psychiatric Hospital","State Psychiatric Hospital - Inpatient PT22","0100","0100PT22",829
+"Hospital-based Services","Sub-Acute Detoxification","Substance Abuse: Sub-Acute Detoxification","H0010","H0010",18
+"Hospital-based Services","Sub-Acute Detoxification","Substance Abuse: Sub-Acute Detoxification","H0012","H0012",18
+"Hospital-based Services","Sub-Acute Detoxification","Substance Abuse: Sub-Acute Detoxification","H0014","H0014",1
+"Medication","Medication Administration","Additional Codes-Physician Services","99211","99211",80
+"Medication","Medication Administration","Medication administration","G0351","G0351",17
+"Medication","Medication Administration","Medication Administration","90772","90772",304
+"Medication","Medication Administration","Medication Administration","90782","90782",63
+"Medication","Medication Administration","Medication Administration","90788","90788",1
+"Medication","Medication Administration","Medication Administration","96372","96372",474
+"Medication","Medication Administration","Medication Administration","99506","99506",103
+"Medication","Medication Administration","Medication Administration","99605","99605",5
+"Medication","Medication Administration","Additional Codes-Physician Services  Medication Administration","99211","99211",184
+"Medication","Medication Administration","Medicaition Administration (Children's Waiver)","99506","99506",10
+"Medication","Medication Administration","Medication Management","99605","99605",9
+"Medication","Medication Administration","Psychiatric Evaluation and Medicaid Management","99211","99211",69
+"Medication","Medication Administration","Established Patient Evaluation and Management","99211","99211",65
+"Medication","Medication Management","Comprehensive Medication Services - EBP only","H2010","H2010",1
+"Medication","Medication Management","Medication Review ","90862","90862",1092
+"Medication","Medication Management","Medication Review ","M0064","M0064",671
+"Medication","Medication Management","Substance Abuse: Medication Review","90862","90862",21
+"Medication","Pharmaceuticals","Enhanced Medical Supplies or Pharmacy","T1999","T1999",412
+"Medication","Pharmaceuticals","Pharmacy (Drugs and Other Biologicals)","105","105",160
+"Medication","Pharmaceuticals","Substance Abuse: Methadone","H0020","H0020",23
+"Medication","Pharmaceuticals","Substance Abuse: Pharmalogical Support - Suboxane","H0033","H0033",3
+"Other","Other","Aggregate for 'J' Codes","ALL","ALL",369
+"Other","Other","Other","98","98",129
+"Outpatient Treatment","Behavioral Treatment","Behavior Management Review","H2000","H2000",258
+"Outpatient Treatment","Behavioral Treatment","Behavior Services","H2019","H2019",195
+"Outpatient Treatment","Behavioral Treatment","Behavior Services","H2019","H2019TT",60
+"Outpatient Treatment","Behavioral Treatment","Monitoring Activities","H2000","H2000TS",20
+"Outpatient Treatment","Behavioral Treatment","Behavior Treatment Plan Review","H2000","H2000",513
+"Outpatient Treatment","Behavioral Treatment","Behavior Treatment Plan Review - Monitoring Activities","H2000","H2000TS",280
+"Outpatient Treatment","Behavioral Treatment","Applied Behavioral Intervention (ABI).","H2019","H2019U5",53
+"Outpatient Treatment","Behavioral Treatment","Early Intensive Behavioral Intervention (EIBI)","H2019","H2019U5, TG",43
+"Outpatient Treatment","Behavioral Treatment","Home Care Training to Home Care Client","S5108","S5108U5",67
+"Outpatient Treatment","Family Services","Family Psycho-Education","T1015","T1015",85
+"Outpatient Treatment","Family Services","Family Training","S5110","S5110",61
+"Outpatient Treatment","Family Services","Family Training","S5111","S5111",722
+"Outpatient Treatment","Family Services","Family Training","S5111","S5111HA",25
+"Outpatient Treatment","Family Services","Family Training","S5111","S5111HM",54
+"Outpatient Treatment","Family Services","Family Training/Support EBP only","G0177","G0177",355
+"Outpatient Treatment","Family Services","Family Psycho-Education - EBP","T1015","T1015",198
+"Outpatient Treatment","Family Services","Family Training - EBP","S5110","S5110",161
+"Outpatient Treatment","Family Services","Substance Abuse: Child Sitting Services","T1009","T1009",5
+"Outpatient Treatment","Family Services","Family Training (SED Waiver)","S5111","S5111HM",1
+"Outpatient Treatment","Outpatient Therapy","Assessment","90833","90833",19
+"Outpatient Treatment","Outpatient Therapy","Assessment","90836","90836",16
+"Outpatient Treatment","Outpatient Therapy","Mental Health Therapy","H2027","H2027",5
+"Outpatient Treatment","Outpatient Therapy","Therapy-Family Therapy","90846","90846",762
+"Outpatient Treatment","Outpatient Therapy","Therapy-Family Therapy","90847","90847",1109
+"Outpatient Treatment","Outpatient Therapy","Therapy-Family Therapy","90849","90849",72
+"Outpatient Treatment","Outpatient Therapy","Therapy-Family Therapy","90849","90849HS",37
+"Outpatient Treatment","Outpatient Therapy","Therapy-Group Therapy","90853","90853",1009
+"Outpatient Treatment","Outpatient Therapy","Therapy-Group Therapy","90857","90857",94
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90810","90810",74
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90811","90811",8
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90812","90812",133
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90813","90813",2
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90814","90814",42
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90815","90815",26
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90816","90816",55
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90817","90817",27
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90818","90818",68
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90819","90819",12
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90821","90821",8
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90822","90822",4
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90823","90823",3
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90824","90824",8
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90826","90826",9
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90827","90827",13
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90828","90828",1
+"Outpatient Treatment","Outpatient Therapy","Therapy-Individual Therapy","90829","90829",1
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90812","90812",1
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90815","90815",2
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90846","90846",12
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90847","90847",23
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90853","90853",33
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","90857","90857",5
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Outpatient Treatment","H0050","H0050",2
+"Outpatient Treatment","Outpatient Therapy","Substance Abuse: Psychotherapy (Individual Therapy)","90826","90826",5
+"Outpatient Treatment","Outpatient Therapy","Assessment for Autism","90785","90785U5",1
+"Outpatient Treatment","Outpatient Therapy","Assessment for Autism","90833","90833U5",1
+"Outpatient Treatment","Outpatient Therapy","Interactive Complexity - Add On Code","90785","90785",56
+"Outpatient Treatment","Outpatient Therapy","Mental Health: Outpatient Care","90832","90832",265
+"Outpatient Treatment","Outpatient Therapy","Mental Health: Outpatient Care","90834","90834",269
+"Outpatient Treatment","Outpatient Therapy","Mental Health: Outpatient Care","90837","90837",263
+"Outpatient Treatment","Outpatient Therapy","Psychotherapy for Crisis Each Additional 30 Minutes","90840","90840",15
+"Outpatient Treatment","Outpatient Therapy","Psychotherapy for Crisis First 60 Minutes","90839","90839",40
+"Outpatient Treatment","Outpatient Therapy","Substance abuse: Outpatient Care","90832","90832",11
+"Outpatient Treatment","Outpatient Therapy","Substance abuse: Outpatient Care","90834","90834",15
+"Outpatient Treatment","Outpatient Therapy","Substance abuse: Outpatient Care","90837","90837",10
+"Outpatient Treatment","Prevention","Prevention Services - Direct Model","H0025","H0025",404
+"Outpatient Treatment","Prevention","Prevention Services - Direct Model","S9482","S9482",62
+"Outpatient Treatment","Prevention","Prevention Services - Direct Model ","T1027","T1027",20
+"Outpatient Treatment","Prevention","Prevention Services - Direct Model ","T2024","T2024",7
+"Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90804","90804",1019
+"Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90805","90805",130
+"Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90806","90806",1084
+"Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90807","90807",72
+"Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90808","90808",856
+"Outpatient Treatment","Substance Abuse Outpatient","Therapy-Individual Therapy","90809","90809",23
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Early Intervention","H0022","H0022",2
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Care","H0015","H0015",20
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Care","H2035","H2035",7
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Care","H2036","H2036",11
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90804","90804",29
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90805","90805",4
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90806","90806",31
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90807","90807",7
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90808","90808",20
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","90809","90809",1
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","H0004","H0004",50
+"Outpatient Treatment","Substance Abuse Outpatient","Substance Abuse: Outpatient Treatment","H0005","H0005",55
+"Physical Health Services","Dental","Comp periodontal evaluation","D0180","D0180",1
+"Physical Health Services","Dental","General dental services","D0150","D0150",8
+"Physical Health Services","Dental","Prophylaxis Adult","D1110","D1110",2
+"Physical Health Services","Dental","Resin based comp-one surface, ant","D2330","D2330",2
+"Physical Health Services","Dental","Resin based comp-one surface, post","D2391","D2391",1
+"Physical Health Services","Dental","Resin based comp-three surfaces, an","D2332","D2332",2
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99201","99201",11
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99202","99202",9
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99203","99203",17
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99204","99204",12
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99205","99205",49
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99212","99212",63
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99213","99213",77
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99214","99214",123
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99215","99215",115
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99221","99221",280
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99222","99222",454
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99223","99223",209
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99224","99224",1
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99231","99231",463
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99232","99232",443
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99233","99233",297
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99238","99238",69
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99241","99241",23
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99242","99242",19
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99243","99243",11
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99244","99244",5
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99245","99245",16
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99251","99251",43
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99252","99252",118
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99253","99253",131
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99254","99254",68
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99255","99255",25
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99261","99261",2
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99262","99262",7
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99263","99263",6
+"Physical Health Services","Health Services","Additional Codes-Physician Services","99274","99274",1
+"Physical Health Services","Health Services","Health Services","97804","97804",41
+"Physical Health Services","Health Services","Health Services","H0034","H0034",402
+"Physical Health Services","Health Services","Health Services","S9445","S9445",317
+"Physical Health Services","Health Services","Health Services","S9446","S9446",261
+"Physical Health Services","Health Services","Health Services","S9470","S9470",235
+"Physical Health Services","Health Services","Health Services","T1000","T1000",6
+"Physical Health Services","Health Services","Health Services","T1002","T1002",1049
+"Physical Health Services","Health Services","Health Services","T1003","T1003",1
+"Physical Health Services","Health Services","Health Services","T1005","T1005",104
+"Physical Health Services","Health Services","Private Duty Nursing","S9123","S9123",72
+"Physical Health Services","Health Services","Private Duty Nursing","S9123","S9123TT",2
+"Physical Health Services","Health Services","Private Duty Nursing","S9124","S9124",87
+"Physical Health Services","Health Services","Private Duty Nursing","S9124","S9124TT",1
+"Physical Health Services","Health Services","Private Duty Nursing","T1000","T1000",38
+"Physical Health Services","Health Services","Private Duty Nursing","T1000","T1000TD",58
+"Physical Health Services","Health Services","Private Duty Nursing","T1000","T1000TE",51
+"Physical Health Services","Health Services","Respite Care","T1005","T1005",915
+"Physical Health Services","Health Services","Respite Care","T1005","T1005TD",120
+"Physical Health Services","Health Services","Respite Care","T1005","T1005TE",128
+"Physical Health Services","Health Services","Respite Care (Children's Waiver)","T1005","T1005TT",37
+"Physical Health Services","Health Services","Substance Abuse: Accupuncture","97810","97810",1
+"Physical Health Services","Health Services","Substance Abuse: Physician Evaluation","99204","99204",1
+"Physical Health Services","Health Services","Substance Abuse: Physician Evaluation","99205","99205",7
+"Physical Health Services","Health Services","Respite Care (Children's Waiver & SED Waiver)","T1005","T1005TT",81
+"Physical Health Services","Health Services","Assessment for Autism","99201","99201U5",1
+"Physical Health Services","Health Services","Assessment for Autism","99212","99212U5",1
+"Physical Health Services","Health Services","Assessment for Autism","99213","99213U5",8
+"Physical Health Services","Health Services","Assessment for Autism","99214","99214U5",6
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99201","99201",20
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99202","99202",31
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99203","99203",38
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99204","99204",39
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99205","99205",32
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99212","99212",104
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99213","99213",129
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99214","99214",129
+"Physical Health Services","Health Services","Psychiatric Evaluation and Medicaid Management","99215","99215",105
+"Physical Health Services","Health Services","Established Patient Evaluation and Management","99212","99212",106
+"Physical Health Services","Health Services","Established Patient Evaluation and Management","99213","99213",133
+"Physical Health Services","Health Services","Established Patient Evaluation and Management","99214","99214",127
+"Physical Health Services","Health Services","Established Patient Evaluation and Management","99215","99215",113
+"Physical Health Services","Health Services","New Patient Evaluation and Management","99201","99201",16
+"Physical Health Services","Health Services","New Patient Evaluation and Management","99202","99202",21
+"Physical Health Services","Health Services","New Patient Evaluation and Management","99203","99203",33
+"Physical Health Services","Health Services","New Patient Evaluation and Management","99204","99204",41
+"Physical Health Services","Health Services","New Patient Evaluation and Management","99205","99205",43
+"Physical Health Services","OT/PT/SLT","Activity Therapy (Children's Waiver)","G0176","G0176",66
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97110","97110",314
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97112","97112",69
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97113","97113",30
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97116","97116",75
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97124","97124",82
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97140","97140",72
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97150","97150",65
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97530","97530",366
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97532","97532",61
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97533","97533",232
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97535","97535",188
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97537","97537",37
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97542","97542",129
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97750","97750",2
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","97760","97760",10
+"Physical Health Services","OT/PT/SLT","Occupational or Physical Therapy","S8990","S8990",64
+"Physical Health Services","OT/PT/SLT","Occupational Therapy","97003","97003",659
+"Physical Health Services","OT/PT/SLT","Occupational Therapy","97004","97004",302
+"Physical Health Services","OT/PT/SLT","Occupational Therapy","97504","97504",7
+"Physical Health Services","OT/PT/SLT","Occupational Therapy","97703","97703",1
+"Physical Health Services","OT/PT/SLT","Occupational Therapy","97750","97750",10
+"Physical Health Services","OT/PT/SLT","Occupational Therapy","97755","97755",32
+"Physical Health Services","OT/PT/SLT","Occupational Therapy","97760","97760",29
+"Physical Health Services","OT/PT/SLT","Physical Therapy","97001","97001",239
+"Physical Health Services","OT/PT/SLT","Physical Therapy","97002","97002",79
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92506","92506",245
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92507","92507",241
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92508","92508",35
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92521","92521",2
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92522","92522",5
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92523","92523",19
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92526","92526",48
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92610","92610",102
+"Physical Health Services","OT/PT/SLT","Speech & Language Therapy (Retired 1/1/14)","92506","92506",17
+"Screening & Assessment","Assessment","Assessment","90792","90792",229
+"Screening & Assessment","Assessment","Assessment","90838","90838",12
+"Screening & Assessment","Assessment","Assessment","99334","99334",7
+"Screening & Assessment","Assessment","Assessment","99335","99335",11
+"Screening & Assessment","Assessment","Assessment","99336","99336",6
+"Screening & Assessment","Assessment","Assessment","99337","99337",3
+"Screening & Assessment","Assessment","Assessment","99341","99341",1
+"Screening & Assessment","Assessment","Assessment","99347","99347",3
+"Screening & Assessment","Assessment","Assessment","99348","99348",5
+"Screening & Assessment","Assessment","Assessment","99349","99349",3
+"Screening & Assessment","Assessment","Assessment","99350","99350",2
+"Screening & Assessment","Assessment","Assessment","T1001","T1001",880
+"Screening & Assessment","Assessment","Assessment-Psychiatric Assessment","90801","90801",1065
+"Screening & Assessment","Assessment","Assessment-Psychiatric Assessment","90802","90802",79
+"Screening & Assessment","Assessment","Assessment ","H0002","H0002",795
+"Screening & Assessment","Assessment","Assessment ","H0031","H0031",1208
+"Screening & Assessment","Assessment","Assessment or Health Services","97802","97802",351
+"Screening & Assessment","Assessment","Assessment or Health Services","97803","97803",298
+"Screening & Assessment","Assessment","Assessments","T1023","T1023",1114
+"Screening & Assessment","Assessment","Assessments-Other","90887","90887",238
+"Screening & Assessment","Assessment","Assessments-Other","96105","96105",11
+"Screening & Assessment","Assessment","Assessments-Other","96110","96110",85
+"Screening & Assessment","Assessment","Assessments-Other","96111","96111",123
+"Screening & Assessment","Assessment","Assessments-Testing","96100","96100",80
+"Screening & Assessment","Assessment","Assessments-Testing","96115","96115",15
+"Screening & Assessment","Assessment","Assessments-Testing","96117","96117",10
+"Screening & Assessment","Assessment","Neurobehavioral Status Exam (Children's Waiver)","96116","96116",62
+"Screening & Assessment","Assessment","Neuropsych test by Psych/Phys (Children's Waiver)","96118","96118",7
+"Screening & Assessment","Assessment","Neuropsych test by Tech (Children's Waiver)","96119","96119",3
+"Screening & Assessment","Assessment","PASRR Level II Screens","T2011","T2011",45
+"Screening & Assessment","Assessment","Psychological Testing by Comp (Children's Waiver)","96103","96103",2
+"Screening & Assessment","Assessment","Psychological Testing by Technician (Children's Waiver)","96102","96102",9
+"Screening & Assessment","Assessment","Psychological Testing PSYCH/PHYS (Children's Waiver)","96101","96101",87
+"Screening & Assessment","Assessment","Neuropsych test Admin w/Comp ","96120","96120",7
+"Screening & Assessment","Assessment","Neuropsych test by Psych/Phys ","96118","96118",58
+"Screening & Assessment","Assessment","Neuropsych test by Tech ","96119","96119",18
+"Screening & Assessment","Assessment","Psychological Testing by Comp ","96103","96103",15
+"Screening & Assessment","Assessment","Psychological Testing by Technician ","96102","96102",80
+"Screening & Assessment","Assessment","Psychological Testing PSYCH/PHYS ","96101","96101",792
+"Screening & Assessment","Assessment","Substance Abuse: Assessment","H0031","H0031",3
+"Screening & Assessment","Assessment","Substance Abuse: Individual Assessment","H0001","H0001",102
+"Screening & Assessment","Assessment","Substance Abuse: Individual Assessment","H0002","H0002",27
+"Screening & Assessment","Assessment","Substance Abuse: Individual Assessment","H0049","H0049",3
+"Screening & Assessment","Assessment","Substance Abuse: Psychiatric Evaluation","90801","90801",46
+"Screening & Assessment","Assessment","Substance Abuse: Psychiatric Evaluation","90802","90802",5
+"Screening & Assessment","Assessment","Alcohol Breath Test for Methadone Clients Only","82075","82075",7
+"Screening & Assessment","Assessment","Neurobehavioral Status Exam","96116","96116",11
+"Screening & Assessment","Assessment","Assessment for Autism","90791","90791U5",5
+"Screening & Assessment","Assessment","Assessment for Autism","90792","90792U5",5
+"Screening & Assessment","Assessment","Assessment for Autism","96101","96101U5",51
+"Screening & Assessment","Assessment","Assessment for Autism","96102","96102U5",3
+"Screening & Assessment","Assessment","Assessment for Autism","96118","96118U5",7
+"Screening & Assessment","Assessment","Assessment for Autism","96119","96119U5",5
+"Screening & Assessment","Assessment","Assessment for Autism","H0031","H0031U5",86
+"Screening & Assessment","Assessment","Support Intensity Scale (SIS) Face-to-Face Assessment","H0031","H0031HW",6
+"Screening & Assessment","Laboratory","Drug Screen for Methadone Clients Only","80100","80100",16
+"Screening & Assessment","Laboratory","Drug Screen for Methadone Clients Only","80101","80101",4
+"Screening & Assessment","Laboratory","Substance Abuse:Laboratory","H0003","H0003",5
+"Screening & Assessment","Laboratory","Substance Abuse:Laboratory (cells now unlocked)","H0048","H0048",1
+"Transportation","Transportation","Additional Codes-Transportation","A0425","A0425",222
+"Transportation","Transportation","Additional Codes-Transportation","A0427","A0427",115
+"Transportation","Transportation","Additional codes - Transportation","A0428","A0428",56
+"Transportation","Transportation","Transportation","A0080","A0080",52
+"Transportation","Transportation","Transportation","A0090","A0090",2
+"Transportation","Transportation","Transportation","A0100","A0100",35
+"Transportation","Transportation","Transportation","A0110","A0110",18
+"Transportation","Transportation","Transportation","A0120","A0120",36
+"Transportation","Transportation","Transportation","A0130","A0130",56
+"Transportation","Transportation","Transportation","A0160","A0160",8
+"Transportation","Transportation","Transportation","A0170","A0170",9
+"Transportation","Transportation","Transportation","S0209","S0209",5
+"Transportation","Transportation","Transportation","S0215","S0215",34
+"Transportation","Transportation","Transportation","T2001","T2001",39
+"Transportation","Transportation","Transportation","T2002","T2002",86
+"Transportation","Transportation","Transportation","T2003","T2003",186
+"Transportation","Transportation","Transportation","T2004","T2004",16
+"Transportation","Transportation","Transportation","T2005","T2005",2
+"Transportation","Transportation","Substance Abuse Services: Transportation","T2003","T2003",8
+"Transportation","Transportation","Substance Abuse Services: Transportation","T2004","T2004",1
+"Transportation","Transportation","Substance Abuse: Transportation","A0110","A0110",3
+"Ungrouped","Ungrouped","Assessment","90791
+","90791
+",214

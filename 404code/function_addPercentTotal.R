@@ -11,23 +11,25 @@ addPercentTotal <- function(){
     # stack the years back up for the CMHSP;
     # return 
     library(dplyr)
-    cmh_2006 <- filter(subMaster, FY==2006 & CMHSP==CMH)
+    cmh_2006 <- filter(Master, FY==2006 & CMHSP==CMH)
     cmh_2006 <- mutate(cmh_2006, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    cmh_2007 <- filter(subMaster, FY==2007 & CMHSP==CMH)
+    cmh_2007 <- filter(Master, FY==2007 & CMHSP==CMH)
     cmh_2007 <- mutate(cmh_2007, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    cmh_2008 <- filter(subMaster, FY==2008 & CMHSP==CMH)
+    cmh_2008 <- filter(Master, FY==2008 & CMHSP==CMH)
     cmh_2008 <- mutate(cmh_2008, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    cmh_2009 <- filter(subMaster, FY==2009 & CMHSP==CMH)
+    cmh_2009 <- filter(Master, FY==2009 & CMHSP==CMH)
     cmh_2009 <- mutate(cmh_2009, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    cmh_2010 <- filter(subMaster, FY==2010 & CMHSP==CMH)
+    cmh_2010 <- filter(Master, FY==2010 & CMHSP==CMH)
     cmh_2010 <- mutate(cmh_2010, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    cmh_2011 <- filter(subMaster, FY==2011 & CMHSP==CMH)
+    cmh_2011 <- filter(Master, FY==2011 & CMHSP==CMH)
     cmh_2011 <- mutate(cmh_2011, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    cmh_2012 <- filter(subMaster, FY==2012 & CMHSP==CMH)
+    cmh_2012 <- filter(Master, FY==2012 & CMHSP==CMH)
     cmh_2012 <- mutate(cmh_2012, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    cmh_2013 <- filter(subMaster, FY==2013 & CMHSP==CMH)
+    cmh_2013 <- filter(Master, FY==2013 & CMHSP==CMH)
     cmh_2013 <- mutate(cmh_2013, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
-    newCMH <- rbind(cmh_2006, cmh_2007, cmh_2008, cmh_2009, cmh_2010, cmh_2011, cmh_2012, cmh_2013)
+    cmh_2014 <- filter(Master, FY==2013 & CMHSP==CMH)
+    cmh_2014 <- mutate(cmh_2013, Unit_Perc_Tot = SumOfUnits/sum(SumOfUnits), Cost_Perc_Tot = SumOfCost/sum(SumOfCost))
+    newCMH <- rbind(cmh_2006, cmh_2007, cmh_2008, cmh_2009, cmh_2010, cmh_2011, cmh_2012, cmh_2013, cmh_2014)
     return(newCMH)
   }
   # Now use percTot...
@@ -77,7 +79,7 @@ addPercentTotal <- function(){
   sub_Washtenaw <- percTot(CMH="Washtenaw")               
   sub_WMichigan <- percTot(CMH="West Michigan")           
   sub_Woodlands <- percTot(CMH="Woodlands")
-  newSubMaster <- rbind(sub_Allegan,sub_AuSable,sub_Barry,sub_BayArenac,sub_Berrien,sub_CEI,
+  newMaster <- rbind(sub_Allegan,sub_AuSable,sub_Barry,sub_BayArenac,sub_Berrien,sub_CEI,
                         sub_CentralMI,sub_Copper,sub_DetroitWayne,sub_Genesee,sub_Gogebic,
                         sub_Gratiot,sub_Hiawatha,sub_Huron,sub_Ionia,sub_Kalamazoo,sub_Lapeer, 
                         sub_Lenawee,sub_Lifeways,sub_Livingston,sub_Macomb,sub_Manistee,sub_Monroe,
@@ -86,7 +88,7 @@ addPercentTotal <- function(){
                         sub_Pathways,sub_Pines,sub_Saginaw,sub_Sanilac,sub_Shiawassee,sub_StClair,
                         sub_StJoseph,sub_SummitPointe,sub_Tuscola,sub_VanBuren,sub_Washtenaw,
                         sub_WMichigan,sub_Woodlands)
-  return(newSubMaster)
+  return(newMaster)
 } 
 
 # This version can be used in R but doesn't translate to Rmd

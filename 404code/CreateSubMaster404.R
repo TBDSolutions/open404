@@ -19,7 +19,7 @@
     subMaster$Cost_Perc_Tot <- round(subMaster$Cost_Perc_Tot, digits = 1)
   
 # Read in unique counts of people served from 2006-2013
-  unique_06to13 <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/TotalServed_FY06-13.csv")
+  unique_06to13 <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/TotalServed_FY06-14.csv")
   # unique_06to13$TotalServed <- as.integer(unique_06to13$TotalServed)
 
 # Create unique keys...

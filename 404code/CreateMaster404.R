@@ -77,63 +77,44 @@ Master$Unit_Hours <- as.numeric(Master$Unit_Hours)
 
 Master <-
 Master %>%
-  mutate(ServiceDesc = ifelse(is.na(FirstOfHCPCS.Code) == T,
-                              yes = gsub("[[:punct:]].*","",
-                                         FirstOfRevenue.Code),
-                              no = as.character(FirstOfHCPCS.Code))) %>%
+  mutate(Code = ifelse(is.na(FirstOfHCPCS.Code) == T,
+                       yes = gsub("[[:punct:]].*","",FirstOfRevenue.Code),
+                       no = as.character(FirstOfHCPCS.Code))) %>%
   filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) %>%
-  mutate(ServiceDesc2 = recode(FirstofService.Description,
-                               "'Other' = 'Other';
-                               'Peer Directed and Operated Support Services' = 'Peer';
-                               'Pharmacy (Drugs and Other Biologicals)' = 'Pharm'"),
-         ServiceDesc = ifelse(is.na(ServiceDesc) == T,
-                              yes = ServiceDesc2,
-                              no = as.character(ServiceDesc))) %>%
+  mutate(Code2 = recode(FirstofService.Description,
+                        "'Other' = 'Other';
+                        'Peer Directed and Operated Support Services' = 'Peer';
+                        'Pharmacy (Drugs and Other Biologicals)' = 'Pharm'"),
+         Code = ifelse(is.na(Code) == T,
+                       yes = Code2,
+                       no = as.character(Code)),
+         Code = as.factor(gsub("[[:punct:]].*","",Code)),
+         # Make new var concat Code / Modifier. Most granular level of service
+         Code_Mod = paste0(Code,FirstOfModifier, sep = "", collapse = NULL),
+         Code_Mod = as.factor(gsub("NA", "", Code_Mod)) # Remove NA values 
+         ) %>%
   select(CMHSP:Population, Description = FirstofService.Description,
-         Code = ServiceDesc, Modifier = FirstOfModifier, SumOfCases:Unit_Hours) %>%
+         Code, Modifier = FirstOfModifier, Code_Mod, SumOfCases:Unit_Hours) %>%
   droplevels()
 
 
-
-# Fix formatting with newline
-Master$FirstOfHCPCS.Code <- gsub(pattern="90791\n", replacement="90791", x=Master$FirstOfHCPCS.Code)
-
 # Checking to make sure there are no missing HCPCS codes
-sum(is.na(Master$FirstOfHCPCS.Code)) #Result is 0
+sum(is.na(Master$Code)) #Result is 0
 
-# Make a new variable by concatenating HCPCS.Code and Modifier.  This will be most granular level of service definition
-Master$Code_Mod <- paste(Master$FirstOfHCPCS.Code,Master$FirstOfModifier, sep = "", collapse = NULL)
-
-# Remove NA values from Code_Mod
-Master$Code_Mod <- as.character(Master$Code_Mod)
-Master$Code_Mod <-gsub(pattern="NA", replacement="", x=Master$Code_Mod)
-
-#Need to change vars back to a factor
-Master$FirstOfHCPCS.Code<-as.factor(Master$FirstOfHCPCS.Code)
-Master$FirstofService.Description<-as.factor(Master$FirstofService.Description)
-Master$Code_Mod<-as.factor(Master$Code_Mod)
-#str(Master$FirstOfHCPCS.Code)
-#str(Master$FirstofService.Description)
-
-
-#Master$UnitPerCase.1<-NULL
-
-#Reordering the columns
-Master<-Master[c(2,1,3:6,14,7:13)]
 
 #Grouping Service.Description into more general categories (variable named 'Service')
 library("car")
-Service <-recode(Master$FirstOfHCPCS.Code,
-                 "'X01'='State Mental Retardation Facility';
-                 'T2025'='Fiscal Intermediary Services';
+Master$Service <-recode(Master$Code,
+                 "'T2025'='Fiscal Intermediary Services';
                  'H2000'='Behavioral Treatment';
                  'H2019'='Behavioral Treatment';
-                 '104'='Ancillary Services / ECT';
-                 '00104'='Ancillary Services / ECT';
-                 '90870'='Ancillary Services / ECT';
+                 '104'='Ancillary Hospital Services';
+                 '00104'='Ancillary Hospital Services';
+                 '90870'='Ancillary Hospital Services';
                  '80100'='Laboratory';
                  '80101'='Laboratory';
                  '82075'='Assessment';
+                 '90791'='Assessment';
                  '90801'='Assessment';
                  '90802'='Assessment';
                  '90887'='Assessment';
@@ -224,6 +205,9 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  '92627'='OT/PT/SLT';
                  '92630'='OT/PT/SLT';
                  '92633'='OT/PT/SLT';
+                 '92521'='OT/PT/SLT';
+                 '92522'='OT/PT/SLT';
+                 '92523'='OT/PT/SLT';
                  'G0177'='Family Services';
                  'S5110'='Family Services';
                  'S5111'='Family Services';
@@ -394,55 +378,48 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                  'T1002'='Health Services';
                  'T1003'='Health Services';
                  '97811'='Health Services';
-                 'K0739'='Ancillary Services / ECT';
+                 'K0739'='Ancillary Hospital Services';
                  'ALL'='Other';
+                 '98'='Other';
                  'T5999'='Equipment';
-                 'X02'='State Hospitalization';
-                 'X03'='Local Hospitalization';
-                 'X04'='Local Hospitalization';
-                 'X05'='Ancillary Services / ECT';
-                 'X06'='Ancillary Services / ECT';
-                 'X07'='Ancillary Services / ECT';
-                 'X08'='Ancillary Services / ECT';
-                  'X09'='Ancillary Services / ECT';
-                  'X10'='Ancillary Services / ECT';
-                  'X11'='Ancillary Services / ECT';
-                  'X12'='Ancillary Services / ECT';
-                  'X13'='Ancillary Services / ECT';
-                  'X14'='Ancillary Services / ECT';
-                  'X15'='Ancillary Services / ECT';
-                  'X16'='Ancillary Services / ECT';
-                  'X17'='Ancillary Services / ECT';
-                  'X18'='Ancillary Services / ECT';
-                  'X19'='Ancillary Services / ECT';
-                  'X20'='Ancillary Services / ECT';
-                  'X21'='Ancillary Services / ECT';
-                  'X22'='Ancillary Services / ECT';
-                  'X23'='Ancillary Services / ECT';
-                  'X24'='Ancillary Services / ECT';
-                  'X25'='Ancillary Services / ECT';
-                  'X26'='Ancillary Services / ECT';
-                  'X27'='Ancillary Services / ECT';
-                  'X28'='Ancillary Services / ECT';
-                  'X29'='Ancillary Services / ECT';
-                 'X30'='Peer Services';
-                 'X31'='Pharmaceuticals';
-                 'X32'='Crisis Services';
-                 'X33'='Partial Hospitalization';
-                 'X34'='Other';
+                 '0100'='Inpatient Psychiatric Hospital';
+                 '0901'='Ancillary Hospital Services';
+                 '901'='Ancillary Hospital Services';
+                 '0370'='Ancillary Hospital Services';
+                 '370'='Ancillary Hospital Services';
+                  '0450'='Ancillary Hospital Services';
+                  '450'='Ancillary Hospital Services';
+                  '0300'='Ancillary Hospital Services';
+                  '0270'='Ancillary Hospital Services';
+                  '0430'='Ancillary Hospital Services';
+                  '0250'='Ancillary Hospital Services';
+                  '0636'='Ancillary Hospital Services';
+                  '0900'='Ancillary Hospital Services';
+                  '0460'='Ancillary Hospital Services';
+                  '0410'='Ancillary Hospital Services';
+                  '0730'='Ancillary Hospital Services';
+                  '102'='Peer Services';
+                 '105'='Pharmaceuticals';
+                 '0762'='Crisis Services';
+                 '762'='Crisis Services';
+                 '0912'='Partial Hospitalization';
+                 '912'='Partial Hospitalization';
+                 '0913'='Partial Hospitalization';
+                 '913'='Partial Hospitalization';
                  'G0409'='Peer Services';
                  'H0037'='Medication Management';
                  'H2010'='Medication Management';
                  'H0050'='Outpatient Therapy';
                  '90785'='Outpatient Therapy';
-                '90791' = 'Assessment';
+                '90791\n' = 'Assessment';
                 '90792'='Assessment';
                 '90832'='Outpatient Therapy';
                 '90833'='Outpatient Therapy';
                 '90834'='Outpatient Therapy';
                 '90836'='Outpatient Therapy';
                 '90839'='Outpatient Therapy';
-                '90840'='Outpatient Therapy'; 
+                '90840'='Outpatient Therapy';
+                '90791'='Assessment';
                 '99334'='Assessment';
                 '99335'='Assessment'; 
                 '99336'='Assessment'; 
@@ -463,17 +440,14 @@ Service <-recode(Master$FirstOfHCPCS.Code,
                 '99342'='Assessment';
                 '99343'='Assessment';
                 '99344'='Assessment';
-                '99345'='Assessment'")
+                '99345'='Assessment';
+                 else = 'Ungrouped'")
 
-table(Service)
-
-#attaching "Service" to "Master" dataframe
-Master<-cbind(Master, Service) 
 
 #Grouping Service into even more general categories (variable named 'ServiceType')
 library("car")
-ServiceType <-recode(Master$Service,
-                     "'Ancillary Services / ECT'='Hospital-based Services';
+Master$ServiceType <-recode(Master$Service,
+                     "'Ancillary Hospital Services'='Hospital-based Services';
                       'Assessment'='Screening & Assessment';
                       'Behavioral Treatment'='Outpatient Treatment';
                        'Case Management'='Care Coordination';
@@ -488,7 +462,7 @@ ServiceType <-recode(Master$Service,
                        'Fiscal Intermediary Services'='Care Coordination';
                        'Health Services'='Physical Health Services';
                        'Laboratory'='Screening & Assessment';
-                       'Local Hospitalization'='Hospital-based Services';
+                       'Inpatient Psychiatric Hospital'='Hospital-based Services';
                        'Medication Administration'='Medication';
                        'Medication Management'='Medication';
                        'OT/PT/SLT'='Physical Health Services';
@@ -501,31 +475,20 @@ ServiceType <-recode(Master$Service,
                       'Residential Treatment'='Home & Community Based Services';
                       'Respite'='Crisis and Respite';
                       'Skill-Building/Non-Vocational'='Employment Services';
-                      'State Hospitalization'='Hospital-based Services';
-                      'State Mental Retardation Facility'='Hospital-based Services';
                       'Sub-Acute Detoxification'='Hospital-based Services';
                       'Substance Abuse Outpatient'='Outpatient Treatment';
                       'Transportation'='Transportation';
-                      'Vocational Services'='Employment Services'")
-# table(ServiceType)
+                      'Vocational Services'='Employment Services';
+                     else = 'Ungrouped'")
 
-# attaching "ServiceType" to "Master" dataframe
-Master<-cbind(Master, ServiceType)
+service_groups <-
+  Master %>%
+  group_by(ServiceType, Service, Description, Code, Code_Mod) %>%
+  summarize(n = n())
 
 ## Adding PIHP regions to the dataset ##
 
-library(car)
-
-#First, need to recode Network180, Copper Country, and North Country
-#Currently entered as "Networy180", "Copper County," and "North country "
-
-Master$CMHSP<-recode(Master$CMHSP, "'Copper County'='Copper Country';
-                     'Networy180'='Network180';
-                     'North country '='North Country'; 'North country'='North Country'")
-
-#levels(Master$CMHSP)
-
-PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
+Master$PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
              'Network180'='3';
              'Gogebic'='1';
              'Hiawatha'='1';
@@ -573,40 +536,29 @@ PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
              'Sanilac'='10';
              'St. Clair'='10'")
 
-PIHPname<-recode(PIHP, "'1'='Northcare';
-                         '2'='NMRE';
-                         '3'='LRP';
-                         '4'='SWMBH';
-                         '5'='MSHN'; 
-                         '6'='CMHPSM';
-                         '7'='DWMHA';
-                         '8'='OCCMHA';
-                         '9'='MCMHS';
-                         '10'='Region10'")
+Master$PIHPname<-recode(Master$PIHP,  "'1'='Northcare';
+                                       '2'='NMRE';
+                                       '3'='LRP';
+                                       '4'='SWMBH';
+                                       '5'='MSHN'; 
+                                       '6'='CMHPSM';
+                                       '7'='DWMHA';
+                                       '8'='OCCMHA';
+                                       '9'='MCMHS';
+                                       '10'='Region10'")
 
-Master<-cbind(Master,PIHP,PIHPname)
-#table(Master$PIHP)
-
-#reordering the columns
-Master<-Master[c(1,17,18,2,3,16,15,4:14)]
-
-return(Master)
-}
-
-Master <- createMaster()
-
-# Calculating Units per 1000 to standardize utilization across CMH/PIHPs
-
-# This makes comparisons between two CMH/PIHPs that have very different
-# population sizes meaningful. Need unique counts per CMHSP per year.
-
-# Master$Unitsper1000<-(Master$SumOfUnits/(x*1000))
-
-#Printing first 10 rows to see what dataframe looks like
-# head(Master, n=10)
+Master <- 
+Master %>%
+  select(FY, PIHPname, PIHP, CMHSP, Population, ServiceType, Service,
+         Description, Code:Unit_Hours)
 
 #Output Master .csv file
 write.csv(Master, 
-          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master",
+          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master.csv",
+          row.names = FALSE)
+
+#Output Service Groups .csv file
+write.csv(service_groups,
+          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Service_Groups.csv",
           row.names = FALSE)
 
