@@ -29,9 +29,11 @@ read404 <- function(path, fy, pop = c("DD", "MIA", "MIC")) {
   
   df <-
     df %>%
-    mutate(CMHSP = na.locf(CMHSP),
+    mutate(CMHSP = na.locf(CMHSP), # Replace NAs with name CMHSP
            FY = factor(fy),
-           Population = factor(pop), # Replace NAs with name CMHSP
+           Population = factor(pop), 
+           FirstOfRevenue.Code = as.character(FirstOfRevenue.Code),
+           FirstOfHCPCS.Code = as.character(FirstOfHCPCS.Code),
            SumOfCost = gsub(".00|,", "", SumOfCost),
            SumOfCost = as.numeric(gsub("[[:punct:]]", "", SumOfCost)),
            SumOfCases = as.numeric(gsub(".00|,", "", SumOfCases)),

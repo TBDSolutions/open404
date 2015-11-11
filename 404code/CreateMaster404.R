@@ -79,7 +79,7 @@ Master <-
 Master %>%
   mutate(Code = ifelse(is.na(FirstOfHCPCS.Code) == T,
                        yes = gsub("[[:punct:]].*","",FirstOfRevenue.Code),
-                       no = as.character(FirstOfHCPCS.Code))) %>%
+                       no = gsub("[[:punct:]].*","",FirstOfHCPCS.Code))) %>%
   filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) %>%
   mutate(Code2 = recode(FirstofService.Description,
                         "'Other' = 'Other';
@@ -88,7 +88,19 @@ Master %>%
          Code = ifelse(is.na(Code) == T,
                        yes = Code2,
                        no = as.character(Code)),
-         Code = as.factor(gsub("[[:punct:]].*","",Code)),
+         Code = recode(Code, 
+                       "'00104' = '0104'; 
+                       '104' = '0104';
+                       '102' = '0102';
+                       '105' = '0105';
+                       '370' = '0370';
+                       '450' = '0450';
+                       '762' = '0762';
+                       '901' = '0901';
+                       '90791\n' = '90791';
+                       '912' = '0912';
+                       '913' = '0913'"),
+         Code = as.factor(gsub("[\r\n]","",Code)), # remove line breaks
          # Make new var concat Code / Modifier. Most granular level of service
          Code_Mod = paste0(Code,FirstOfModifier, sep = "", collapse = NULL),
          Code_Mod = as.factor(gsub("NA", "", Code_Mod)) # Remove NA values 
@@ -108,7 +120,7 @@ Master$Service <-recode(Master$Code,
                  "'T2025'='Fiscal Intermediary Services';
                  'H2000'='Behavioral Treatment';
                  'H2019'='Behavioral Treatment';
-                 '104'='Ancillary Hospital Services';
+                 '0104'='Ancillary Hospital Services';
                  '00104'='Ancillary Hospital Services';
                  '90870'='Ancillary Hospital Services';
                  '80100'='Laboratory';
@@ -384,9 +396,7 @@ Master$Service <-recode(Master$Code,
                  'T5999'='Equipment';
                  '0100'='Inpatient Psychiatric Hospital';
                  '0901'='Ancillary Hospital Services';
-                 '901'='Ancillary Hospital Services';
                  '0370'='Ancillary Hospital Services';
-                 '370'='Ancillary Hospital Services';
                   '0450'='Ancillary Hospital Services';
                   '450'='Ancillary Hospital Services';
                   '0300'='Ancillary Hospital Services';
@@ -398,20 +408,17 @@ Master$Service <-recode(Master$Code,
                   '0460'='Ancillary Hospital Services';
                   '0410'='Ancillary Hospital Services';
                   '0730'='Ancillary Hospital Services';
-                  '102'='Peer Services';
-                 '105'='Pharmaceuticals';
+                  '0102'='Peer Services';
+                 '0105'='Pharmaceuticals';
                  '0762'='Crisis Services';
                  '762'='Crisis Services';
                  '0912'='Partial Hospitalization';
-                 '912'='Partial Hospitalization';
                  '0913'='Partial Hospitalization';
-                 '913'='Partial Hospitalization';
                  'G0409'='Peer Services';
                  'H0037'='Medication Management';
                  'H2010'='Medication Management';
                  'H0050'='Outpatient Therapy';
                  '90785'='Outpatient Therapy';
-                '90791\n' = 'Assessment';
                 '90792'='Assessment';
                 '90832'='Outpatient Therapy';
                 '90833'='Outpatient Therapy';
