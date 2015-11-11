@@ -12,7 +12,7 @@
 "Care Coordination","Interdisciplinary Team","Wraparound","H2022","H2022",113
 "Care Coordination","Interdisciplinary Team","Wraparound (SED Waiver)","H2022","H2022",57
 "Care Coordination","Interdisciplinary Team","Wraparound (SED Waiver)","H2022","H2022TT",8
-"Care Coordination","Peer Services","Peer Directed and Operated Support Services","102","102",192
+"Care Coordination","Peer Services","Peer Directed and Operated Support Services","0102","0102",192
 "Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0023","H0023",166
 "Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0038","H0038",666
 "Care Coordination","Peer Services","Peer Directed and Operated Support Services","H0046","H0046",19
@@ -29,13 +29,10 @@
 "Crisis and Respite","Crisis Services","Crisis Intervention","H2011","H2011",1078
 "Crisis and Respite","Crisis Services","Crisis Intervention","H2020","H2020",4
 "Crisis and Respite","Crisis Services","Crisis Intervention","T2034","T2034",35
-"Crisis and Respite","Crisis Services","Crisis Observation Care","0762","0762",1
-"Crisis and Respite","Crisis Services","Crisis Observation Care","762","762",1
+"Crisis and Respite","Crisis Services","Crisis Observation Care","0762","0762",2
 "Crisis and Respite","Crisis Services","Substance Abuse: Residential","H0018","H0018",53
-"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","0912","0912",260
-"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","0913","0913",30
-"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","912","912",58
-"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","913","913",5
+"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","0912","0912",318
+"Crisis and Respite","Partial Hospitalization","Outpatient Partial Hospitalization","0913","0913",35
 "Crisis and Respite","Respite","Community Living Supports-Therapeutic Camping","T2036","T2036",48
 "Crisis and Respite","Respite","Community Living Supports-Therapeutic Camping","T2037","T2037",28
 "Crisis and Respite","Respite","Respite","H0045","H0045",430
@@ -92,15 +89,11 @@
 "Home & Community Based Services","Residential Treatment","Substance Abuse: Residential","H0019","H0019",31
 "Home & Community Based Services","Residential Treatment","Substance Abuse Services: Residential Room and Board","S9976","S9976",8
 "Home & Community Based Services","Residential Treatment","Residential Room and Board","S9976","S9976",16
-"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Anesthesia","00104","00104",14
-"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Anesthesia","104","104",7
-"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Facility Charge","0901","0901",100
-"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Facility Charge","901","901",29
+"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Anesthesia","0104","0104",21
+"Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Facility Charge","0901","0901",129
 "Hospital-based Services","Ancillary Hospital Services","Additional Codes-ECT Physician","90870","90870",67
-"Hospital-based Services","Ancillary Hospital Services","ECT Anesthesia","0370","0370",1
-"Hospital-based Services","Ancillary Hospital Services","ECT Anesthesia","370","370",1
-"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Emergency Room","0450","0450",35
-"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Emergency Room","450","450",7
+"Hospital-based Services","Ancillary Hospital Services","ECT Anesthesia","0370","0370",2
+"Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Emergency Room","0450","0450",42
 "Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Laboratory","0300","0300",1
 "Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Medical/Surgical Supplies and Devices","0270","0270",3
 "Hospital-based Services","Ancillary Hospital Services","Inpatient Hospital Ancillary Services - Occupational Therapy","0430","0430",1
@@ -135,7 +128,7 @@
 "Medication","Medication Management","Medication Review ","M0064","M0064",671
 "Medication","Medication Management","Substance Abuse: Medication Review","90862","90862",21
 "Medication","Pharmaceuticals","Enhanced Medical Supplies or Pharmacy","T1999","T1999",412
-"Medication","Pharmaceuticals","Pharmacy (Drugs and Other Biologicals)","105","105",160
+"Medication","Pharmaceuticals","Pharmacy (Drugs and Other Biologicals)","0105","0105",160
 "Medication","Pharmaceuticals","Substance Abuse: Methadone","H0020","H0020",23
 "Medication","Pharmaceuticals","Substance Abuse: Pharmalogical Support - Suboxane","H0033","H0033",3
 "Other","Other","Aggregate for 'J' Codes","ALL","ALL",369
@@ -345,6 +338,7 @@
 "Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92526","92526",48
 "Physical Health Services","OT/PT/SLT","Speech & Language Therapy ","92610","92610",102
 "Physical Health Services","OT/PT/SLT","Speech & Language Therapy (Retired 1/1/14)","92506","92506",17
+"Screening & Assessment","Assessment","Assessment","90791","90791",214
 "Screening & Assessment","Assessment","Assessment","90792","90792",229
 "Screening & Assessment","Assessment","Assessment","90838","90838",12
 "Screening & Assessment","Assessment","Assessment","99334","99334",7
@@ -425,6 +419,3 @@
 "Transportation","Transportation","Substance Abuse Services: Transportation","T2003","T2003",8
 "Transportation","Transportation","Substance Abuse Services: Transportation","T2004","T2004",1
 "Transportation","Transportation","Substance Abuse: Transportation","A0110","A0110",3
-"Ungrouped","Ungrouped","Assessment","90791
-","90791
-",214
