@@ -1,4 +1,6 @@
 
+library(dplyr)
+
 # Combine 404 datasets
   source("function_read404.R")
   Master <- combine404("C:/Users/Josh/Documents/GitHub/open404/data/raw")
@@ -36,15 +38,23 @@
            Cost_Perc_Tot = round(SumOfCost/sum(SumOfCost, na.rm = T) * 100, digits = 1)
            ) %>%
     ungroup()
+
+# Add rates per 1,000 served
+  source("function_calc404rates.R")
+  Master <- calc404rates(df = Master)
+
+# Add rates per 1,000 population (census)
+#   source("function_calcPop.R")
+#   tst <- calc404pop(census_key=census_key)
   
 
-#Output Master .csv file
-write.csv(Master, 
-          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master.csv",
-          row.names = FALSE)
+# Output Master .csv file
+  write.csv(Master, 
+            file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master.csv",
+            row.names = FALSE)
 
-#Output Service Groups .csv file
-write.csv(service_groups,
-          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Service_Groups.csv",
-          row.names = FALSE)
+# Output Service Groups .csv file
+  write.csv(service_groups,
+            file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Service_Groups.csv",
+            row.names = FALSE)
 
