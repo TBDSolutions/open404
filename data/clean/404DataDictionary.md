@@ -1,11 +1,8 @@
 ---
 title: "404DataDictionary"
 author: "J. Hagedorn"
-date: "Friday, August 29, 2014"
 output: html_document
 ---
-
-## All files (subMaster, enriched10to13, alternate10to13)
 
 Each observation (row) pertains to a specific service (Code_Mod), broken down by CMHSP and Population.
 
@@ -30,17 +27,14 @@ High level groupings of services into the following overall types: *"Care Coordi
 ### "Service"
 Lower level groupings of services into multiple types, each falling into one of the "ServiceType" groupings.
 
-### "FirstofService.Description" 
+### "Description" 
 The name of the service, taken from the MDCH-generated 404 report.
 
-### "FirstOfHCPCS.Code"
-The CPT or HCPCS code for the service described in "FirstofService.Description"
-
-### "FirstOfModifier" 
-The modifier attached to the CPT or HCPCS code.  Used to differentiate specific sub-types of services.
+### "Code"
+The CPT or HCPCS code for the service described in "Description".  For services which only have revenue codes, these are used.
 
 ### "Code_Mod"
-A concatenated field of "FirstOfHCPCS.Code" and "FirstOfModifier."  Because there are multiple modifiers for a single code, "Code_Mod" is the most granular specification of the type of service provided.
+A concatenated field of "Code" and "Modifier."  Because there are multiple modifiers for a single code, "Code_Mod" is the most granular specification of the type of service provided.
 
 ### "Unit_Hours"
 A multiplier to convert all time-based units into a common measurement.  For example, units which are of the unit type "hour" have a multiplier of 1, while units of the unit type "15 minutes" have a multiplier of 4.
@@ -72,16 +66,10 @@ The annual cost of the service as a % of the total annual cost of all services, 
 ### "Cost1kSvd"     
 Cost per 1,000 people served by the CMHSP.  Uses the general formula *(Sum Of Cost/Unique Persons Served by CMHSP) x 1000*
 
-### "Unit1kSvd"     
-Units per 1,000 people served by the CMHSP.  Uses the general formula *(Sum Of Units/Unique Persons Served by CMHSP) x 1000*
-
 ### "Perc_Svd"
 Percentage of people served by the CMHSP who received this service (per year/population).
 
-### "CostPUPM"
-Cost PUPM (Per User Per Month)
-
-## 2010 to 2013 files only (enriched10to13, alternate10to13)
+## 2010 to 2013 files only 
 
 These two variables are calculated using the American Community (ACS) survey data from the Census API, which only contains 5-year estimates going back to 2010.
 

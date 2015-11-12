@@ -47,7 +47,6 @@ library(dplyr)
 #   source("function_calcPop.R")
 #   tst <- calc404pop(census_key=census_key)
   
-
 # Output Master .csv file
   write.csv(Master, 
             file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master.csv",

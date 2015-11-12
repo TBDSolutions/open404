@@ -9,6 +9,13 @@ The [code provided here](https://github.com/j-hagedorn/open404/tree/master/404co
 * Grouping of CPT/HCPCS codes into broader [Service Groups](https://github.com/j-hagedorn/open404/blob/master/data/clean/service_groups.csv). 
 * Standardization of unit variable to hours, such that 1.00 = 1 hour
 
+For details on the data elements in this dataset, please refer to the [data dictionary](https://github.com/j-hagedorn/open404/blob/master/data/clean/404DataDictionary.md).
+
+You can read the code into R with a simple:
+`read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master.csv")`
+
+...or [import it into Excel](https://support.office.com/en-za/article/Import-or-export-text-txt-or-csv-files-5250ac4c-663c-47ce-937b-339e391393ba) using the same URL.
+
 This code is made available under a [MIT License](http://opensource.org/licenses/MIT)
 
 The data is drawn from source tables collected by MDHHS, provided by the Behavioral Health and Developmental Disabilities Administration (BHDDA).  Thanks to Kathleen Haines and Kasi Hunzinger for their ongoing help in obtaining data.
