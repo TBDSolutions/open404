@@ -22,7 +22,7 @@ calc404pop <- function(census_key) {
   
   # Use 2012 ACS estimates for 2013 404 population rates, since 2013 ACS data not published yet.
   
-  MI_2013 <- acs.fetch(endyear = 2012, 
+  MI_2014 <- acs.fetch(endyear = 2013, 
                        span = 5, # x-year estimate
                        geography=MIbyCounty, 
                        #table.name,
@@ -32,6 +32,8 @@ calc404pop <- function(census_key) {
                        #key, 
                        col.names = "auto")
   
+  MI_2013 <- acs.fetch(endyear = 2013, span = 5, geography=MIbyCounty,  
+                       variable = c('B01001_001','B09001_001'), col.names = "auto")
   MI_2012 <- acs.fetch(endyear = 2012, span = 5, geography=MIbyCounty,  
                        variable = c('B01001_001','B09001_001'), col.names = "auto")
   MI_2011 <- acs.fetch(endyear = 2011, span = 5, geography=MIbyCounty,  
@@ -43,6 +45,13 @@ calc404pop <- function(census_key) {
   
   # Make a dataframe
   #####
+  
+  # ...for 2014
+  MI_df_14 <- data.frame(estimate(MI_2013))
+  colnames(MI_df_14)=c("TotalPop","Under18")
+  MI_df_14$Year <- 2014  #add year variable
+  MI_df_14$County <- rownames(MI_df_14) #create new var using rownames
+  rownames(MI_df_14) <- NULL #nullify existing rownames
   
   # ...for 2013
   MI_df_13 <- data.frame(estimate(MI_2013))
@@ -72,7 +81,7 @@ calc404pop <- function(census_key) {
   MI_df_10$County <- rownames(MI_df_10) #create new var using rownames
   rownames(MI_df_10) <- NULL #nullify existing rownames
   
-  MI_df <- rbind(MI_df_13,MI_df_12,MI_df_11, MI_df_10) #bind the 4 years together
+  MI_df <- rbind(MI_df_14,MI_df_13,MI_df_12,MI_df_11, MI_df_10) #bind the 4 years together
   MI_df <- MI_df[,c(3,4,1,2)] #reorder columns
   MI_df$Over18 <- MI_df$TotalPop-MI_df$Under18 # compute pop over 18
   MI_df$County <- as.factor(MI_df$County)
@@ -238,12 +247,13 @@ calc404pop <- function(census_key) {
   # Merge with 404 data
   #####
   # Read in 404 data
-  subMaster <- read.csv('https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/subMaster', sep=',', header=TRUE)
-  FY10to13 <- subset(subMaster, FY >= 2010)
+  FY10to14 <- 
+  Master %>% 
+    filter(FY %in% c("2010","2011","2012","2013","2014"))
   
   # Create unique "Year-CMH" key to merge
   byCMHSP$Key <- paste(byCMHSP$Year,byCMHSP$CMHSP, sep = "", collapse = NULL)
-  FY10to13$Key <- paste(FY10to13$FY,FY10to13$CMHSP, sep = "", collapse = NULL)
+  FY10to14$Key <- paste(FY10to14$FY,FY10to14$CMHSP, sep = "", collapse = NULL)
   merged <- merge(byCMHSP, FY10to13, by.x = "Key", by.y = "Key")
   #####
   
@@ -293,19 +303,3 @@ calc404pop <- function(census_key) {
   return(merged)
 }
 
-enriched10to13 <- calc404pop(census_key=census_key)
-
-# Output enriched10to13 .csv file
-write.csv(enriched10to13, 
-          file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\enriched10to13")
-#####
-
-# Test aggregation
-library(dplyr)
-summarise(group_by(merged10to12, FY,CMHSP), 
-          Cost1000=sum(SumOfCost)/(mean(subPop)/1000),
-          Srvd1000=sum(SumOfCases)/(mean(subPop)/1000))
-
-summarise(group_by(merged10to12, FY,CMHSP), 
-          Cost1000=sum(Cost1kPop),
-          Srvd1000=sum(Srvd1kPop))
