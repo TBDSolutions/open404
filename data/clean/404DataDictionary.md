@@ -79,5 +79,8 @@ The cost of the service per 1,000 members of the general population.
 ### "Srvd1kPop"
 The number of people receiving the service per 1,000 members of the general population.
 
+## Notes:
+The CMHSP "Clinton Eaton Ingham" did not submit their cost and service use data for fiscal year 2014.  Since services with values of zero for cost, units and cases are excluded from the Master dataset, this CMHSP does not show up in 2014.
+
 # Other references:
 [MDCH 404 site](http://www.michigan.gov/mdch/0,4612,7-132-2941_4868_4902-256889--,00.html)
