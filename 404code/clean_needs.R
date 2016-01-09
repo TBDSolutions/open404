@@ -5,7 +5,9 @@ library(tidyr)
 # Source function from GitHub
 source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/function_combineNeeds_v2.R")
 
-needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessment/data")
+#needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessment/data")
+needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/needs")
+
 # Others doing this would have to download .xls from the folder at:
 # "https://github.com/j-hagedorn/open404/tree/master/data/needs"
 
@@ -38,8 +40,6 @@ needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessme
   needs$CMHSP <- gsub("&", "and", needs$CMHSP, fixed = T)
   needs$CMHSP <- gsub("bhs", "", needs$CMHSP, fixed = T)
   
-  
-
 # Map codes
 
   needs$CMHSP <- car::recode(needs$CMHSP, 
