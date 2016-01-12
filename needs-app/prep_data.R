@@ -1,3 +1,13 @@
+# Install required packages
+  # Define required packages
+    list.of.packages <- c("car","dplyr", "rcdimple","DT","tidyr",
+                          "networkD3","shinydashboard")
+    
+  # Check for and install new packages  
+    new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+    if(length(new.packages)) install.packages(new.packages)
+    
+    rm(list.of.packages); rm(new.packages)
 
 #### Aggregate data to allow presentation in open app
 

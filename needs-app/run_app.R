@@ -12,6 +12,9 @@ deployApp("needs-app", account = "tbdsolutions")
 
 # Get info about ShinyApps accounts
 
+rsconnect::showLogs(needsapp, account = "joshh")
+
+applications()
 accounts()
 accountInfo("joshh")
 accountInfo("tbdsolutions")

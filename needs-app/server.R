@@ -1,21 +1,17 @@
+## server.R ##
 
-# Define required packages
-  list.of.packages <- c("car","dplyr", "rcdimple","DT","tidyr",
-                        "networkD3","shinydashboard")
-
-# Check for and install new packages  
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-  if(length(new.packages)) install.packages(new.packages)
-  
-  rm(list.of.packages); rm(new.packages)
-
+  library(car)
+  library(dplyr)
+  library(tidyr)
+  library(rcdimple)
+  library(DT)
+  library(networkD3)
+  library(shinydashboard)
 
 #####
 # Load de-identified data
   needs <- read.csv("data/needs.csv")
   
-  master <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master.csv")
-
 #####
 # Summarize by Phases
 

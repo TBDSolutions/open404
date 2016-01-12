@@ -1,17 +1,16 @@
 ## ui.R ##
 
-library(car)
-library(dplyr)
-library(tidyr)
-library(rcdimple)
-library(DT)
-library(networkD3)
-library(shinydashboard)
+  library(car)
+  library(dplyr)
+  library(tidyr)
+  library(rcdimple)
+  library(DT)
+  library(networkD3)
+  library(shinydashboard)
 
 #####
 # Load de-identified data
-needs <- read.csv("data/needs.csv")
-
+  needs <- read.csv("data/needs.csv")
 
 # Summarize to create measures
 
