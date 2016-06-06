@@ -4,13 +4,17 @@
 
 # R History files
 .Rhistory
-
+*.Rproj
 # Ignore Codebooks
 *.pdf
 *.ppsx
 *!/codebooks
 
 *.html
+
+*\.RData
+*.RData
+*.dcf
 
 #################
 ## Eclipse
@@ -228,3 +232,5 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 .Rproj.user
+*.RData
+404code/.RData
