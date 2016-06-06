@@ -1,6 +1,7 @@
 name: needs-app
 account: tbdsolutions
 server: shinyapps.io
-bundleId: 307741
-url: https://tbdsolutions.shinyapps.io/needs-app
-when: 1447171305.3232
+appId: 67694
+bundleId: 347882
+url: https://tbdsolutions.shinyapps.io/needs-app/
+when: 1452565610.81906

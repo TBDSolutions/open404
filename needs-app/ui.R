@@ -203,7 +203,10 @@ dashboardPage(skin = "green",
                             "Needs Assessment"), 
                           " contains data related to requests for service and 
                           waiting list information consistent with other CMHSP 
-                          contractual requirements.")
+                          contractual requirements."),
+                        p("You can download the combined and cleaned data by 
+                          clicking the link below:"),
+                        downloadButton('downloadData', 'Download')
                         )
                       )
                     

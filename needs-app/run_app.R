@@ -8,7 +8,7 @@ library(shinyapps)
 
 deployApp(needsapp, account = "joshh")
 
-deployApp("needs-app", account = "tbdsolutions")
+deployApp(needsapp, account = "tbdsolutions")
 
 # Get info about ShinyApps accounts
 

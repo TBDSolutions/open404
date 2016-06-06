@@ -626,5 +626,12 @@ shinyServer(
       # Compare PIHPs, CMHSPs
       # include selection of time periods
     
+    output$downloadData <- downloadHandler(
+      filename = "MDHHS_ServiceDisposition_Combined.csv",
+      content = function(file) {
+        write.csv(needs, file)
+      }
+      )
+    
     } 
   )
