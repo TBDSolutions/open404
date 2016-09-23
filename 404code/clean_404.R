@@ -3,7 +3,7 @@ library(dplyr)
 
 # Combine 404 datasets
   source("function_read404.R")
-  Master <- combine404("C:/Users/Josh/Documents/GitHub/open404/data/raw")
+  Master <- combine404("../data/raw")
 
 # Clean CPT/HCPCS and apply groupings
   source("function_group404.R")
