@@ -11,7 +11,7 @@
 *!/codebooks
 
 *.html
-
+*.rda
 *\.RData
 *.RData
 *.dcf
@@ -234,3 +234,4 @@ pip-log.txt
 .Rproj.user
 *.RData
 404code/.RData
+*.RData
