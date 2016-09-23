@@ -49,7 +49,7 @@ library(dplyr)
   
 # Output Master .csv file
   write.csv(Master, 
-            file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master.csv",
+            file="../data/clean/Master.csv",
             row.names = FALSE)
 
 # Output Service Groups .csv file
