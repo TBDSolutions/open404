@@ -3,7 +3,7 @@ library(dplyr)
 
 # Combine 404 datasets
   source("function_read404.R")
-  Master <- combine404("C:/Users/Josh/Documents/GitHub/open404/data/raw")
+  Master <- combine404("../data/raw")
 
 # Clean CPT/HCPCS and apply groupings
   source("function_group404.R")
@@ -49,7 +49,7 @@ library(dplyr)
   
 # Output Master .csv file
   write.csv(Master, 
-            file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Master.csv",
+            file="../data/clean/Master.csv",
             row.names = FALSE)
 
 # Output Service Groups .csv file
