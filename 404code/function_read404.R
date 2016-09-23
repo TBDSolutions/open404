@@ -20,6 +20,8 @@ read404 <- function(path, fy, pop = c("DD", "MIA", "MIC")) {
   df[df == ''] <- NA #change blanks to NA
   
   names(df)[1] <- "CMHSP" # change CMHSP name col
+  names(df)[2] <- "FirstofService.Description"
+  names(df)[6] <- "UnitType" # change UnitType name col
   names(df)[7] <- "SumOfCases" # change SumOfCases name col
   names(df)[8] <- "SumOfUnits" # change CMHSP name col
   names(df)[9] <- "SumOfCost" # change CMHSP name col
@@ -35,11 +37,18 @@ read404 <- function(path, fy, pop = c("DD", "MIA", "MIC")) {
            FirstOfRevenue.Code = as.character(FirstOfRevenue.Code),
            FirstOfHCPCS.Code = as.character(FirstOfHCPCS.Code),
            SumOfCost = gsub(".00|,", "", SumOfCost),
+           SumOfCost = gsub("\\..*", "", SumOfCost),
            SumOfCost = as.numeric(gsub("[[:punct:]]", "", SumOfCost)),
            SumOfCases = as.numeric(gsub(".00|,", "", SumOfCases)),
-           SumOfUnits = as.numeric(gsub(".00|,", "", SumOfUnits))
+           SumOfCases = as.numeric(gsub("\\..*", "", SumOfCases)),
+           SumOfUnits = as.numeric(gsub(".00|,", "", SumOfUnits)),
+           SumOfUnits = as.numeric(gsub("\\..*", "", SumOfUnits))
     ) %>%
     filter(is.na(FirstofService.Description) == F) %>%
+    mutate(CostPerCase = round(SumOfCost/SumOfCases, digits = 2),
+           CostPerUnit = round(SumOfCost/SumOfUnits, digits = 2),
+           UnitPerCase = round(SumOfUnits/SumOfCases, digits = 1)
+    ) %>%
     select(CMHSP, FY, Population, FirstofService.Description:UnitPerCase)
   
   return(df)
