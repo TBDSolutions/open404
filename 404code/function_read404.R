@@ -36,12 +36,12 @@ read404 <- function(path, fy, pop = c("DD", "MIA", "MIC")) {
            Population = factor(pop), 
            FirstOfRevenue.Code = as.character(FirstOfRevenue.Code),
            FirstOfHCPCS.Code = as.character(FirstOfHCPCS.Code),
-           SumOfCost = gsub(".00|,", "", SumOfCost),
+           SumOfCost = gsub(",", "", SumOfCost),
            SumOfCost = gsub("\\..*", "", SumOfCost),
            SumOfCost = as.numeric(gsub("[[:punct:]]", "", SumOfCost)),
-           SumOfCases = as.numeric(gsub(".00|,", "", SumOfCases)),
+           SumOfCases = as.numeric(gsub(",", "", SumOfCases)),
            SumOfCases = as.numeric(gsub("\\..*", "", SumOfCases)),
-           SumOfUnits = as.numeric(gsub(".00|,", "", SumOfUnits)),
+           SumOfUnits = as.numeric(gsub(",", "", SumOfUnits)),
            SumOfUnits = as.numeric(gsub("\\..*", "", SumOfUnits))
     ) %>%
     filter(is.na(FirstofService.Description) == F) %>%
@@ -49,7 +49,10 @@ read404 <- function(path, fy, pop = c("DD", "MIA", "MIC")) {
            CostPerUnit = round(SumOfCost/SumOfUnits, digits = 2),
            UnitPerCase = round(SumOfUnits/SumOfCases, digits = 1)
     ) %>%
-    select(CMHSP, FY, Population, FirstofService.Description:UnitPerCase)
+    select(CMHSP,FY,Population,FirstofService.Description,
+           FirstOfRevenue.Code,FirstOfHCPCS.Code,FirstOfModifier,
+           UnitType,SumOfCases,SumOfUnits,SumOfCost,
+           CostPerCase,CostPerUnit,UnitPerCase)
   
   return(df)
   
@@ -78,6 +81,10 @@ combine404 <- function(directory) {
     pop <- ifelse(pop == "-DD", yes = "DD", no = pop)
     
     x <- read404(path = files[i], fy = fy, pop = pop)
+    
+    print(paste0(length(colnames(x)), " columns: ", fy,"_",pop))
+    ## For use in diagnosing issues:
+    # print(paste0("Column names: ", colnames(x)))
     
     df <- rbind(df, x)
     
