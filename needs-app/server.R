@@ -1,7 +1,7 @@
 ## server.R ##
 
-  library(car)
   library(dplyr)
+  library(car)
   library(tidyr)
   library(rcdimple)
   library(DT)
@@ -61,20 +61,20 @@
     group_by(FY,PIHPname,CMHSP,Population) %>%
     gather(Measure,Score, throughput:elig_wait) %>%
     mutate(MeasureDesc = recode(Measure,
-                                "'throughput' = 'Overall Access';
-                                'in_nonMH' = '% total requesting non-CMH services';
-                                'drop_out' = 'Assessment Drop-out Rate';
-                                'assess_elig' = '% Assessed Eligible';
-                                'in_req' = '% total requesting CMH services';
-                                'req_screenout' = '% Screened Out';
-                                'refer_MHP' = '% Referred to MHP';
-                                'refer_FFS' = '% Referred to FFS';
-                                'inelig_rfrMH' = '% Referred for External MH Svs';
-                                'elig_urg_imm' = '% Meeting Acute Criteria';
-                                'some_wait' = '% of waitlist with partial service';
-                                'all_wait' = '% of waitlist with partial service';
-                                'elig_wait' = '% of eligibles on waitlist'"))
-    
+                                throughput = "Overall Access",
+                                in_nonMH = "% total requesting non-CMH services",
+                                drop_out = "Assessment Drop-out Rate",
+                                assess_elig = "% Assessed Eligible",
+                                in_req = "% total requesting CMH services",
+                                req_screenout = "% Screened Out",
+                                refer_MHP = "% Referred to MHP",
+                                refer_FFS = "% Referred to FFS",
+                                inelig_rfrMH = "% Referred for External MH Svs",
+                                elig_urg_imm = "% Meeting Acute Criteria",
+                                some_wait = "% of waitlist with partial service",
+                                all_wait = "% of waitlist with partial service",
+                                elig_wait = "% of eligibles on waitlist"))
+
   
 #####
 
@@ -94,12 +94,12 @@ shinyServer(
                  & FY <= input$fy[2]) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -113,12 +113,12 @@ shinyServer(
                  & PIHPname == input$pihp) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -131,12 +131,12 @@ shinyServer(
                  & CMHSP == input$cmh) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -149,12 +149,12 @@ shinyServer(
                  & PIHPname == input$pihp) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -178,21 +178,21 @@ shinyServer(
       name_df <- 
         name_df %>%
         mutate(name = as.factor(recode(name, 
-                                       "'assmt_sched' = 'Assessment';
-                                  'eligible' = 'Eligible';
-                                  'req_CMHsvc' = 'Seek CMH service';
-                                  'total_in' = 'All seeking service';
-                                  'all_wait' = 'Waitlist all';
-                                  'no_elig_deter' = 'No show';
-                                  'not_eligible' = 'Other';
-                                  'out_nonMH' = 'Non MH needs';
-                                  'rfr_to_FFS' = 'To FFS';
-                                  'rfr_to_MHP' = 'To MHP';
-                                  'screened_out' = 'Screened out';
-                                  'screened_out_other' = 'Screened other';
-                                  'seeking_SUD' = 'To SUD';
-                                  'some_wait' = 'Waitlist some';
-                                  'waiting' = 'Waitlist'")))
+                                       assmt_sched = "Assessment",
+                                       eligible = "Eligible",
+                                       req_CMHsvc = "Seek CMH service",
+                                       total_in = "All seeking service",
+                                       all_wait = "Waitlist all",
+                                       no_elig_deter = "No show",
+                                       not_eligible = "Other",
+                                       out_nonMH = "Non MH needs",
+                                       rfr_to_FFS = "To FFS",
+                                       rfr_to_MHP = "To MHP",
+                                       screened_out = "Screened out",
+                                       screened_out_other = "Screened other",
+                                       seeking_SUD = "To SUD",
+                                       some_wait = "Waitlist some",
+                                       waiting = "Waitlist")))
         
       
       sankeyNetwork(Links = n, Nodes = name_df, 
@@ -204,7 +204,7 @@ shinyServer(
                     fontSize = 20, 
                     nodeWidth = 20, 
                     nodePadding = 20,
-#                     height = 500, 
+                    height = 500, 
                     width = 500
                     )
       
@@ -220,12 +220,12 @@ shinyServer(
                  & FY <= input$fy[2]) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -239,12 +239,12 @@ shinyServer(
                  & PIHPname == input$pihp) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -257,12 +257,12 @@ shinyServer(
                  & CMHSP == input$cmh) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -275,12 +275,12 @@ shinyServer(
                  & PIHPname == input$pihp) %>%
           droplevels() %>%
           select(Phase, to = Name, People) %>%
-          mutate(from = car::recode(Phase, 
-                                    "'Start' = 'total_in';
-                                    'Entry' = 'total_in';
-                                    'Screening' = 'req_CMHsvc';
-                                    'Eligibility' = 'assmt_sched';
-                                    'Waiting' = 'eligible'")) %>%
+          mutate(from = recode(Phase, 
+                               Start = "total_in",
+                               Entry = "total_in",
+                               Screening = "req_CMHsvc",
+                               Eligibility = "assmt_sched",
+                               Waiting = "eligible")) %>%
           group_by(from,to) %>%
           summarize(people = sum(People, na.rm = T)) %>%
           ungroup()
@@ -302,37 +302,37 @@ shinyServer(
         rename(to_id = id) %>%
         droplevels() %>%
         mutate(from = as.factor(recode(from, 
-                                       "'assmt_sched' = 'Assessment';
-                                        'eligible' = 'Eligible';
-                                        'req_CMHsvc' = 'Seek CMH service';
-                                        'total_in' = 'All seeking service';
-                                        'all_wait' = 'Waitlist all';
-                                        'no_elig_deter' = 'No show';
-                                        'not_eligible' = 'Other';
-                                        'out_nonMH' = 'Non MH needs';
-                                        'rfr_to_FFS' = 'To FFS';
-                                        'rfr_to_MHP' = 'To MHP';
-                                        'screened_out' = 'Screened out';
-                                        'screened_out_other' = 'Screened other';
-                                        'seeking_SUD' = 'To SUD';
-                                        'some_wait' = 'Waitlist some';
-                                        'waiting' = 'Waitlist'")),
-               to = as.factor(recode(to, 
-                                     "'assmt_sched' = 'Assessment';
-                                      'eligible' = 'Eligible';
-                                      'req_CMHsvc' = 'Seek CMH service';
-                                      'total_in' = 'All seeking service';
-                                      'all_wait' = 'Waitlist all';
-                                      'no_elig_deter' = 'No show';
-                                      'not_eligible' = 'Other';
-                                      'out_nonMH' = 'Non MH needs';
-                                      'rfr_to_FFS' = 'To FFS';
-                                      'rfr_to_MHP' = 'To MHP';
-                                      'screened_out' = 'Screened out';
-                                      'screened_out_other' = 'Screened other';
-                                      'seeking_SUD' = 'To SUD';
-                                      'some_wait' = 'Waitlist some';
-                                      'waiting' = 'Waitlist'")),
+                                       assmt_sched = "Assessment",
+                                       eligible = "Eligible",
+                                       req_CMHsvc = "Seek CMH service",
+                                       total_in = "All seeking service",
+                                       all_wait = "Waitlist all",
+                                       no_elig_deter = "No show",
+                                       not_eligible = "Other",
+                                       out_nonMH = "Non MH needs",
+                                       rfr_to_FFS = "To FFS",
+                                       rfr_to_MHP = "To MHP",
+                                       screened_out = "Screened out",
+                                       screened_out_other = "Screened other",
+                                       seeking_SUD = "To SUD",
+                                       some_wait = "Waitlist some",
+                                       waiting = "Waitlist")),
+               to = as.factor(recode(from, 
+                                     assmt_sched = "Assessment",
+                                     eligible = "Eligible",
+                                     req_CMHsvc = "Seek CMH service",
+                                     total_in = "All seeking service",
+                                     all_wait = "Waitlist all",
+                                     no_elig_deter = "No show",
+                                     not_eligible = "Other",
+                                     out_nonMH = "Non MH needs",
+                                     rfr_to_FFS = "To FFS",
+                                     rfr_to_MHP = "To MHP",
+                                     screened_out = "Screened out",
+                                     screened_out_other = "Screened other",
+                                     seeking_SUD = "To SUD",
+                                     some_wait = "Waitlist some",
+                                     waiting = "Waitlist")),
                pct = round( people 
                             / sum(people[from == "All seeking service"]) * 100, 
                             digits = 1) 
@@ -344,7 +344,7 @@ shinyServer(
                 rownames = FALSE,
                 colnames = c('From step...','To step...',
                              '# of people','% of total'),
-                extensions = c('Responsive'),
+                extensions = c(Responsive),
                 options = list(pageLength = 15, lengthMenu = c(5, 15))
                 )
       
@@ -399,19 +399,19 @@ shinyServer(
         group_by(CMHSP) %>%
         gather(Measure,Score, throughput:elig_wait) %>%
         mutate(MeasureDesc = recode(Measure,
-                                    "'throughput' = 'Overall Access';
-                                    'in_nonMH' = '% total requesting non-CMH services';
-                                    'drop_out' = 'Assessment Drop-out Rate';
-                                    'assess_elig' = '% Assessed Eligible';
-                                    'in_req' = '% total requesting CMH services';
-                                    'req_screenout' = '% Screened Out';
-                                    'refer_MHP' = '% Referred to MHP';
-                                    'refer_FFS' = '% Referred to FFS';
-                                    'inelig_rfrMH' = '% Referred for External MH Svs';
-                                    'elig_urg_imm' = '% Meeting Acute Criteria';
-                                    'some_wait' = '% of waitlist with partial service';
-                                    'all_wait' = '% of waitlist with partial service';
-                                    'elig_wait' = '% of eligibles on waitlist'")) %>%
+                                    throughput = "Overall Access",
+                                    in_nonMH = "% total requesting non-CMH services",
+                                    drop_out = "Assessment Drop-out Rate",
+                                    assess_elig = "% Assessed Eligible",
+                                    in_req = "% total requesting CMH services",
+                                    req_screenout = "% Screened Out",
+                                    refer_MHP = "% Referred to MHP",
+                                    refer_FFS = "% Referred to FFS",
+                                    inelig_rfrMH = "% Referred for External MH Svs",
+                                    elig_urg_imm = "% Meeting Acute Criteria",
+                                    some_wait = "% of waitlist with partial service",
+                                    all_wait = "% of waitlist with partial service",
+                                    elig_wait = "% of eligibles on waitlist")) %>%
         filter(is.na(Score) == F
                & Score >= 0
                & Score <= 100
@@ -483,15 +483,15 @@ shinyServer(
                emergent or routine and, if so, will address emergent and urgent 
                need first. To assure understanding of the problem from the point 
                of view of the person who is seeking help, methods for determining 
-               urgent or emergent situations must incorporate 'caller or client-defined' 
+               urgent or emergent situations must incorporate caller or client-defined 
                crisis situations. Workers must be able to demonstrate empathy as 
-               a key customer service method.' Therefore, there is considerable 
+               a key customer service method. Therefore, there is considerable 
                room for interpretation and subjective decision making. It may be 
                beneficial for the PIHP to facilitate a discussion among the CMHSPs 
                to determine how their access departments define these terms on a 
                day to day basis. It should also be clarified if these conditions 
                are tracked as a data element that is monitored and if not, how 
-               the CMHSP determined their answer for these items. (See: Medicaid 
+               the CMHSP determined their answer for these items.' (See: Medicaid 
                Managed Specialty Services and Supports Contract, Attachment P4.1.1; 
                page 4 Screening For Crisis)")
       } else if ( input$measure == "% of eligibles on waitlist" ) {

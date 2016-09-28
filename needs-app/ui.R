@@ -1,6 +1,5 @@
 ## ui.R ##
 
-  library(car)
   library(dplyr)
   library(tidyr)
   library(rcdimple)
@@ -38,19 +37,19 @@ need_metrics <-
   group_by(FY,PIHPname,CMHSP,Population) %>%
   gather(Measure,Score, throughput:elig_wait) %>%
   mutate(MeasureDesc = recode(Measure,
-                              "'throughput' = 'Overall Access';
-                                'in_nonMH' = '% total requesting non-CMH services';
-                                'drop_out' = 'Assessment Drop-out Rate';
-                                'assess_elig' = '% Assessed Eligible';
-                                'in_req' = '% total requesting CMH services';
-                                'req_screenout' = '% Screened Out';
-                                'refer_MHP' = '% Referred to MHP';
-                                'refer_FFS' = '% Referred to FFS';
-                                'inelig_rfrMH' = '% Referred for External MH Svs';
-                                'elig_urg_imm' = '% Meeting Acute Criteria';
-                                'some_wait' = '% of waitlist with partial service';
-                                'all_wait' = '% of waitlist with partial service';
-                                'elig_wait' = '% of eligibles on waitlist'"))
+                              throughput = "Overall Access",
+                              in_nonMH = "% total requesting non-CMH services",
+                              drop_out = "Assessment Drop-out Rate",
+                              assess_elig = "% Assessed Eligible",
+                              in_req = "% total requesting CMH services",
+                              req_screenout = "% Screened Out",
+                              refer_MHP = "% Referred to MHP",
+                              refer_FFS = "% Referred to FFS",
+                              inelig_rfrMH = "% Referred for External MH Svs",
+                              elig_urg_imm = "% Meeting Acute Criteria",
+                              some_wait = "% of waitlist with partial service",
+                              all_wait = "% of waitlist with partial service",
+                              elig_wait = "% of eligibles on waitlist"))
 
 ## DEFINE UI ##
 
