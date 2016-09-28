@@ -15,59 +15,60 @@ group404 <- function(Master) {
   #All values are based on 1.00 = 1 hour
   
   #install.packages('car')
-  library("car")
-  Master$Unit_Hours <-recode(Master$UnitType,
-                             "'' = NA;                                                                
-                             ' of items'= NA;                                                      
-                             ' of tests'= NA;                                                      
-                             ' of treatments'= NA;                                                 
-                             ' of units'= NA;                                                    
-                             ' of visits'= NA;                                             
-                             '15 minutes'='.25';                                                    
-                             '15 Minutes'='.25';                                              
-                             '30 Minutes'='.50';                                                    
-                             '30 Minutes or less'='.50';                                             
-                             'Days'='24.00';                                                            
-                             'Encounter'= NA;                                                      
-                             'Encounter  Trip'= NA;                                               
-                             'Encounter 2030 Min'='.50';                                           
-                             'Encounter 4550 Min'='.83';                                            
-                             'Encounter 7580 Min'='1.33';                                            
-                             'Encounter Face-to-Face'= NA;                                         
-                             'Evaluation'= NA;                                                     
-                             'Face to Face Contact'= NA;                                           
-                             'Hour'='1.00';                                                          
-                             'Items'= NA;                                                         
-                             'Minutes'= NA;                                                        
-                             'Month'='720.00';                                                         
-                             'Per diem'='24.00';                                              
-                             'Per Diem'='24.00';                                              
-                             'Per mile'= NA;                                                       
-                             'Per Mile'= NA;                                                      
-                             'Per oneway trip'= NA;                                              
-                             'Refer to code descriptions'= NA;                                   
-                             'Service'= NA;                                                      
-                             'Up to 15 min'='.25';                                                   
-                             'Per Hour'='1.00';                                                      
-                             'Per Screen'= NA;                                                      
-                             'Per Test'= NA;                                                      
-                             '25 minutes'='.42';                                                    
-                             '35 Minutes'='.58';                                                    
-                             '50 Minutes'='.83';                                                    
-                             '70 Minutes'='1.17';                                                    
-                             'Direct Observation Encounter'= NA;                                   
-                             'Each Additional 15 Minutes'='.25'; #same as 15 minutes                                     
+  library(car)
+  Master$Unit_Hours <-car::recode(Master$UnitType,
+                             "'' = NA;
+                             ' of items'= NA;
+                             ' of tests'= NA;
+                             ' of treatments'= NA;
+                             ' of units'= NA;
+                             ' of visits'= NA;
+                             '15 minutes'='.25';
+                             '15 Minutes'='.25';
+                             '30 Minutes'='.50';
+                             '30 Minutes or less'='.50';
+                             'Days'='24.00';
+                             'Encounter'= NA;
+                             'Encounter  Trip'= NA;
+                             'Encounter 2030 Min'='.50';
+                             'Encounter 4550 Min'='.83';
+                             'Encounter 7580 Min'='1.33';
+                             'Encounter Face-to-Face'= NA;
+                             'Evaluation'= NA;
+                             'Face to Face Contact'= NA;
+                             'Hour'='1.00';
+                             'Items'= NA;
+                             'Minutes'= NA;
+                             'Month'='720.00';
+                             'Per diem'='24.00';
+                             'Per Diem'='24.00';
+                             'Per mile'= NA;
+                             'Per Mile'= NA;
+                             'Per oneway trip'= NA;
+                             'Refer to code descriptions'= NA;
+                             'Service'= NA;
+                             'Up to 15 min'='.25';
+                             'Per Hour'='1.00';
+                             'Per Screen'= NA;
+                             'Per Test'= NA;
+                             '25 minutes'='.42';
+                             '35 Minutes'='.58';
+                             '50 Minutes'='.83';
+                             '70 Minutes'='1.17';
+                             'Direct Observation Encounter'= NA;
+                             'Each Additional 15 Minutes'='.25'; 
                              'Encounter Trip  Per session One day partial day'='8.00';
                              'Encounter Trip  Per session One day partial day'='8.00';
-                             'Encounter Trip Per session One night one session'='8.00';         
-                             'Encounter FacetoFace generally less than 10 minutes'='.17';         
-                             'Encounter Session at least 45 min'='.75';                              
-                             'First Hour'='1.00';                                                    
-                             'Month   Service'='720.00';                                                
-                             'Per Service'= NA;                                                     
-                             'Per Item'= NA;                                                   
+                             'Encounter Trip Per session One night one session'='8.00';
+                             'Encounter FacetoFace generally less than 10 minutes'='.17';
+                             'Encounter Session at least 45 min'='.75';
+                             'First Hour'='1.00';
+                             'Month   Service'='720.00';
+                             'Per Service'= NA;
+                             'Per Item'= NA;
                              'Per session One day partial day'='8.00';
-                             'Per session One night'='8.00'")
+                             'Per session One night'='8.00';
+                             else = NA")
   
   Master$Unit_Hours <- as.numeric(Master$Unit_Hours)
   
@@ -79,14 +80,14 @@ group404 <- function(Master) {
                          yes = gsub("[[:punct:]].*","",FirstOfRevenue.Code),
                          no = gsub("[[:punct:]].*","",FirstOfHCPCS.Code))) %>%
     filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) %>%
-    mutate(Code2 = recode(FirstofService.Description,
+    mutate(Code2 = car::recode(FirstofService.Description,
                           "'Other' = 'Other';
                           'Peer Directed and Operated Support Services' = 'Peer';
                           'Pharmacy (Drugs and Other Biologicals)' = 'Pharm'"),
            Code = ifelse(is.na(Code) == T,
                          yes = Code2,
                          no = as.character(Code)),
-           Code = recode(Code, 
+           Code = car::recode(Code, 
                          "'00104' = '0104'; 
                          '104' = '0104';
                          '102' = '0102';
@@ -114,8 +115,7 @@ group404 <- function(Master) {
   
   
   #Grouping Service.Description into more general categories (variable named 'Service')
-  library("car")
-  Master$Service <-recode(Master$Code,
+  Master$Service <- car::recode(Master$Code,
                           "'T2025'='Fiscal Intermediary Services';
                           'H2000'='Behavioral Treatment';
                           'H2019'='Behavioral Treatment';
@@ -451,8 +451,7 @@ group404 <- function(Master) {
   
   
   #Grouping Service into even more general categories (variable named 'ServiceType')
-  library("car")
-  Master$ServiceType <-recode(Master$Service,
+  Master$ServiceType <- car::recode(Master$Service,
                               "'Ancillary Hospital Services'='Hospital-based Services';
                               'Assessment'='Screening & Assessment';
                               'Behavioral Treatment'='Outpatient Treatment';
@@ -492,9 +491,16 @@ group404 <- function(Master) {
     group_by(ServiceType, Service, Description, Code, Code_Mod) %>%
     summarize(n = n())
   
+  
+  ## Standardize CMHSP names
+  Master$CMHSP <- car::recode(Master$CMHSP,
+                         "'LifeWays' = 'Lifeways';
+                         'Manistee-Benzie (Centra Wellness)' = 'Manistee-Benzie';
+                         'Muskegon (HealthWest)' = 'Muskegon'")
+  
   ## Adding PIHP regions to the dataset ##
   
-  Master$PIHP<-recode(Master$CMHSP, "'Copper Country'='1';
+  Master$PIHP <- car::recode(Master$CMHSP, "'Copper Country'='1';
                       'Network180'='3';
                       'Gogebic'='1';
                       'Hiawatha'='1';
@@ -542,7 +548,7 @@ group404 <- function(Master) {
                       'Sanilac'='10';
                       'St. Clair'='10'")
 
-  Master$PIHPname<-recode(Master$PIHP,  "'1'='Northcare';
+  Master$PIHPname <- car::recode(Master$PIHP,  "'1'='Northcare';
                         '2'='NMRE';
                         '3'='LRP';
                         '4'='SWMBH';
