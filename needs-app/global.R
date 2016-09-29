@@ -5,6 +5,7 @@ library(tidyr)
 library(rcdimple)
 library(DT)
 library(networkD3)
+library(visNetwork)
 library(shinydashboard)
 
 # Load de-identified data

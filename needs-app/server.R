@@ -3,88 +3,49 @@
 shinyServer(
   function(input, output) { 
     
-    output$sankey <- renderSankeyNetwork({
+    need_network <- reactive({
       
-      if ( input$pihp == "All" & input$cmh == "All" ) {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else if ( input$pihp != "All" & input$cmh != "All") {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]
-                 & CMHSP == input$cmh
-                 & PIHPname == input$pihp) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else if ( input$pihp == "All" & input$cmh != "All" ) {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]
-                 & CMHSP == input$cmh) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else if ( input$pihp != "All" & input$cmh == "All" ) {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]
-                 & PIHPname == input$pihp) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else
-        print(paste0("Error!  Error!"))
+      if ( input$pihp == "All" ) {
+        pihp_filt <- levels(needs$PIHPname)
+      } else if ( input$pihp != "All") {
+        pihp_filt <- input$pihp
+      } else print(paste0("Error!  Error!"))
+      
+      if ( input$pihp == "All" ) {
+        cmh_filt <- levels(needs$CMHSP)
+      } else if ( input$pihp != "All") {
+        cmh_filt <- input$cmh
+      } else print(paste0("Error!  Error!"))
+      
+      needs %>% 
+        filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
+        filter(FY >= input$fy[1] 
+               & FY <= input$fy[2]
+               & CMHSP %in% cmh_filt
+               & PIHPname %in% pihp_filt) %>%
+        droplevels() %>%
+        select(Phase, to = Name, People) %>%
+        mutate(from = recode(Phase, 
+                             Start = "total_in",
+                             Entry = "total_in",
+                             Screening = "req_CMHsvc",
+                             Eligibility = "assmt_sched",
+                             Waiting = "eligible")) %>%
+        group_by(from,to) %>%
+        summarize(people = sum(People, na.rm = T)) %>%
+        ungroup()
+      
+    })
+    
+    
+    output$network <- renderVisNetwork({
+      
+      need_network <- need_network()
       
       # make link ids for all levels of to/from options
       links <- unique(c(levels(need_network$from),
                         levels(need_network$to)))
       name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
-      
       
       # Join link IDs to need_network df
       n <- need_network %>%
@@ -112,9 +73,80 @@ shinyServer(
                                        seeking_SUD = "To SUD",
                                        some_wait = "Waitlist some",
                                        waiting = "Waitlist")))
-        
       
-      sankeyNetwork(Links = n, Nodes = name_df, 
+      nodes <- 
+        name_df %>% 
+        rename(label = name) %>%
+        mutate(title = recode(id,
+                              `0` = "Scheduled for a psychosocial <br>intake assessment.",
+                              `1` = "Total service requests or <br>inquiries a CMSHP received.",
+                              `2` = "People who requested a <br>service the CMSHP provides",
+                              `3` = "Determined eligible for <br>services based on assessment.",
+                              `4` = "Placed on wait list for all <br>services.",
+                              `5` = "Scheduled for assessment but <br>never showed or withdrew from services <br>prior to assessment.",
+                              `6` = "...",
+                              `7` = "Requested a non-behavioral <br>health service (food bank, housing shelter).",
+                              `8` = "Referred to Medicaid fee for <br>service provider.",
+                              `9` = "Referred to Medicaid health <br>plan for services.",
+                              `10` = "Did not meet CMHSP criteria <br>and were screened out.",
+                              `11` = "Screened out for other reasons <br>(e.g. eligibility could not be determined, <br>withdrew services, declined services)",
+                              `12` = "Called seeking to access <br>SUD primary services.",
+                              `13` = "Placed on wait list for some <br>services, but authorized for other services.",
+                              `14` = "Either waitlist option."))
+      
+      edges <- 
+        n %>% 
+        rename(from_desc = from, to_desc = to, 
+               from = from_id, to = to_id, value = people) %>%
+        mutate(title = paste0(value," people"))
+      
+      visNetwork(nodes, edges, height = "600px", width = "100%") %>% 
+        visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T)) %>%
+        visEdges(arrows =list(to = list(enabled = TRUE, scaleFactor = 3)),
+                 color = list(color = "#78B7C5", highlight = "#E1AF00")) %>%
+        visLayout(randomSeed = 123)
+      
+    })
+    
+    output$sankey <- renderSankeyNetwork({
+      
+      need_network <- need_network()
+      
+      # make link ids for all levels of to/from options
+      links <- unique(c(levels(need_network$from),
+                        levels(need_network$to)))
+      name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
+      
+      # Join link IDs to need_network df
+      n <- need_network %>%
+        left_join(name_df, by = c("from" = "name")) %>%
+        rename(from_id  = id) %>%
+        left_join(name_df, by = c("to" = "name")) %>%
+        rename(to_id = id) %>%
+        droplevels()
+      
+      name_df <- 
+        name_df %>%
+        mutate(name = as.factor(recode(name, 
+                                       assmt_sched = "Assessment",
+                                       eligible = "Eligible",
+                                       req_CMHsvc = "Seek CMH service",
+                                       total_in = "All seeking service",
+                                       all_wait = "Waitlist all",
+                                       no_elig_deter = "No show",
+                                       not_eligible = "Other",
+                                       out_nonMH = "Non MH needs",
+                                       rfr_to_FFS = "To FFS",
+                                       rfr_to_MHP = "To MHP",
+                                       screened_out = "Screened out",
+                                       screened_out_other = "Screened other",
+                                       seeking_SUD = "To SUD",
+                                       some_wait = "Waitlist some",
+                                       waiting = "Waitlist")))
+      
+      
+      sankeyNetwork(Links = n, 
+                    Nodes = name_df, 
                     Source = "from_id",
                     Target = "to_id", 
                     Value = "people", 

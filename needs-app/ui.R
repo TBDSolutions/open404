@@ -29,7 +29,9 @@ dashboardPage(skin = "green",
               fluidRow(
                 tabBox(
                   title = "Flow",
-                  tabPanel("Chart", 
+                  tabPanel("Network",
+                           visNetworkOutput("network")),
+                  tabPanel("Sankey", 
                            sankeyNetworkOutput("sankey",
                                                width = "100%", 
                                                height = 500 #"100%"
