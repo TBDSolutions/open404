@@ -26,14 +26,7 @@ dashboardPage(skin = "green",
                     levels(unique(needs$PIHPname))), 
         selected = "All"),
       uiOutput("cmh"),
-      sliderInput(
-        "fy", 
-        label = "Select FY(s):", 
-        min = min(as.numeric(needs$FY)), 
-        max = max(as.numeric(needs$FY)), 
-        value = c(min(as.numeric(needs$FY)), 
-                  max(as.numeric(needs$FY)))
-      )
+      uiOutput("fy")
     )
   ),
   dashboardBody(
@@ -59,6 +52,8 @@ dashboardPage(skin = "green",
                 ),
                 tabPanel(
                   "Table", 
+                  textOutput("flow_df_preamble"),
+                  br(),
                   dataTableOutput("flow_df")
                 ),
                 tabPanel(
@@ -152,7 +147,8 @@ dashboardPage(skin = "green",
                   selectInput(
                     "measure",
                     label = "Select a measure:",
-                    choices = levels(unique(need_metrics$MeasureDesc))), 
+                    choices = unique(need_metrics$MeasureDesc)
+                  ), 
                   dimpleOutput("bar")
                 ),
                 tabPanel(

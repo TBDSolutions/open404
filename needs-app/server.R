@@ -115,6 +115,19 @@ shinyServer(
       
     })
     
+    output$fy <- renderUI({
+      
+      sliderInput(
+        "fy", 
+        label = "Select FY(s):", 
+        min = min(as.numeric(needs$FY)), 
+        max = max(as.numeric(needs$FY)), 
+        value = c(min(as.numeric(needs$FY)), 
+                  max(as.numeric(needs$FY)))
+      )
+      
+    })
+    
     # VIZ
     
     output$network <- renderVisNetwork({
@@ -152,98 +165,35 @@ shinyServer(
       
     })
     
+    output$flow_df_preamble <- renderText({
+      
+      pihp_filt <- if ( input$pihp == "All" ) {
+        levels(needs$PIHPname)
+      } else if ( input$pihp != "All") {
+        input$pihp
+      } else print(paste0("Error!  Error!"))
+      
+      cmh_filt <- if ( input$cmh == "All" ) {
+        unique(needs$CMHSP[needs$PIHPname %in% pihp_filt])
+      } else if ( input$cmh != "All") {
+        input$cmh
+      } else print(paste0("Error!  Error!"))
+      
+      paste0(
+        "In FY ",input$fy[1],"-",input$fy[2],", the selected CMHSPs (", 
+        paste(cmh_filt,sep = '',collapse = ', '),") reported that ",
+        sum(need_network()$people[need_network()$from == "total_in"]),
+        " people sought services. The table below shows how those individuals 
+        moved through the process of accessing services, and what percentage of 
+        people moved from a given step in the access process to the next step."
+      )
+      
+    })
+    
     output$flow_df <- renderDataTable({
       
-      if ( input$pihp == "All" & input$cmh == "All" ) {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else if ( input$pihp != "All" & input$cmh != "All") {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]
-                 & CMHSP == input$cmh
-                 & PIHPname == input$pihp) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else if ( input$pihp == "All" & input$cmh != "All" ) {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]
-                 & CMHSP == input$cmh) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else if ( input$pihp != "All" & input$cmh == "All" ) {
-        need_network <- 
-          needs %>% 
-          filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
-          filter(FY >= input$fy[1] 
-                 & FY <= input$fy[2]
-                 & PIHPname == input$pihp) %>%
-          droplevels() %>%
-          select(Phase, to = Name, People) %>%
-          mutate(from = recode(Phase, 
-                               Start = "total_in",
-                               Entry = "total_in",
-                               Screening = "req_CMHsvc",
-                               Eligibility = "assmt_sched",
-                               Waiting = "eligible")) %>%
-          group_by(from,to) %>%
-          summarize(people = sum(People, na.rm = T)) %>%
-          ungroup()
-      } else
-        print(paste0("Error!  Error!"))
-      
-      # make link ids for all levels of to/from options
-      links <- unique(c(levels(need_network$from),
-                        levels(need_network$to)))
-      name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
-      
-      #total <- sum(need_network)
-      
-      # Join link IDs to need_network df
-      n <- need_network %>%
-        left_join(name_df, by = c("from" = "name")) %>%
-        rename(from_id  = id) %>%
-        left_join(name_df, by = c("to" = "name")) %>%
-        rename(to_id = id) %>%
-        droplevels() %>%
-        mutate(from = as.factor(recode(from, 
+      edges() %>%
+        mutate(from_desc = as.factor(recode(from, 
                                        assmt_sched = "Assessment",
                                        eligible = "Eligible",
                                        req_CMHsvc = "Seek CMH service",
@@ -259,7 +209,7 @@ shinyServer(
                                        seeking_SUD = "To SUD",
                                        some_wait = "Waitlist some",
                                        waiting = "Waitlist")),
-               to = as.factor(recode(from, 
+               to_desc = as.factor(recode(to, 
                                      assmt_sched = "Assessment",
                                      eligible = "Eligible",
                                      req_CMHsvc = "Seek CMH service",
@@ -276,19 +226,15 @@ shinyServer(
                                      some_wait = "Waitlist some",
                                      waiting = "Waitlist")),
                pct = round( people 
-                            / sum(people[from == "All seeking service"]) * 100, 
-                            digits = 1) 
-               ) %>%
-        select(from, to, people, pct)
-      
-      datatable(n,
-                caption = 'Summary of Flow through Access Process',
-                rownames = FALSE,
-                colnames = c('From step...','To step...',
-                             '# of people','% of total'),
-                extensions = c(Responsive),
-                options = list(pageLength = 15, lengthMenu = c(5, 15))
-                )
+                            / sum(people[from == "total_in"]) * 100, 
+                            digits = 1)
+        ) %>%
+        select(from_desc,to_desc,people,pct) %>%
+        datatable(caption = 'Summary of Flow through Access Process',
+                  rownames = FALSE,
+                  colnames = c('From step...','To step...',
+                               '# of people','From as % of To'),
+                  options = list(pageLength = 15, lengthMenu = c(5, 15))) 
       
     })
     
