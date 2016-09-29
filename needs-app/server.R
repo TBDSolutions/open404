@@ -39,6 +39,64 @@ shinyServer(
       
     })
     
+    nodes <- reactive({
+      
+      unique(c(unique(as.character(need_network()$from)),
+               unique(as.character(need_network()$to)))) %>%
+        data.frame("name_id" = .) %>%
+        # Alphabetize
+        arrange(name_id) %>%
+        # Assign ids starting at 0
+        mutate(id = row_number(name_id)-1) %>%
+        mutate(name = recode(name_id, 
+                             assmt_sched = "Assessment",
+                             eligible = "Eligible",
+                             req_CMHsvc = "Seek CMH service",
+                             total_in = "All seeking service",
+                             all_wait = "Waitlist all",
+                             no_elig_deter = "No show",
+                             not_eligible = "Other",
+                             out_nonMH = "Non MH needs",
+                             rfr_to_FFS = "To FFS",
+                             rfr_to_MHP = "To MHP",
+                             screened_out = "Screened out",
+                             screened_out_other = "Screened other",
+                             seeking_SUD = "To SUD",
+                             some_wait = "Waitlist some",
+                             waiting = "Waitlist"),
+               title = recode(name_id,
+                              assmt_sched = "Scheduled for a psychosocial <br>intake assessment.",
+                              total_in = "Total service requests or <br>inquiries a CMSHP received.",
+                              req_CMHsvc = "People who requested a <br>service the CMSHP provides",
+                              eligible = "Determined eligible for <br>services based on assessment.",
+                              all_wait = "Placed on wait list for all <br>services.",
+                              no_elig_deter = "Scheduled for assessment but <br>never showed or withdrew from services <br>prior to assessment.",
+                              not_eligible = "Determined ineligible for <br>other reasons.",
+                              out_nonMH = "Requested a non-behavioral <br>health service (food bank, housing shelter).",
+                              rfr_to_FFS = "Referred to Medicaid fee-for- <br>service provider.",
+                              rfr_to_MHP = "Referred to Medicaid health <br>plan for services.",
+                              screened_out = "Did not meet CMHSP criteria <br>and were screened out.",
+                              screened_out_other = "Screened out for other reasons <br>(e.g. eligibility could not be determined, <br>withdrew services, declined services)",
+                              seeking_SUD = "Called seeking to access <br>SUD primary services.",
+                              some_wait = "Placed on wait list for some <br>services, but authorized for other services.",
+                              waiting = "Either waitlist option."))
+      
+    })
+    
+    edges <- reactive({
+      
+      # Join link IDs to need_network df
+      need_network() %>%
+        left_join(nodes(), by = c("from" = "name_id")) %>%
+        select(-name) %>%
+        rename(from_id  = id) %>%
+        left_join(nodes(), by = c("to" = "name_id")) %>%
+        select(-name) %>%
+        rename(to_id = id) %>%
+        droplevels()
+      
+    })
+    
     # REACTIVE FILTERS
     
     output$cmh <- renderUI({
@@ -61,69 +119,10 @@ shinyServer(
     
     output$network <- renderVisNetwork({
       
-      #need_network <- need_network()
-      
-      # make link ids for all levels of to/from options
-      # links <- unique(c(unique(as.character(need_network()$from)),
-      #                   unique(as.character(need_network()$to))))
-      # 
-      # name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
-      name_df <-
-        unique(c(unique(as.character(need_network()$from)),
-                 unique(as.character(need_network()$to)))) %>%
-        data.frame("name" = .) %>%
-        arrange(name) %>%
-        mutate(id = row_number(name)-1)
-      
-      # Join link IDs to need_network df
-      n <- need_network() %>%
-        left_join(name_df, by = c("from" = "name")) %>%
-        rename(from_id  = id) %>%
-        left_join(name_df, by = c("to" = "name")) %>%
-        rename(to_id = id) %>%
-        droplevels()
-      
-      name_df <- 
-        name_df %>%
-        mutate(name = as.factor(recode(name, 
-                                       assmt_sched = "Assessment",
-                                       eligible = "Eligible",
-                                       req_CMHsvc = "Seek CMH service",
-                                       total_in = "All seeking service",
-                                       all_wait = "Waitlist all",
-                                       no_elig_deter = "No show",
-                                       not_eligible = "Other",
-                                       out_nonMH = "Non MH needs",
-                                       rfr_to_FFS = "To FFS",
-                                       rfr_to_MHP = "To MHP",
-                                       screened_out = "Screened out",
-                                       screened_out_other = "Screened other",
-                                       seeking_SUD = "To SUD",
-                                       some_wait = "Waitlist some",
-                                       waiting = "Waitlist")))
-      
-      nodes <- 
-        name_df %>% 
-        rename(label = name) %>%
-        mutate(title = recode(id,
-                              `0` = "Scheduled for a psychosocial <br>intake assessment.",
-                              `1` = "Total service requests or <br>inquiries a CMSHP received.",
-                              `2` = "People who requested a <br>service the CMSHP provides",
-                              `3` = "Determined eligible for <br>services based on assessment.",
-                              `4` = "Placed on wait list for all <br>services.",
-                              `5` = "Scheduled for assessment but <br>never showed or withdrew from services <br>prior to assessment.",
-                              `6` = "...",
-                              `7` = "Requested a non-behavioral <br>health service (food bank, housing shelter).",
-                              `8` = "Referred to Medicaid fee for <br>service provider.",
-                              `9` = "Referred to Medicaid health <br>plan for services.",
-                              `10` = "Did not meet CMHSP criteria <br>and were screened out.",
-                              `11` = "Screened out for other reasons <br>(e.g. eligibility could not be determined, <br>withdrew services, declined services)",
-                              `12` = "Called seeking to access <br>SUD primary services.",
-                              `13` = "Placed on wait list for some <br>services, but authorized for other services.",
-                              `14` = "Either waitlist option."))
+      nodes <- nodes() %>% rename(label = name)
       
       edges <- 
-        n %>% 
+        edges() %>% 
         rename(from_desc = from, to_desc = to, 
                from = from_id, to = to_id, value = people) %>%
         mutate(title = paste0(value," people"))
@@ -138,43 +137,8 @@ shinyServer(
     
     output$sankey <- renderSankeyNetwork({
       
-      need_network <- need_network()
-      
-      # make link ids for all levels of to/from options
-      links <- unique(c(levels(need_network$from),
-                        levels(need_network$to)))
-      name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
-      
-      # Join link IDs to need_network df
-      n <- need_network %>%
-        left_join(name_df, by = c("from" = "name")) %>%
-        rename(from_id  = id) %>%
-        left_join(name_df, by = c("to" = "name")) %>%
-        rename(to_id = id) %>%
-        droplevels()
-      
-      name_df <- 
-        name_df %>%
-        mutate(name = as.factor(recode(name, 
-                                       assmt_sched = "Assessment",
-                                       eligible = "Eligible",
-                                       req_CMHsvc = "Seek CMH service",
-                                       total_in = "All seeking service",
-                                       all_wait = "Waitlist all",
-                                       no_elig_deter = "No show",
-                                       not_eligible = "Other",
-                                       out_nonMH = "Non MH needs",
-                                       rfr_to_FFS = "To FFS",
-                                       rfr_to_MHP = "To MHP",
-                                       screened_out = "Screened out",
-                                       screened_out_other = "Screened other",
-                                       seeking_SUD = "To SUD",
-                                       some_wait = "Waitlist some",
-                                       waiting = "Waitlist")))
-      
-      
-      sankeyNetwork(Links = n, 
-                    Nodes = name_df, 
+      sankeyNetwork(Links = edges(), 
+                    Nodes = nodes(), 
                     Source = "from_id",
                     Target = "to_id", 
                     Value = "people", 
@@ -184,8 +148,7 @@ shinyServer(
                     nodeWidth = 20, 
                     nodePadding = 20,
                     height = 500, 
-                    width = 500
-                    )
+                    width = 500)
       
     })
     
