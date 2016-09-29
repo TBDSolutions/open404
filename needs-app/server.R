@@ -3,18 +3,20 @@
 shinyServer(
   function(input, output) { 
     
+    # REACTIVE DATASETS
+    
     need_network <- reactive({
       
-      if ( input$pihp == "All" ) {
-        pihp_filt <- levels(needs$PIHPname)
+      pihp_filt <- if ( input$pihp == "All" ) {
+        levels(needs$PIHPname)
       } else if ( input$pihp != "All") {
-        pihp_filt <- input$pihp
+        input$pihp
       } else print(paste0("Error!  Error!"))
       
-      if ( input$pihp == "All" ) {
-        cmh_filt <- levels(needs$CMHSP)
-      } else if ( input$pihp != "All") {
-        cmh_filt <- input$cmh
+      cmh_filt <- if ( input$cmh == "All" ) {
+        levels(needs$CMHSP)
+      } else if ( input$cmh != "All") {
+        input$cmh
       } else print(paste0("Error!  Error!"))
       
       needs %>% 
@@ -37,18 +39,44 @@ shinyServer(
       
     })
     
+    # REACTIVE FILTERS
+    
+    output$cmh <- renderUI({
+      
+      filtre <- if (input$pihp == "All") {
+        levels(needs$CMHSP)
+      } else 
+        levels(droplevels(needs$CMHSP[needs$PIHPname == input$pihp]))
+      
+      selectInput(
+        "cmh",
+        label = "Select CMH:",
+        choices = c("All", filtre), 
+        selected = "All"
+      )
+      
+    })
+    
+    # VIZ
     
     output$network <- renderVisNetwork({
       
-      need_network <- need_network()
+      #need_network <- need_network()
       
       # make link ids for all levels of to/from options
-      links <- unique(c(levels(need_network$from),
-                        levels(need_network$to)))
-      name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
+      # links <- unique(c(unique(as.character(need_network()$from)),
+      #                   unique(as.character(need_network()$to))))
+      # 
+      # name_df <- data.frame("name" = links, "id" = 0:(length(links)-1))
+      name_df <-
+        unique(c(unique(as.character(need_network()$from)),
+                 unique(as.character(need_network()$to)))) %>%
+        data.frame("name" = .) %>%
+        arrange(name) %>%
+        mutate(id = row_number(name)-1)
       
       # Join link IDs to need_network df
-      n <- need_network %>%
+      n <- need_network() %>%
         left_join(name_df, by = c("from" = "name")) %>%
         rename(from_id  = id) %>%
         left_join(name_df, by = c("to" = "name")) %>%
@@ -104,7 +132,7 @@ shinyServer(
         visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T)) %>%
         visEdges(arrows =list(to = list(enabled = TRUE, scaleFactor = 3)),
                  color = list(color = "#78B7C5", highlight = "#E1AF00")) %>%
-        visLayout(randomSeed = 123)
+        visLayout(randomSeed = 123) 
       
     })
     
