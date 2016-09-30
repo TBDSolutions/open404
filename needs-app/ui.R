@@ -144,12 +144,8 @@ dashboardPage(skin = "green",
                 width = 12,
                 tabPanel(
                   "Compare", 
-                  selectInput(
-                    "measure",
-                    label = "Select a measure:",
-                    choices = unique(need_metrics$MeasureDesc)
-                  ), 
-                  dimpleOutput("bar")
+                  uiOutput("measure"), 
+                  plotlyOutput("bar")
                 ),
                 tabPanel(
                   "About", 

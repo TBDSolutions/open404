@@ -97,6 +97,86 @@ shinyServer(
       
     })
     
+    need_metrics <- reactive({
+      
+      pihp_filt <- if ( input$pihp == "All" ) {
+        levels(needs$PIHPname)
+      } else if ( input$pihp != "All") {
+        input$pihp
+      } else print(paste0("Error!  Error!"))
+      
+      cmh_filt <- if ( input$cmh == "All" ) {
+        levels(needs$CMHSP)
+      } else if ( input$cmh != "All") {
+        input$cmh
+      } else print(paste0("Error!  Error!"))
+      
+      # Summarize to create measures
+      
+      needs %>%
+        filter(FY >= input$fy[1] 
+               & FY <= input$fy[2]
+               & CMHSP %in% cmh_filt
+               & PIHPname %in% pihp_filt) %>%
+        droplevels() %>%
+        select(FY,PIHPname,CMHSP,Name,Population,People) %>%
+        group_by(FY,PIHPname, CMHSP,Population) %>%
+        spread(Name,People) %>%
+        ungroup() %>%
+        mutate(throughput_num = eligible - waiting,
+               throughput_den = total_in,
+               in_nonMH_num = out_nonMH,
+               in_nonMH_den = total_in,
+               drop_out_num = no_elig_deter,
+               drop_out_den = assmt_sched,
+               assess_elig_num = eligible,
+               assess_elig_den = assmt_sched - no_elig_deter,
+               in_req_num = req_CMHsvc,
+               in_req_den = total_in,
+               req_screenout_num = screened_out,
+               req_screenout_den = req_CMHsvc,
+               refer_MHP_num = rfr_to_MHP,
+               refer_MHP_den = assmt_sched - no_elig_deter,
+               refer_FFS_num = rfr_to_FFS,
+               refer_FFS_den = assmt_sched - no_elig_deter,
+               inelig_rfrMH_num = rfr_to_mh_Y,
+               inelig_rfrMH_den = not_eligible,
+               elig_urg_imm_num = urgent_crit + immed_crit,
+               elig_urg_imm_den = eligible,
+               some_wait_num = some_wait,
+               some_wait_den = waiting,
+               all_wait_num = all_wait,
+               all_wait_den = waiting,
+               elig_wait_num = waiting,
+               elig_wait_den = eligible
+        ) %>%
+        select(FY:Population, throughput_num:elig_wait_den) %>%
+        group_by(FY,PIHPname,CMHSP,Population) %>%
+        gather(Measure,Score, throughput_num:elig_wait_den) %>%
+        separate(Measure,
+                 into = c("Measure","numtype"),
+                 sep = "_\\s*(?=[^_]+$)") %>% # Split at last '_' character
+        group_by(FY,PIHPname,CMHSP,Population,Measure) %>%
+        spread(numtype,Score) %>%
+        mutate(Score = round(num/den * 100, digits = 1),
+               Score = ifelse(is.nan(Score) == T,0,Score), # Replace NaN with 0
+               MeasureDesc = recode(Measure,
+                                    throughput = "Overall Access",
+                                    in_nonMH = "% total requesting non-CMH services",
+                                    drop_out = "Assessment Drop-out Rate",
+                                    assess_elig = "% Assessed Eligible",
+                                    in_req = "% total requesting CMH services",
+                                    req_screenout = "% Screened Out",
+                                    refer_MHP = "% Referred to MHP",
+                                    refer_FFS = "% Referred to FFS",
+                                    inelig_rfrMH = "% Referred for External MH Svs",
+                                    elig_urg_imm = "% Meeting Acute Criteria",
+                                    some_wait = "% of waitlist with partial service",
+                                    all_wait = "% of waitlist with partial service",
+                                    elig_wait = "% of eligibles on waitlist")) 
+      
+    })
+    
     # REACTIVE FILTERS
     
     output$cmh <- renderUI({
@@ -124,6 +204,17 @@ shinyServer(
         max = max(as.numeric(needs$FY)), 
         value = c(min(as.numeric(needs$FY)), 
                   max(as.numeric(needs$FY)))
+      )
+      
+    })
+    
+    output$measure <- renderUI({
+      
+      selectInput(
+        "measure",
+        label = "Select a measure:",
+        choices = unique(need_metrics()$MeasureDesc),
+        selected = "Overall Access"
       )
       
     })
@@ -238,100 +329,44 @@ shinyServer(
       
     })
     
-    output$bar <- renderDimple({
+    output$bar <- renderPlotly({
       
-      need_dimple <-
-        needs %>%
-        select(FY,PIHPname,CMHSP,Name,Population,People) %>%
-        group_by(FY,PIHPname, CMHSP,Population) %>%
-        spread(Name,People) %>%
-        ungroup() %>%
-        filter(FY >= input$fy[1] 
-               & FY <= input$fy[2]) %>%
-        group_by(CMHSP) %>%
-        summarize(all_wait = sum(all_wait),
-                  assmt_sched = sum(assmt_sched),
-                  eligible = sum(eligible),
-                  immed_crit = sum(immed_crit),
-                  no_elig_deter = sum(no_elig_deter),
-                  not_eligible = sum(not_eligible),
-                  out_nonMH = sum(out_nonMH),
-                  req_CMHsvc = sum(req_CMHsvc),
-                  rfr_to_FFS = sum(rfr_to_FFS),
-                  rfr_to_mh_N = sum(rfr_to_mh_N),
-                  rfr_to_mh_Y = sum(rfr_to_mh_Y),
-                  rfr_to_MHP = sum(rfr_to_MHP),
-                  screened_out = sum(screened_out),
-                  screened_out_other = sum(screened_out_other),
-                  seeking_SUD = sum(seeking_SUD),
-                  some_wait = sum(some_wait),
-                  total_in = sum(total_in),
-                  urgent_crit = sum(urgent_crit),
-                  waiting = sum(waiting)
-                  ) %>%
-        mutate(throughput = round((eligible - waiting)/total_in * 100, digits = 1),
-               in_nonMH = round(out_nonMH/total_in*100, digits = 1),
-               drop_out = round(no_elig_deter/assmt_sched*100, digits = 1),
-               assess_elig = round(eligible/(assmt_sched - no_elig_deter)*100, digits = 1),
-               in_req = round(req_CMHsvc/total_in*100, digits = 1),
-               req_screenout = round(screened_out/req_CMHsvc*100, digits = 1),
-               refer_MHP = round(rfr_to_MHP/(assmt_sched - no_elig_deter)*100, digits = 1),
-               refer_FFS = round(rfr_to_FFS/(assmt_sched - no_elig_deter)*100, digits = 1),
-               inelig_rfrMH = round(rfr_to_mh_Y/not_eligible*100, digits = 1),
-               elig_urg_imm = round((urgent_crit + immed_crit) / eligible * 100, digits = 1),
-               some_wait = round(some_wait / waiting * 100, digits = 1),
-               all_wait = round(all_wait / waiting * 100, digits = 1),
-               elig_wait = round(waiting / eligible * 100, digits = 1)
-               ) %>%
-        select(CMHSP, throughput:elig_wait) %>%
-        group_by(CMHSP) %>%
-        gather(Measure,Score, throughput:elig_wait) %>%
-        mutate(MeasureDesc = recode(Measure,
-                                    throughput = "Overall Access",
-                                    in_nonMH = "% total requesting non-CMH services",
-                                    drop_out = "Assessment Drop-out Rate",
-                                    assess_elig = "% Assessed Eligible",
-                                    in_req = "% total requesting CMH services",
-                                    req_screenout = "% Screened Out",
-                                    refer_MHP = "% Referred to MHP",
-                                    refer_FFS = "% Referred to FFS",
-                                    inelig_rfrMH = "% Referred for External MH Svs",
-                                    elig_urg_imm = "% Meeting Acute Criteria",
-                                    some_wait = "% of waitlist with partial service",
-                                    all_wait = "% of waitlist with partial service",
-                                    elig_wait = "% of eligibles on waitlist")) %>%
+      need_metrics() %>%
         filter(is.na(Score) == F
                & Score >= 0
                & Score <= 100
                & MeasureDesc == input$measure
-               ) %>%
-        droplevels() %>%
+        ) %>%
+        ungroup() %>% droplevels() %>%
+        group_by(CMHSP) %>%
+        summarize(num = sum(num, na.rm = T),
+                  den = sum(den, na.rm = T)) %>%
+        mutate(Score = round(num/den * 100, digits = 1),
+               Score = ifelse(is.nan(Score) == T,0,Score)) %>%
         arrange(desc(Score)) %>%
-        ungroup()
+        ungroup() %>%
+        mutate(avg_score = round(sum(num, na.rm = T)/sum(den, na.rm = T) * 100, 
+                                 digits = 1)) %>%
+        plot_ly(x = CMHSP, y = Score, type = "bar",
+                marker = list(color = "#DC863B"),
+                name = paste0("% score"),
+                text = paste("Numerator: ", num,
+                             "<br>Denominator: ", den)) %>%
+        add_trace(x = CMHSP, 
+                  y = rep(avg_score, each = nlevels(as.factor(CMHSP))), 
+                  type = "line",
+                  line = list(dash = 5),
+                  marker = list(color = "#555555"),
+                  name = "Weighted Average", 
+                  yaxis = "y") %>%
+        layout(title = paste0(input$measure,", by CMHSP"),
+               xaxis = list(title = input$group, showticklabels = F,
+                            categoryarray = CMHSP, categoryorder = "array"),
+               yaxis = list(title = "% score",
+                            range = c(0, 100)),
+               legend = list(xanchor = "right", yanchor = "top", x = 1, y = 1, 
+                             font = list(size = 10)))
       
-#       cmh_table <-
-#       need_dimple %>%
-#         group_by(CMHSP) %>%
-#         summarise(n = n()) %>%
-#         mutate(cmh_color = ifelse(CMHSP == input$cmh,
-#                                   yes == "#bb00cc",
-#                                   no == "#00ccff"))
-      
-      need_dimple %>%
-        dimple(x ="CMHSP", y = "Score", type = "bar") %>%
-        set_bounds(x = "7%", y = "5%",
-                   width = "90%", 
-                   height = "65%") %>%
-        xAxis(orderRule = "Date", 
-              title = "Item",
-              fontSize = "80%" #, hidden=TRUE
-              )  %>%
-        yAxis(title = "% score",
-              fontSize = "80%",
-              overrideMin = 0, 
-              overrideMax = 100) # %>%
-        # default_colors(list(cmh_table$pihp_color))
-
     })
     
     output$metric_nm <- renderText({
@@ -518,8 +553,7 @@ shinyServer(
       filename = "MDHHS_ServiceDisposition_Combined.csv",
       content = function(file) {
         write.csv(needs, file)
-      }
-      )
+      })
     
-    } 
-  )
+    })
+
