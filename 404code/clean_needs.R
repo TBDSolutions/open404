@@ -121,6 +121,7 @@ needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/
                              'westmichigans' = 'West Michigan';
                              'cass' = 'Woodlands';
                              'cassdbawoodlands' = 'Woodlands';
+                             'casswoodlandsbhn' = 'Woodlands';
                              'cassmrntal' = 'Woodlands'")
 
 
