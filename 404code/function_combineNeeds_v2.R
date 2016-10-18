@@ -57,91 +57,92 @@ combineNeeds <- function(directory) {
     df %>%
     mutate(FY = factor(FY), CMHSP = factor(CMHSP),
            Desc = factor(Desc),
-           People = as.numeric(People),
+           People = as.numeric(People))#,
            # Berrien submitted on the old form in 2015
-           Name = ifelse(as.integer(as.character(FY)) < 2015 
-                         | (as.integer(as.character(FY)) = 2015 
-                            & CMHSP == "Berrien Mental Health Authority"),
-                         yes = car::recode(Item,"'1'='total_in';
-                                      '3'='out_nonMH';
-                                      '4'='seeking_SUD';
-                                      '5'='req_CMHsvc';
-                                      '6'='screened_out';
-                                      '7'='assmt_sched';
-                                      '8' = 'screened_out_other';
-                                      '9'='no_elig_deter';
-                                      '10'='rfr_to_FFS';
-                                      '11'='rfr_to_MHP';
-                                      '12'='not_eligible';
-                                      '12a'='rfr_to_mh_Y';
-                                      '12b'='rfr_to_mh_N';
-                                      '13'='eligible';
-                                      '14'='urgent_crit';
-                                      '15'='immed_crit';
-                                      '16'='waiting';
-                                      '16a'='some_wait';
-                                      '16b'='all_wait'"),
-                         no = car::recode(Item,"'1'='total_in';
-                                     '3'='out_nonMH';
-                                     '4'='req_CMHsvc';
-                                     '5'='screened_out';
-                                     '6'='assmt_sched';
-                                     '7'='screened_out_other';
-                                     '8' = 'no_elig_deter';
-                                     '9'='rfr_to_FFS';
-                                     '10'='rfr_to_MHP';
-                                     '11'='not_eligible';
-                                     '11a'='rfr_to_mh_Y';
-                                     '11b'='rfr_to_mh_N';
-                                     '12'='eligible';
-                                     '13'='urgent_crit';
-                                     '14'='immed_crit';
-                                     '15'='waiting';
-                                     '15a'='some_wait';
-                                     '15b'='all_wait'")))
+           # Name = ifelse(as.integer(as.character(FY)) < 2015 
+           #               | (as.integer(as.character(FY)) = 2015 
+           #                  & CMHSP == "Berrien Mental Health Authority"),
+           #               yes = car::recode(Item,"'1'='total_in';
+           #                            '3'='out_nonMH';
+           #                            '4'='seeking_SUD';
+           #                            '5'='req_CMHsvc';
+           #                            '6'='screened_out';
+           #                            '7'='assmt_sched';
+           #                            '8' = 'screened_out_other';
+           #                            '9'='no_elig_deter';
+           #                            '10'='rfr_to_FFS';
+           #                            '11'='rfr_to_MHP';
+           #                            '12'='not_eligible';
+           #                            '12a'='rfr_to_mh_Y';
+           #                            '12b'='rfr_to_mh_N';
+           #                            '13'='eligible';
+           #                            '14'='urgent_crit';
+           #                            '15'='immed_crit';
+           #                            '16'='waiting';
+           #                            '16a'='some_wait';
+           #                            '16b'='all_wait'"),
+           #               no = car::recode(Item,"'1'='total_in';
+           #                           '3'='out_nonMH';
+           #                           '4'='req_CMHsvc';
+           #                           '5'='screened_out';
+           #                           '6'='assmt_sched';
+           #                           '7'='screened_out_other';
+           #                           '8' = 'no_elig_deter';
+           #                           '9'='rfr_to_FFS';
+           #                           '10'='rfr_to_MHP';
+           #                           '11'='not_eligible';
+           #                           '11a'='rfr_to_mh_Y';
+           #                           '11b'='rfr_to_mh_N';
+           #                           '12'='eligible';
+           #                           '13'='urgent_crit';
+           #                           '14'='immed_crit';
+           #                           '15'='waiting';
+           #                           '15a'='some_wait';
+           #                           '15b'='all_wait'")))
   
-  # 
-  # if (as.integer(as.character(df$FY)) < 2015 
-  #     | (as.integer(as.character(df$FY)) <= 2015 & df$CMHSP == "Berrien")) {
-  #   
-  #   df$Name <- recode(df$Item,"'1'='total_in';
-  #                     '3'='out_nonMH';
-  #                     '4'='seeking_SUD';
-  #                     '5'='req_CMHsvc';
-  #                     '6'='screened_out';
-  #                     '7'='assmt_sched';
-  #                     '8' = 'screened_out_other';
-  #                     '9'='no_elig_deter';
-  #                     '10'='rfr_to_FFS';
-  #                     '11'='rfr_to_MHP';
-  #                     '12'='not_eligible';
-  #                     '12a'='rfr_to_mh_Y';
-  #                     '12b'='rfr_to_mh_N';
-  #                     '13'='eligible';
-  #                     '14'='urgent_crit';
-  #                     '15'='immed_crit';
-  #                     '16'='waiting';
-  #                     '16a'='some_wait';
-  #                     '16b'='all_wait'")
-  # } else # Map to new 2015 fields
-  #   df$Name <- recode(df$Item,"'1'='total_in';
-  #                     '3'='out_nonMH';
-  #                     '4'='req_CMHsvc';
-  #                     '5'='screened_out';
-  #                     '6'='assmt_sched';
-  #                     '7'='screened_out_other';
-  #                     '8' = 'no_elig_deter';
-  #                     '9'='rfr_to_FFS';
-  #                     '10'='rfr_to_MHP';
-  #                     '11'='not_eligible';
-  #                     '11a'='rfr_to_mh_Y';
-  #                     '11b'='rfr_to_mh_N';
-  #                     '12'='eligible';
-  #                     '13'='urgent_crit';
-  #                     '14'='immed_crit';
-  #                     '15'='waiting';
-  #                     '15a'='some_wait';
-  #                     '15b'='all_wait'")
+
+  if (as.integer(as.character(df$FY)) < 2015
+      | (as.integer(as.character(df$FY)) = 2015 
+         & df$CMHSP == "Berrien Mental Health Authority")) {
+
+    df$Name <- recode(df$Item,"'1'='total_in';
+                      '3'='out_nonMH';
+                      '4'='seeking_SUD';
+                      '5'='req_CMHsvc';
+                      '6'='screened_out';
+                      '7'='assmt_sched';
+                      '8' = 'screened_out_other';
+                      '9'='no_elig_deter';
+                      '10'='rfr_to_FFS';
+                      '11'='rfr_to_MHP';
+                      '12'='not_eligible';
+                      '12a'='rfr_to_mh_Y';
+                      '12b'='rfr_to_mh_N';
+                      '13'='eligible';
+                      '14'='urgent_crit';
+                      '15'='immed_crit';
+                      '16'='waiting';
+                      '16a'='some_wait';
+                      '16b'='all_wait'")
+  } else # Map to new 2015 fields
+    df$Name <- recode(df$Item,"'1'='total_in';
+                      '3'='out_nonMH';
+                      '4'='req_CMHsvc';
+                      '5'='screened_out';
+                      '6'='assmt_sched';
+                      '7'='screened_out_other';
+                      '8' = 'no_elig_deter';
+                      '9'='rfr_to_FFS';
+                      '10'='rfr_to_MHP';
+                      '11'='not_eligible';
+                      '11a'='rfr_to_mh_Y';
+                      '11b'='rfr_to_mh_N';
+                      '12'='eligible';
+                      '13'='urgent_crit';
+                      '14'='immed_crit';
+                      '15'='waiting';
+                      '15a'='some_wait';
+                      '15b'='all_wait'")
   
   # recode to make groups
   df$Phase <- recode(df$Name,"'total_in'='Start';
