@@ -12,7 +12,8 @@ needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/
 # "https://github.com/j-hagedorn/open404/tree/master/data/needs"
 
 # Mess of regex to decrease variation in user-entered fields
-  needs$CMHSP <- tolower(needs$CMHSP)
+   # Replace NAs with zeroes
+needs$CMHSP <- tolower(needs$CMHSP)
   needs$CMHSP <- gsub(" ", "", needs$CMHSP, fixed = T)
   needs$CMHSP <- gsub("cmhsp", "", needs$CMHSP, fixed = T)
   needs$CMHSP <- gsub("behavioral", "", needs$CMHSP, fixed = T)
@@ -198,11 +199,11 @@ needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/
   
 # Order factor for phase
 library(gdata)
-needs$Phase <- reorder(needs$Phase, new.order=c("Start","Entry","Screening","Eligibility","Placement","Waiting"))
+needs$Phase <- reorder(needs$Phase, 
+                       new.order=c("Start","Entry","Screening","Eligibility",
+                                   "Placement","Waiting","Other"))
 
 needs <- needs %>% select(FY,PIHP:PIHPname,CMHSP:Undup)
-
-needs$People[is.na(needs$People)] <- 0 # Replace NAs with zeroes
 
 # Make a df p
 
