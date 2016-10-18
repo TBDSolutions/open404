@@ -211,17 +211,9 @@ needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/
                          all_wait = "People who were wait-listed for all CMHSP services",
                          screened_out_other = "People requesting CMHSP services who were screened out for other reasons",
                          oth_place_ref = "People receiving other placement or referral")) %>%
-    select(-Item)
+    select(-Item) %>%
+    select(FY,PIHP:PIHPname,CMHSP:Undup)
   
-# Remove Item (since it varies across years)
-# Recode
-
-needs %<>% 
-  select(-Item)
-
-
-# Arrange vars
-needs <- needs %>% select(FY,PIHP:PIHPname,CMHSP:Undup)
 
 needs$People[is.na(needs$People)] <- 0 #Replace NAs with zeroes
 # Make a df p
