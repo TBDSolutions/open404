@@ -168,7 +168,8 @@ combineNeeds <- function(directory) {
                      'immed_crit'='Placement';
                      'waiting'='Waiting';
                      'some_wait'='Waiting';
-                     'all_wait'='Waiting'")
+                     'all_wait'='Waiting';
+                     'oth_place_ref' = 'Other'")
 
   df <-
   df %>% 
