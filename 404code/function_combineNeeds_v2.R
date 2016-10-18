@@ -53,6 +53,9 @@ combineNeeds <- function(directory) {
     
   }
   
+  # Recode years
+  df$FY <- car::recode(df$FY, "'012*' = '2011';'2010' = '2011';'2010' = '2011'")
+
   df <-
     df %>%
     mutate(FY = factor(FY), CMHSP = factor(CMHSP),

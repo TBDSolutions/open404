@@ -3,18 +3,13 @@ library(dplyr)
 library(tidyr)
 
 # Source function from GitHub
-source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/function_combineNeeds_v2.R")
+source("https://raw.githubusercontent.com/j-hagedorn/open404/needs-0-1/404code/function_combineNeeds_v2.R")
 
 #needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessment/data")
 needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/needs")
 
 # Others doing this would have to download .xls from the folder at:
 # "https://github.com/j-hagedorn/open404/tree/master/data/needs"
-
-# Recode years
-  # levels(needs$FY)
-  needs$FY <- car::recode(needs$FY, "'012*' = '2011';'2010' = '2011';'2010' = '2011'")
-  needs$FY <- as.factor(needs$FY)
 
 # Mess of regex to decrease variation in user-entered fields
   needs$CMHSP <- tolower(needs$CMHSP)
