@@ -166,8 +166,10 @@ combineNeeds <- function(directory) {
                      'some_wait'='Waiting';
                      'all_wait'='Waiting'")
 
-  library(gdata)
-  df$Phase <- reorder(df$Phase, new.order=c("Start","Entry","Screening","Eligibility","Waiting"))
+  # library(gdata)
+  # df$Phase <- gdata::reorder(df$Phase, 
+  #                     new.order = c("Start","Entry","Screening",
+  #                                   "Eligibility","Waiting"))
   
   df <-
   df %>% 
