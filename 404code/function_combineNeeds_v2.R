@@ -57,9 +57,10 @@ combineNeeds <- function(directory) {
     mutate(FY = factor(FY), CMHSP = factor(CMHSP),
            Desc = factor(Desc),
            People = as.numeric(People),
+           # Berrien submitted on the old form in 2015
            Name = ifelse(as.integer(as.character(df$FY)) < 2015 
                          | (as.integer(as.character(df$FY)) = 2015 
-                            & df$CMHSP == "Berrien"),
+                            & df$CMHSP == "Berrien Mental Health Authority"),
                          yes = car::recode(df$Item,"'1'='total_in';
                                       '3'='out_nonMH';
                                       '4'='seeking_SUD';
@@ -101,7 +102,7 @@ combineNeeds <- function(directory) {
   # library(car)
   # if (as.integer(as.character(df$FY)) < 2015 
   #     | (as.integer(as.character(df$FY)) <= 2015 & df$CMHSP == "Berrien")) {
-  #   # Berrien submitted on the old form in 2015
+  #   
   #   df$Name <- recode(df$Item,"'1'='total_in';
   #                     '3'='out_nonMH';
   #                     '4'='seeking_SUD';
