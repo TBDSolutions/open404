@@ -59,8 +59,8 @@ combineNeeds <- function(directory) {
            People = as.numeric(People))
   
   library(car)
-  if (as.integer(as.character(FY)) < 2015 
-      | (as.integer(as.character(FY)) <= 2015 & CMHSP == "Berrien")) {
+  if (as.integer(as.character(df$FY)) < 2015 
+      | (as.integer(as.character(df$FY)) <= 2015 & df$CMHSP == "Berrien")) {
     # Berrien submitted on the old form in 2015
     df$Name <- recode(df$Item,"'1'='total_in';
                       '3'='out_nonMH';
