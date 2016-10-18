@@ -1,5 +1,5 @@
-# library(plyr)
 library(dplyr)
+library(magrittr)
 library(tidyr)
 
 # Source function from GitHub
@@ -13,7 +13,7 @@ needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/
 
 # Mess of regex to decrease variation in user-entered fields
    # Replace NAs with zeroes
-needs$CMHSP <- tolower(needs$CMHSP)
+  needs$CMHSP <- tolower(needs$CMHSP)
   needs$CMHSP <- gsub(" ", "", needs$CMHSP, fixed = T)
   needs$CMHSP <- gsub("cmhsp", "", needs$CMHSP, fixed = T)
   needs$CMHSP <- gsub("behavioral", "", needs$CMHSP, fixed = T)
@@ -39,170 +39,188 @@ needs$CMHSP <- tolower(needs$CMHSP)
   
 # Map codes
 
-  needs$CMHSP <- car::recode(needs$CMHSP, 
-                             "'allegan' = 'Allegan';
-                             'ausablevalley' = 'AuSable Valley';
-                             'ausablevalleycmh' = 'AuSable Valley';
-                             'av' = 'AuSable Valley';
-                             'ausablevalley' = 'AuSable Valley';
-                             'barry' = 'Barry';
-                             'bayarenac' = 'Bay-Arenac';
-                             'berrien' = 'Berrien';
-                             'bca' = 'Barry';
-                             'cei' = 'Clinton Eaton Ingham';
-                             'acei' = 'Clinton Eaton Ingham';
-                             'forcentralmichigan' = 'CMH for Central Michigan';
-                             'cm' = 'CMH for Central Michigan';
-                             'coppercountry' = 'Copper Country';
-                             'detroitwayneagencyjacquelynsummerlin' = 'Detroit-Wayne';
-                             'detroitwayne' = 'Detroit-Wayne';
-                             'genesee' = 'Genesee';
-                             'gogebic' = 'Gogebic';
-                             'gogebica' = 'Gogebic';
-                             'gratiot' = 'Gratiot';
-                             'hiawatha' = 'Hiawatha';
-                             'huron' = 'Huron';
-                             'ionia' = 'Ionia';
-                             'therightdoorforhoperecoveryandwellnessformerlyionia' = 'Ionia';
-                             'kalamazooandsubstanceabuse' = 'Kalamazoo';
-                             'kalamazooandsubabuse' = 'Kalamazoo';
-                             'ksas' = 'Kalamazoo';
-                             'lapeer' = 'Lapeer';
-                             'lapeerco' = 'Lapeer';
-                             'lenawee' = 'Lenawee';
-                             'lifeways' = 'Lifeways';
-                             'livingston' = 'Livingston';
-                             'livingstona' = 'Livingston';
-                             'macomb' = 'Macomb';
-                             'macombco' = 'Macomb';
-                             'mcaccesscenteronly' = 'Macomb';
-                             'centrawellness' = 'Manistee-Benzie';
-                             'centrawellnessmb' = 'Manistee-Benzie';
-                             'centrawellnessakamanisteebenzie' = 'Manistee-Benzie';
-                             'monroe' = 'Monroe';
-                             'montcalmcenterfor' = 'Montcalm';
-                             'montcalmcare' = 'Montcalm';
-                             'muskegon' = 'Muskegon';
-                             'west' = 'Muskegon';
-                             '180' = 'Network180';
-                             'newaygo' = 'Newaygo';
-                             'nc' = 'North Country';
-                             'northcountry' = 'North Country';
-                             'northcountrycmh' = 'North Country';
-                             'northeastmichigan' = 'Northeast Michigan';
-                             'northernlakes' = 'Northern Lakes';
-                             'northpointe' = 'Northpointe';
-                             'n' = 'Northpointe';
-                             'oakland' = 'Oakland';
-                             'ottawa' = 'Ottawa';
-                             'pathways' = 'Pathways';
-                             'pines' = 'Pines';
-                             'saginaw' = 'Saginaw';
-                             'saginawmh' = 'Saginaw';
-                             'sanilac' = 'Sanilac';
-                             'sanilaca' = 'Sanilac';
-                             'shiawassee' = 'Shiawassee';
-                             'stclair' = 'St. Clair';
-                             'sassjc' = 'St. Joseph';
-                             'stjoseph' = 'St. Joseph';
-                             'summitpointe' = 'Summit Pointe';
-                             'tuscolahelath' = 'Tuscola';
-                             'tuscolas' = 'Tuscola';
-                             'vanburen' = 'Van Buren';
-                             'vanburena' = 'Van Buren';
-                             'washtenaw' = 'Washtenaw';
-                             'washtenaworganization' = 'Washtenaw';
-                             'washtenawwcho' = 'Washtenaw';
-                             'westmichigan' = 'West Michigan';
-                             'westmichigans' = 'West Michigan';
-                             'cass' = 'Woodlands';
-                             'cassdbawoodlands' = 'Woodlands';
-                             'casswoodlandsbhn' = 'Woodlands';
-                             'cassmrntal' = 'Woodlands'")
+  needs <-
+    needs %>%
+    mutate(CMHSP = dplyr::recode(CMHSP,
+                          allegan = "Allegan",
+                          ausablevalley = "AuSable Valley",
+                          ausablevalleycmh = "AuSable Valley",
+                          av = "AuSable Valley",
+                          ausablevalley = "AuSable Valley",
+                          barry = "Barry",
+                          bayarenac = "Bay-Arenac",
+                          berrien = "Berrien",
+                          bca = "Barry",
+                          cei = "Clinton Eaton Ingham",
+                          acei = "Clinton Eaton Ingham",
+                          forcentralmichigan = "CMH for Central Michigan",
+                          cm = "CMH for Central Michigan",
+                          coppercountry = "Copper Country",
+                          detroitwayneagencyjacquelynsummerlin = "Detroit-Wayne",
+                          detroitwayne = "Detroit-Wayne",
+                          genesee = "Genesee",
+                          gogebic = "Gogebic",
+                          gogebica = "Gogebic",
+                          gratiot = "Gratiot",
+                          hiawatha = "Hiawatha",
+                          huron = "Huron",
+                          ionia = "Ionia",
+                          therightdoorforhoperecoveryandwellnessformerlyionia = "Ionia",
+                          kalamazooandsubstanceabuse = "Kalamazoo",
+                          kalamazooandsubabuse = "Kalamazoo",
+                          ksas = "Kalamazoo",
+                          lapeer = "Lapeer",
+                          lapeerco = "Lapeer",
+                          lenawee = "Lenawee",
+                          lifeways = "Lifeways",
+                          livingston = "Livingston",
+                          livingstona = "Livingston",
+                          macomb = "Macomb",
+                          macombco = "Macomb",
+                          mcaccesscenteronly = "Macomb",
+                          centrawellness = "Manistee-Benzie",
+                          centrawellnessmb = "Manistee-Benzie",
+                          centrawellnessakamanisteebenzie = "Manistee-Benzie",
+                          monroe = "Monroe",
+                          montcalmcenterfor = "Montcalm",
+                          montcalmcare = "Montcalm",
+                          muskegon = "Muskegon",
+                          west = "Muskegon",
+                          `180` = "Network180",
+                          newaygo = "Newaygo",
+                          nc = "North Country",
+                          northcountry = "North Country",
+                          northcountrycmh = "North Country",
+                          northeastmichigan = "Northeast Michigan",
+                          northernlakes = "Northern Lakes",
+                          northpointe = "Northpointe",
+                          n = "Northpointe",
+                          oakland = "Oakland",
+                          ottawa = "Ottawa",
+                          pathways = "Pathways",
+                          pines = "Pines",
+                          saginaw = "Saginaw",
+                          saginawmh = "Saginaw",
+                          sanilac = "Sanilac",
+                          sanilaca = "Sanilac",
+                          shiawassee = "Shiawassee",
+                          stclair = "St. Clair",
+                          sassjc = "St. Joseph",
+                          stjoseph = "St. Joseph",
+                          summitpointe = "Summit Pointe",
+                          tuscolahelath = "Tuscola",
+                          tuscolas = "Tuscola",
+                          vanburen = "Van Buren",
+                          vanburena = "Van Buren",
+                          washtenaw = "Washtenaw",
+                          washtenaworganization = "Washtenaw",
+                          washtenawwcho = "Washtenaw",
+                          westmichigan = "West Michigan",
+                          westmichigans = "West Michigan",
+                          cass = "Woodlands",
+                          cassdbawoodlands = "Woodlands",
+                          casswoodlandsbhn = "Woodlands",
+                          cassmrntal = "Woodlands"),
+           PIHP = dplyr::recode(CMHSP,
+                         `Copper Country`="1",
+                         `Network180`="3", 
+                         `Gogebic`="1",
+                         `Hiawatha`="1",
+                         `Northpointe`="1", 
+                         `Pathways`="1",
+                         `AuSable Valley`="2",
+                         `Manistee-Benzie`="2",
+                         `North Country`="2",
+                         `Northeast Michigan`="2",
+                         `Northern Lakes`="2",
+                         `Allegan`="3",
+                         `Muskegon`="3",
+                         `Network180`="3",
+                         `Ottawa`="3",
+                         `West Michigan`="3",
+                         `Barry`="4",
+                         `Berrien`="4",
+                         `Kalamazoo`="4",
+                         `Pines`="4",
+                         `St. Joseph`="4",
+                         `Summit Pointe`="4",
+                         `Van Buren`="4",
+                         `Woodlands`="4",
+                         `Bay-Arenac`="5",
+                         `Clinton Eaton Ingham`="5",
+                         `CMH for Central Michigan`="5",
+                         `Gratiot`="5",
+                         `Huron`="5",
+                         `Ionia`="5",
+                         `Lifeways`="5",
+                         `Montcalm`="5",
+                         `Newaygo`="5",
+                         `Saginaw`="5",
+                         `Shiawassee`="5",
+                         `Tuscola`="5",
+                         `Lenawee`="6",
+                         `Livingston`="6",
+                         `Monroe`="6",
+                         `Washtenaw`="6",
+                         `Detroit-Wayne`="7",
+                         `Oakland`="8",
+                         `Macomb`="9",
+                         `Genesee`="10",
+                         `Lapeer`="10",
+                         `Sanilac`="10",
+                         `St. Clair`="10"),
+           PIHPname = dplyr::recode(PIHP,
+                                    `1`="Northcare",
+                                    `2`="NMRE",
+                                    `3`="LRP",
+                                    `4`="SWMBH",
+                                    `5`="MSHN", 
+                                    `6`="CMHPSM",
+                                    `7`="DWMHA",
+                                    `8`="OCCMHA",
+                                    `9`="MCMHS",
+                                    `10`="Region10"),
+           Phase = recode_factor(Phase,
+                                 Start = "Start",
+                                 Entry = "Entry",
+                                 Screening = "Screening", 
+                                 Eligibility = "Eligibility",
+                                 Placement = "Placement",
+                                 Waiting = "Waiting",
+                                 Other = "Other",
+                                 .ordered = T),
+           # Rewrite Desc field with consistent descriptions
+           Desc = dplyr::recode(Name,
+                         total_in = "Total number of people who telephoned or walked in",
+                         out_nonMH = "People seeking services not related to behavioral health needs",
+                         seeking_SUD = "People seeking services referred to substance abuse services",
+                         req_CMHsvc = "People seeking services who requested services the CMHSP provides",
+                         screened_out = "People requesting CMHSP services who did not meet eligibility through phone or other screen",
+                         assmt_sched = "People requesting CMHSP services who were scheduled for assessment",
+                         no_elig_deter = "People scheduled for assessment who did not receive eligibility determination (e.g. dropped out, no show, etc.)",
+                         rfr_to_FFS = "People not served because they were MA FFS enrolled and referred to other MA FFS providers (not health plan)",
+                         rfr_to_MHP = "People not served because they were MA HP enrolled and referred out to MA health plan",
+                         not_eligible = "People scheduled for assessment who did not meet CMHSP eligibility criteria",
+                         rfr_to_mh_Y = "People who were ineligible for CMHSP services and not referred out to other mental health providers",
+                         rfr_to_mh_N = "People who were ineligible for CMHSP services and were referred out to other mental health providers",
+                         eligible = "People meeting CMHSP eligibilty criteria",
+                         urgent_crit = "Eligible persons who met emergency/urgent conditions criteria",
+                         immed_crit = "Eligible persons who met immediate admission criteria",
+                         waiting = "Eligible persons who were put on a waiting list",
+                         some_wait = "People who received some CMHSP services, but were wait listed for other services",
+                         all_wait = "People who were wait-listed for all CMHSP services",
+                         screened_out_other = "People requesting CMHSP services who were screened out for other reasons",
+                         oth_place_ref = "People receiving other placement or referral")) %>%
+    select(-Item)
+  
+# Remove Item (since it varies across years)
+# Recode
+
+needs %<>% 
+  select(-Item)
 
 
-# droplevels(needs)
-# levels(as.factor(needs$CMHSP))
- 
-# tst <-
-# needs %>%
-#   group_by(CMHSP, FY) %>%
-#   summarise(n = n()) %>%
-#   group_by(CMHSP, FY) %>%
-#   summarise(n = n())
-
-  needs$PIHP<-recode(needs$CMHSP, "'Copper Country'='1';
-                        'Network180'='3'; 
-                     'Gogebic'='1';
-                     'Hiawatha'='1';
-                     'Northpointe'='1'; 
-                     'Pathways'='1';
-                     'AuSable Valley'='2';
-                     'Manistee-Benzie'='2';
-                     'North Country'='2';
-                     'Northeast Michigan'='2';
-                     'Northern Lakes'='2';
-                     'Allegan'='3';
-                     'Muskegon'='3';
-                     'Network180'='3';
-                     'Ottawa'='3';
-                     'West Michigan'='3';
-                     'Barry'='4';
-                     'Berrien'='4';
-                     'Kalamazoo'='4';
-                     'Pines'='4';
-                     'St. Joseph'='4';
-                     'Summit Pointe'='4';
-                     'Van Buren'='4';
-                     'Woodlands'='4';
-                     'Bay-Arenac'='5';
-                     'Clinton Eaton Ingham'='5';
-                     'CMH for Central Michigan'='5';
-                     'Gratiot'='5';
-                     'Huron'='5';
-                     'Ionia'='5';
-                     'Lifeways'='5';
-                     'Montcalm'='5';
-                     'Newaygo'='5';
-                     'Saginaw'='5';
-                     'Shiawassee'='5';
-                     'Tuscola'='5';
-                     'Lenawee'='6';
-                     'Livingston'='6';
-                     'Monroe'='6';
-                     'Washtenaw'='6';
-                     'Detroit-Wayne'='7';
-                     'Oakland'='8';
-                     'Macomb'='9';
-                     'Genesee'='10';
-                     'Lapeer'='10';
-                     'Sanilac'='10';
-                     'St. Clair'='10'")
-  
-  needs$PIHP <- as.factor(needs$PIHP)
-  
-  needs$PIHPname<-recode(needs$PIHP, "'1'='Northcare';
-                         '2'='NMRE';
-                         '3'='LRP';
-                         '4'='SWMBH';
-                         '5'='MSHN'; 
-                         '6'='CMHPSM';
-                         '7'='DWMHA';
-                         '8'='OCCMHA';
-                         '9'='MCMHS';
-                         '10'='Region10'")
-  
-  needs$PIHPname <- as.factor(needs$PIHPname)
-  needs$CMHSP <- as.factor(needs$CMHSP)
-  
-  needs$People <- as.integer(needs$People)
-  
-# Order factor for phase
-library(gdata)
-needs$Phase <- reorder(needs$Phase, 
-                       new.order=c("Start","Entry","Screening","Eligibility",
-                                   "Placement","Waiting","Other"))
-
+# Arrange vars
 needs <- needs %>% select(FY,PIHP:PIHPname,CMHSP:Undup)
 
 needs$People[is.na(needs$People)] <- 0 #Replace NAs with zeroes
