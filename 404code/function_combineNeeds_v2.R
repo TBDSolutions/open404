@@ -98,7 +98,8 @@ combineNeeds <- function(directory) {
                                      '14'='immed_crit';
                                      '15'='waiting';
                                      '15a'='some_wait';
-                                     '15b'='all_wait'")))
+                                     '15b'='all_wait';
+                                     else = NA")))
   
 
   # if (as.integer(as.character(df$FY)) < 2015
@@ -166,11 +167,6 @@ combineNeeds <- function(directory) {
                      'some_wait'='Waiting';
                      'all_wait'='Waiting'")
 
-  # library(gdata)
-  # df$Phase <- gdata::reorder(df$Phase, 
-  #                     new.order = c("Start","Entry","Screening",
-  #                                   "Eligibility","Waiting"))
-  
   df <-
   df %>% 
     mutate(Item = factor(Item), Name = factor(Name), Phase = factor(Phase)) %>%
