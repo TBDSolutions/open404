@@ -5,6 +5,7 @@ combineNeeds <- function(directory) {
   library(dplyr)
   library(tidyr)
   library(stringr)
+  library(car)
   
   files <- list.files(directory,full.names = TRUE) # make list of full file names
   n <- length(files)
@@ -99,7 +100,7 @@ combineNeeds <- function(directory) {
                                      '15a'='some_wait';
                                      '15b'='all_wait'")))
   
-  # library(car)
+  # 
   # if (as.integer(as.character(df$FY)) < 2015 
   #     | (as.integer(as.character(df$FY)) <= 2015 & df$CMHSP == "Berrien")) {
   #   
