@@ -143,30 +143,31 @@ combineNeeds <- function(directory) {
   #                     '15'='waiting';
   #                     '15a'='some_wait';
   #                     '15b'='all_wait'")
-  # 
-  # # recode to make groups
-  # df$Phase <- recode(df$Name,"'total_in'='Start';
-  #                    'out_nonMH'='Entry';
-  #                    'seeking_SUD'='Entry';
-  #                    'req_CMHsvc'='Entry';
-  #                    'screened_out'='Screening';
-  #                    'assmt_sched'='Screening';
-  #                    'screened_out_other' = 'Screening';
-  #                    'no_elig_deter'='Eligibility';
-  #                    'rfr_to_FFS'='Eligibility';
-  #                    'rfr_to_MHP'='Eligibility';
-  #                    'not_eligible'='Eligibility';
-  #                    'rfr_to_mh_Y'='Eligibility';
-  #                    'rfr_to_mh_N'='Eligibility';
-  #                    'eligible'='Eligibility';
-  #                    'urgent_crit'='Placement';
-  #                    'immed_crit'='Placement';
-  #                    'waiting'='Waiting';
-  #                    'some_wait'='Waiting';
-  #                    'all_wait'='Waiting'")
   
-#   library(gdata)
-#   df$Phase <- reorder(df$Phase, new.order=c("Start","Entry","Screening","Eligibility","Waiting"))
+  
+  # recode to make groups
+  df$Phase <- recode(df$Name,"'total_in'='Start';
+                     'out_nonMH'='Entry';
+                     'seeking_SUD'='Entry';
+                     'req_CMHsvc'='Entry';
+                     'screened_out'='Screening';
+                     'assmt_sched'='Screening';
+                     'screened_out_other' = 'Screening';
+                     'no_elig_deter'='Eligibility';
+                     'rfr_to_FFS'='Eligibility';
+                     'rfr_to_MHP'='Eligibility';
+                     'not_eligible'='Eligibility';
+                     'rfr_to_mh_Y'='Eligibility';
+                     'rfr_to_mh_N'='Eligibility';
+                     'eligible'='Eligibility';
+                     'urgent_crit'='Placement';
+                     'immed_crit'='Placement';
+                     'waiting'='Waiting';
+                     'some_wait'='Waiting';
+                     'all_wait'='Waiting'")
+
+  library(gdata)
+  df$Phase <- reorder(df$Phase, new.order=c("Start","Entry","Screening","Eligibility","Waiting"))
   
   df <-
   df %>% 
