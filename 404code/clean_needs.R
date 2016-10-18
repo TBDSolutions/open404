@@ -205,6 +205,7 @@ needs$Phase <- reorder(needs$Phase,
 
 needs <- needs %>% select(FY,PIHP:PIHPname,CMHSP:Undup)
 
+needs$People[is.na(needs$People)] <- 0 #Replace NAs with zeroes
 # Make a df p
 
 # tst <- needs %>% select(FY, PIHPname, CMHSP, Population, Phase, Name, People)
