@@ -58,10 +58,10 @@ combineNeeds <- function(directory) {
            Desc = factor(Desc),
            People = as.numeric(People),
            # Berrien submitted on the old form in 2015
-           Name = ifelse(as.integer(as.character(df$FY)) < 2015 
-                         | (as.integer(as.character(df$FY)) = 2015 
-                            & df$CMHSP == "Berrien Mental Health Authority"),
-                         yes = car::recode(df$Item,"'1'='total_in';
+           Name = ifelse(as.integer(as.character(FY)) < 2015 
+                         | (as.integer(as.character(FY)) = 2015 
+                            & CMHSP == "Berrien Mental Health Authority"),
+                         yes = car::recode(Item,"'1'='total_in';
                                       '3'='out_nonMH';
                                       '4'='seeking_SUD';
                                       '5'='req_CMHsvc';
@@ -80,7 +80,7 @@ combineNeeds <- function(directory) {
                                       '16'='waiting';
                                       '16a'='some_wait';
                                       '16b'='all_wait'"),
-                         no = car::recode(df$Item,"'1'='total_in';
+                         no = car::recode(Item,"'1'='total_in';
                                      '3'='out_nonMH';
                                      '4'='req_CMHsvc';
                                      '5'='screened_out';
