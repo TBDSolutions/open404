@@ -102,7 +102,7 @@ combineNeeds <- function(directory) {
   
 
   if (as.integer(as.character(df$FY)) < 2015
-      | (as.integer(as.character(df$FY)) = 2015 
+      | (as.integer(as.character(df$FY)) == 2015 
          & df$CMHSP == "Berrien Mental Health Authority")) {
 
     df$Name <- recode(df$Item,"'1'='total_in';
