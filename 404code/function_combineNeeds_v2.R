@@ -99,7 +99,7 @@ combineNeeds <- function(directory) {
                                      '15'='waiting';
                                      '15a'='some_wait';
                                      '15b'='all_wait';
-                                     else = NA")))
+                                     '16' = 'oth_place_ref'")))
   
 
   # if (as.integer(as.character(df$FY)) < 2015
