@@ -15,8 +15,11 @@
 # source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/function_combineNeeds_v2.R")
 
 # Create processed datasets
-  source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/clean_needs.R")
+  source("https://raw.githubusercontent.com/j-hagedorn/open404/needs-0-1/404code/clean_needs.R")
 
+# Check completeness
+  tst <- needs %>% group_by(FY,CMHSP) %>% summarize(n = n()) %>% group_by(FY) %>% summarize(n = n())
+    
 # Write to app folder for use in Shiny
   write.csv(needs, "C:/Users/joshh/Documents/GitHub/open404/needs-app/data/needs.csv", row.names = F)
 

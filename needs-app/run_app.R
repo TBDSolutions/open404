@@ -1,8 +1,8 @@
 library(shiny)
 
-needsapp <- "C:/Users/joshh/Documents/GitHub/open404/needs-app"
+#needsapp <- "C:/Users/joshh/Documents/GitHub/open404/needs-app"
 
-runApp(needsapp)
+runApp("needs-app")
 
 library(shinyapps)
 
