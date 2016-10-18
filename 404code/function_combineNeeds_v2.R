@@ -58,7 +58,7 @@ combineNeeds <- function(directory) {
            Desc = factor(Desc),
            People = as.numeric(People),
            Name = ifelse(as.integer(as.character(df$FY)) < 2015 
-                         | (as.integer(as.character(df$FY)) <= 2015 
+                         | (as.integer(as.character(df$FY)) = 2015 
                             & df$CMHSP == "Berrien"),
                          yes = car::recode(df$Item,"'1'='total_in';
                                       '3'='out_nonMH';
