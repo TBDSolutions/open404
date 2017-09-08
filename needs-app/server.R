@@ -20,7 +20,11 @@ shinyServer(
       } else print(paste0("Error!  Error!"))
       
       needs %>% 
-        filter(Item!="1"&Item!="12a"&Item !="12b"&Item!="14"&Item!="15") %>%
+        filter(Name != "total_in" 
+               & Name !="rfr_to_mh_Y"
+               & Name !="rfr_to_mh_N"
+               & Name != "urgent_crit" 
+               & Name !="immed_crit") %>%
         filter(FY >= input$fy[1] 
                & FY <= input$fy[2]
                & CMHSP %in% cmh_filt
