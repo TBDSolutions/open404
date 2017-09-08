@@ -15,6 +15,7 @@
 *\.RData
 *.RData
 *.dcf
+*.zip
 
 #################
 ## Eclipse
