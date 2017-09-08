@@ -1,0 +1,66 @@
+"","Code","Code_Mod","Description","Unit_Hours","short_description","long_description"
+"1","90772","90772","Medication Administration",NA,NA,NA
+"2","90782","90782","Medication Administration",NA,NA,NA
+"3","90785","90785","Interactive Complexity - Add On Code",NA,"Psytx complex interactive","INTERACTIVE COMPLEXITY (LIST SEPARATELY IN ADDITION TO THE CODE FOR PRIMARY PROCEDURE)"
+"4","90785","90785U5","Assessment for Autism",NA,"Psytx complex interactive","INTERACTIVE COMPLEXITY (LIST SEPARATELY IN ADDITION TO THE CODE FOR PRIMARY PROCEDURE)"
+"5","90788","90788","Medication Administration",NA,NA,NA
+"6","90791","90791","Assessment",NA,"Psych diagnostic evaluation","PSYCHIATRIC DIAGNOSTIC EVALUATION"
+"7","90791","90791U5","Assessment for Autism",NA,"Psych diagnostic evaluation","PSYCHIATRIC DIAGNOSTIC EVALUATION"
+"8","90792","90792","Assessment",NA,"Psych diag eval w/med srvcs","PSYCHIATRIC DIAGNOSTIC EVALUATION WITH MEDICAL SERVICES"
+"9","90792","90792U5","Assessment for Autism",NA,"Psych diag eval w/med srvcs","PSYCHIATRIC DIAGNOSTIC EVALUATION WITH MEDICAL SERVICES"
+"10","90801","90801","Assessment-Psychiatric Assessment",NA,NA,NA
+"11","90802","90802","Assessment-Psychiatric Assessment",NA,NA,NA
+"12","90804","90804","Substance Abuse: Outpatient Treatment",0.5,NA,NA
+"13","90805","90805","Substance Abuse: Outpatient Treatment",0.5,NA,NA
+"14","90806","90806","Substance Abuse: Outpatient Treatment",0.83,NA,NA
+"15","90807","90807","Substance Abuse: Outpatient Treatment",0.83,NA,NA
+"16","90808","90808","Substance Abuse: Outpatient Treatment",1.33,NA,NA
+"17","90809","90809","Substance Abuse: Outpatient Treatment",1.33,NA,NA
+"18","90810","90810","Therapy-Individual Therapy",0.5,NA,NA
+"19","90811","90811","Therapy-Individual Therapy",0.5,NA,NA
+"20","90812","90812","Substance Abuse: Outpatient Treatment",0.83,NA,NA
+"21","90813","90813","Therapy-Individual Therapy",0.83,NA,NA
+"22","90814","90814","Therapy-Individual Therapy",1.33,NA,NA
+"23","90815","90815","Substance Abuse: Outpatient Treatment",1.33,NA,NA
+"24","90816","90816","Therapy-Individual Therapy",0.5,NA,NA
+"25","90817","90817","Therapy-Individual Therapy",0.5,NA,NA
+"26","90818","90818","Therapy-Individual Therapy",0.83,NA,NA
+"27","90819","90819","Therapy-Individual Therapy",0.83,NA,NA
+"28","90821","90821","Therapy-Individual Therapy",1.33,NA,NA
+"29","90822","90822","Therapy-Individual Therapy",1.33,NA,NA
+"30","90823","90823","Therapy-Individual Therapy",0.5,NA,NA
+"31","90824","90824","Therapy-Individual Therapy",0.5,NA,NA
+"32","90826","90826","Substance Abuse: Psychotherapy (Individual Therapy)",0.83,NA,NA
+"33","90827","90827","Therapy-Individual Therapy",0.83,NA,NA
+"34","90828","90828","Therapy-Individual Therapy",1.33,NA,NA
+"35","90829","90829","Therapy-Individual Therapy",1.33,NA,NA
+"36","90832","90832","Mental Health: Outpatient Care",NA,"Psytx pt&/family 30 minutes","PSYCHOTHERAPY, 30 MINUTES WITH PATIENT AND/OR FAMILY MEMBER"
+"37","90832","90832HF","Substance abuse: Outpatient Care",0.5,"Psytx pt&/family 30 minutes","PSYCHOTHERAPY, 30 MINUTES WITH PATIENT AND/OR FAMILY MEMBER"
+"38","90833","90833","Assessment",NA,"Psytx pt&/fam w/e&m 30 min","PSYCHOTHERAPY, 30 MINUTES WITH PATIENT AND/OR FAMILY MEMBER WHEN PERFORMED WITH AN EVALUATION AND MANAGEMENT SERVICE (LIST SEPARATELY IN ADDITION TO THE CODE FOR PRIMARY PROCEDURE)"
+"39","90833","90833U5","Assessment for Autism",NA,"Psytx pt&/fam w/e&m 30 min","PSYCHOTHERAPY, 30 MINUTES WITH PATIENT AND/OR FAMILY MEMBER WHEN PERFORMED WITH AN EVALUATION AND MANAGEMENT SERVICE (LIST SEPARATELY IN ADDITION TO THE CODE FOR PRIMARY PROCEDURE)"
+"40","90834","90834","Mental Health: Outpatient Care",NA,"Psytx pt&/family 45 minutes","PSYCHOTHERAPY, 45 MINUTES WITH PATIENT AND/OR FAMILY MEMBER"
+"41","90834","90834HF","Substance abuse: Outpatient Care",NA,"Psytx pt&/family 45 minutes","PSYCHOTHERAPY, 45 MINUTES WITH PATIENT AND/OR FAMILY MEMBER"
+"42","90836","90836","Assessment",NA,"Psytx pt&/fam w/e&m 45 min","PSYCHOTHERAPY, 45 MINUTES WITH PATIENT AND/OR FAMILY MEMBER WHEN PERFORMED WITH AN EVALUATION AND MANAGEMENT SERVICE (LIST SEPARATELY IN ADDITION TO THE CODE FOR PRIMARY PROCEDURE)"
+"43","90837","90837","Mental Health: Outpatient Care",NA,"Psytx pt&/family 60 minutes","PSYCHOTHERAPY, 60 MINUTES WITH PATIENT AND/OR FAMILY MEMBER"
+"44","90837","90837HF","Substance abuse: Outpatient Care",NA,"Psytx pt&/family 60 minutes","PSYCHOTHERAPY, 60 MINUTES WITH PATIENT AND/OR FAMILY MEMBER"
+"45","90838","90838","Assessment",NA,"Psytx pt&/fam w/e&m 60 min","PSYCHOTHERAPY, 60 MINUTES WITH PATIENT AND/OR FAMILY MEMBER WHEN PERFORMED WITH AN EVALUATION AND MANAGEMENT SERVICE (LIST SEPARATELY IN ADDITION TO THE CODE FOR PRIMARY PROCEDURE)"
+"46","90839","90839","Psychotherapy for Crisis First 60 Minutes",NA,"Psytx crisis initial 60 min","PSYCHOTHERAPY FOR CRISIS; FIRST 60 MINUTES"
+"47","90840","90840","Psychotherapy for Crisis Each Additional 30 Minutes",NA,"Psytx crisis ea addl 30 min","PSYCHOTHERAPY FOR CRISIS; EACH ADDITIONAL 30 MINUTES (LIST SEPARATELY IN ADDITION TO CODE FOR PRIMARY SERVICE)"
+"48","90846","90846","Substance Abuse: Outpatient Treatment",NA,"Family psytx w/o patient","FAMILY PSYCHOTHERAPY (WITHOUT THE PATIENT PRESENT)"
+"49","90846","90846HF","Substance Abuse: Outpatient Treatment",NA,"Family psytx w/o patient","FAMILY PSYCHOTHERAPY (WITHOUT THE PATIENT PRESENT)"
+"50","90847","90847","Substance Abuse: Outpatient Treatment",NA,"Family psytx w/patient","FAMILY PSYCHOTHERAPY (CONJOINT PSYCHOTHERAPY) (WITH PATIENT PRESENT)"
+"51","90849","90849","Therapy-Family Therapy",NA,"Multiple family group psytx","MULTIPLE-FAMILY GROUP PSYCHOTHERAPY"
+"52","90849","90849HS","Therapy-Family Therapy",NA,"Multiple family group psytx","MULTIPLE-FAMILY GROUP PSYCHOTHERAPY"
+"53","90853","90853","Substance Abuse: Outpatient Treatment",NA,"Group psychotherapy","GROUP PSYCHOTHERAPY (OTHER THAN OF A MULTIPLE-FAMILY GROUP)"
+"54","90853","90853HF","Substance Abuse: Outpatient Treatment",NA,"Group psychotherapy","GROUP PSYCHOTHERAPY (OTHER THAN OF A MULTIPLE-FAMILY GROUP)"
+"55","90857","90857","Substance Abuse: Outpatient Treatment",NA,NA,NA
+"56","90862","90862","Medication Review ",NA,NA,NA
+"57","90870","90870","Additional Codes-ECT Physician",NA,"Electroconvulsive therapy","ELECTROCONVULSIVE THERAPY (INCLUDES NECESSARY MONITORING)"
+"58","90887","90887","Assessments-Other",NA,"Consultation with family","INTERPRETATION OR EXPLANATION OF RESULTS OF PSYCHIATRIC, OTHER MEDICAL EXAMINATIONS AND PROCEDURES, OR OTHER ACCUMULATED DATA TO FAMILY OR OTHER RESPONSIBLE PERSONS, OR ADVISING THEM HOW TO ASSIST PATIENT"
+"59","H0036","H0036","Home Based Services",NA,"Comm psy face-face per 15min","COMMUNITY PSYCHIATRIC SUPPORTIVE TREATMENT, FACE-TO-FACE, PER 15 MINUTES"
+"60","H0036","H0036ST","Home Based Services",NA,"Comm psy face-face per 15min","COMMUNITY PSYCHIATRIC SUPPORTIVE TREATMENT, FACE-TO-FACE, PER 15 MINUTES"
+"61","H2021","H2021","Wraparound",NA,"Com wrap-around sv, 15 min","COMMUNITY-BASED WRAP-AROUND SERVICES, PER 15 MINUTES"
+"62","H2033","H2033","Home Based Services",NA,"Multisys ther/juvenile 15min","MULTISYSTEMIC THERAPY FOR JUVENILES, PER 15 MINUTES"
+"63","T1016","T1016","Supports Coordination",0.25,"Case management","CASE MANAGEMENT, EACH 15 MINUTES"
+"64","T1017","T1017","Targeted Case Management",0.25,"Targeted case management","TARGETED CASE MANAGEMENT, EACH 15 MINUTES"
+"65","T1017","T1017SE","Nursing Home Mental Health Monitoring",0.25,"Targeted case management","TARGETED CASE MANAGEMENT, EACH 15 MINUTES"
