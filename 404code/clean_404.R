@@ -48,12 +48,10 @@ library(dplyr)
 #   tst <- calc404pop(census_key=census_key)
   
 # Output Master .csv file
-  write.csv(Master, 
-            file="../data/clean/Master.csv",
-            row.names = FALSE)
+  write.csv(Master,"../data/clean/Master.csv", row.names = F)
+# Output Master .feather file
+  feather::write_feather(Master,"../data/clean/Master.feather")
 
 # Output Service Groups .csv file
-  write.csv(service_groups,
-            file="C:\\Users\\Josh\\Documents\\GitHub\\open404\\data\\clean\\Service_Groups.csv",
-            row.names = FALSE)
+  write.csv(service_groups,"../data/clean/Service_Groups.csv", row.names = F)
 
