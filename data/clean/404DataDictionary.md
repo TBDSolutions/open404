@@ -27,6 +27,9 @@ High level groupings of services into the following overall types: *"Care Coordi
 ### "Service"
 Lower level groupings of services into multiple types, each falling into one of the "ServiceType" groupings.
 
+### "short_description"
+A shortened description of the HCPCS code, drawn from the official CMS documentation.  See option "Current LCDs" from CMS site [here](https://www.cms.gov/medicare-coverage-database/downloads/downloadable-databases.aspx)
+
 ### "Description" 
 The name of the service, taken from the MDCH-generated 404 report.
 

@@ -19,6 +19,9 @@ You can read the code into R with a simple:
 
 ...or [import it into Excel](https://support.office.com/en-za/article/Import-or-export-text-txt-or-csv-files-5250ac4c-663c-47ce-937b-339e391393ba) using the same URL.
 
+A file ready for analysis in either R or Python which preserves column classes and data types is available using the Apache 'feather' format:
+`feather::read_feather("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master.feather")`
+
 This code is made available under a [MIT License](http://opensource.org/licenses/MIT)
 
 The data is drawn from source tables collected by MDHHS, provided by the Behavioral Health and Developmental Disabilities Administration (BHDDA).  Thanks to Kathleen Haines and Kasi Hunzinger for their ongoing help in obtaining data.
