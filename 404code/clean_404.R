@@ -13,17 +13,21 @@ library(dplyr)
   
   Master <-
   Master %>%
-    group_by(FY,PIHPname,PIHP,CMHSP,Population,
-             ServiceType,Service,Description,Code,Code_Mod) %>%
-    summarize(Unit_Hours = max(Unit_Hours),
-              SumOfCases = sum(SumOfCases),
-              SumOfUnits = sum(SumOfUnits),
-              SumOfCost = sum(SumOfCost)
-              ) %>%
-    mutate(CostPerCase = round(SumOfCost / SumOfCases, digits = 2),
-           CostPerUnit = round(SumOfCost / SumOfUnits, digits = 2),
-           UnitPerCase = round(SumOfUnits / SumOfCases, digits = 1)
-           ) %>%
+    group_by(
+      FY,PIHPname,PIHP,CMHSP,Population,
+      ServiceType,Service,short_description,Description,Code,Code_Mod
+    ) %>%
+    summarize(
+      Unit_Hours = max(Unit_Hours),
+      SumOfCases = sum(SumOfCases),
+      SumOfUnits = sum(SumOfUnits),
+      SumOfCost = sum(SumOfCost)
+    ) %>%
+    mutate(
+      CostPerCase = round(SumOfCost / SumOfCases, digits = 2),
+      CostPerUnit = round(SumOfCost / SumOfUnits, digits = 2),
+      UnitPerCase = round(SumOfUnits / SumOfCases, digits = 1)
+    ) %>%
     ungroup()
   
   
@@ -34,9 +38,10 @@ library(dplyr)
   Master <-
   Master %>%
     group_by(FY,CMHSP) %>%
-    mutate(Unit_Perc_Tot = round(SumOfUnits/sum(SumOfUnits, na.rm = T) * 100, digits = 1), 
-           Cost_Perc_Tot = round(SumOfCost/sum(SumOfCost, na.rm = T) * 100, digits = 1)
-           ) %>%
+    mutate(
+      Unit_Perc_Tot = round(SumOfUnits/sum(SumOfUnits, na.rm = T) * 100, digits = 1), 
+      Cost_Perc_Tot = round(SumOfCost/sum(SumOfCost, na.rm = T) * 100, digits = 1)
+    ) %>%
     ungroup()
 
 # Add rates per 1,000 served
@@ -53,5 +58,10 @@ library(dplyr)
   feather::write_feather(Master,"../data/clean/Master.feather")
 
 # Output Service Groups .csv file
+  service_groups <- 
+    Master %>% 
+    group_by(ServiceType,Service,short_description,Description,Code,Code_Mod) %>%
+    summarize(n = n())
+  
   write.csv(service_groups,"../data/clean/Service_Groups.csv", row.names = F)
 

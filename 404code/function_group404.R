@@ -185,6 +185,7 @@ group404 <- function(Master) {
                           '92506'='OT/PT/SLT';
                           '92507'='OT/PT/SLT';
                           '92508'='OT/PT/SLT';
+                          '92524'='OT/PT/SLT';
                           '92526'='OT/PT/SLT';
                           '92610'='OT/PT/SLT';
                           '97001'='OT/PT/SLT';
@@ -235,6 +236,7 @@ group404 <- function(Master) {
                           'H0023'='Peer Services';
                           'H0038'='Peer Services';
                           'H0046'='Peer Services';
+                          '118' = 'Peer Services';
                           'H2030'='Clubhouse';
                           'T1012'='Peer Services';
                           'A0080'='Transportation';
@@ -379,6 +381,11 @@ group404 <- function(Master) {
                           '99262'='Health Services';
                           '99263'='Health Services';
                           '99274'='Health Services';
+                          '99305'='Health Services';
+                          '99307'='Health Services';
+                          '99308'='Health Services';
+                          '99309'='Health Services';
+                          '99310'='Health Services';
                           'H0034'='Health Services';
                           'S9123'='Health Services';
                           'S9124'='Health Services';
@@ -392,8 +399,13 @@ group404 <- function(Master) {
                           'K0739'='Ancillary Hospital Services';
                           'ALL'='Other';
                           '98'='Other';
+                          '113' = 'Other';
                           'T5999'='Equipment';
                           '0100'='Inpatient Psychiatric Hospital';
+                          '0114'='Inpatient Psychiatric Hospital';
+                          '100'='Inpatient Psychiatric Hospital';
+                          '39'='Inpatient Psychiatric Hospital';
+                          '40'='Inpatient Psychiatric Hospital';
                           '0901'='Ancillary Hospital Services';
                           '0370'='Ancillary Hospital Services';
                           '0450'='Ancillary Hospital Services';
@@ -409,6 +421,7 @@ group404 <- function(Master) {
                           '0730'='Ancillary Hospital Services';
                           '0102'='Peer Services';
                           '0105'='Pharmaceuticals';
+                          '121'='Pharmaceuticals';
                           '0762'='Crisis Services';
                           '762'='Crisis Services';
                           '0912'='Partial Hospitalization';
@@ -563,6 +576,27 @@ group404 <- function(Master) {
   Master %>%
     select(FY, PIHPname, PIHP, CMHSP, Population, ServiceType, Service,
            Description:UnitPerCase)
+  
+  ## Import HCPCS file
+  ## In order to run this script, your 'data/' path will need 
+  ## to contain the following files:
+  ## /hcpc_code_lookup.csv
+  ## Download option "Current LCDs" from CMS site:
+  ## "https://www.cms.gov/medicare-coverage-database/downloads/downloadable-databases.aspx"
+  
+  hcpcs_file <- readr::read_csv("~/GitHub/open404/data/hcpc_code_lookup.csv")
+  
+  hcpcs_file %<>% 
+    #semi_join(locus_to_svs, by = c("hcpc_code_id" = "proccode")) %>%
+    group_by(hcpc_code_id) %>%
+    filter(hcpc_code_version == max(hcpc_code_version)) %>%
+    select(hcpc_code_id, short_description) 
+  
+  Master <-
+    Master %>%
+    left_join(hcpcs_file, by = c("Code" = "hcpc_code_id")) %>%
+    mutate(short_description = ifelse(is.na(short_description) == T,as.character(Description),short_description)) %>%
+    select(FY:Service,short_description,everything())
   
   return(Master)
   
