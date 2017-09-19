@@ -4,9 +4,9 @@
 
 library(shiny)
 library(plotly)
-library(dplyr)
-#library(plyr)
+library(tidyverse)
+library(feather)
 
 #### Read datasets ####
 
-data404 <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/clean/Master.csv")
+data404 <- read_feather("~/GitHub/open404/data/clean/Master.feather")
