@@ -6,55 +6,31 @@ shinyServer(function(input, output) {
 
   df_bubble <- reactive({
     
+    # Relabel selected grouping variable
     if (input$org_type == "PIHPname") {
-      
-      df <- data404 %>%
-        filter(ServiceType == input$select_ServiceType) %>%
-        group_by(FY,PIHPname) %>%
-        summarize(
-          SumCases = sum(SumOfCases, na.rm = T),
-          SumUnits = sum(SumOfUnits, na.rm = T),
-          SumCost = sum(SumOfCost, na.rm = T),
-          CostPerCase = round(SumCost / SumCases, digits = 2),
-          CostPerUnit = round(SumCost / SumUnits, digits = 2),
-          UnitPerCase = round(SumUnits / SumCases, digits = 1),
-          Cost1kSvd = round(SumCost / 1000, digits = 1)) %>%
-        ungroup()
-      
-      df <-
-        df %>%
-        group_by(FY) %>%
-        mutate(
-          Cost_Perc_Tot = round(SumUnits / sum(SumUnits, na.rm = T) * 100, digits = 1),
-          Perc_Svd = round(SumCases / sum(SumCases, na.rm = T) * 100, digits = 1)
-        )%>%
-        ungroup()
-      
+      df <- data404 %>% rename(org_grp = PIHPname)
     } else if (input$org_type == "CMHSP") {
-      
-      df <- data404 %>%
-        filter(ServiceType == input$select_ServiceType) %>%
-        group_by(FY,CMHSP) %>%
-        summarize(
-          SumCases = sum(SumOfCases, na.rm = T),
-          SumUnits = sum(SumOfUnits, na.rm = T),
-          SumCost = sum(SumOfCost, na.rm = T),
-          CostPerCase = round(SumCost / SumCases, digits = 2),
-          CostPerUnit = round(SumCost / SumUnits, digits = 2),
-          UnitPerCase = round(SumUnits / SumCases, digits = 1),
-          Cost1kSvd = round(SumCost / 1000, digits = 1)) %>%
-        ungroup()
-      
-      df <-
-        df %>%
-        group_by(FY) %>%
-        mutate(
-          Cost_Perc_Tot = round(SumUnits / sum(SumUnits, na.rm = T) * 100, digits = 1),
-          Perc_Svd = round(SumCases / sum(SumCases, na.rm = T) * 100, digits = 1)
-        )%>%
-        ungroup()
-      
+      df <- data404 %>% rename(org_grp = CMHSP)
     } else print(paste0("Error.  Unrecognized input."))
+    
+    df %<>%
+      filter(ServiceType == input$select_ServiceType) %>%
+      group_by(FY,org_grp) %>%
+      summarize(
+        SumCases = sum(SumOfCases, na.rm = T),
+        SumUnits = sum(SumOfUnits, na.rm = T),
+        SumCost = sum(SumOfCost, na.rm = T),
+        CostPerCase = round(SumCost / SumCases, digits = 2),
+        CostPerUnit = round(SumCost / SumUnits, digits = 2),
+        UnitPerCase = round(SumUnits / SumCases, digits = 1),
+        Cost1kSvd = round(SumCost / 1000, digits = 1)) %>%
+      ungroup() %>%
+      group_by(FY) %>%
+      mutate(
+        Cost_Perc_Tot = round(SumUnits / sum(SumUnits, na.rm = T) * 100, digits = 1),
+        Perc_Svd = round(SumCases / sum(SumCases, na.rm = T) * 100, digits = 1)
+      ) %>%
+      ungroup()
     
     # if (input$select_PIHP == "All") {
     #   df <- data404
@@ -82,12 +58,12 @@ shinyServer(function(input, output) {
 
     df %>%
       select(
-        FY
-        ,org_type = matches(input$org_type)
-        # ,w = matches(input$w)
-        ,x = matches(input$x)
-        ,y = matches(input$y)
-        ,z = matches(input$z)
+        FY,
+        org_grp,
+        # w = matches(input$w),
+        x = matches(input$x),
+        y = matches(input$y),
+        z = matches(input$z)
       )
     
   })

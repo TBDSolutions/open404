@@ -12,7 +12,6 @@
 
 *.html
 *.rda
-*\.RData
 *.RData
 *.dcf
 *.zip
@@ -241,3 +240,4 @@ pip-log.txt
 *.csv
 *.feather
 *.zip
+
