@@ -236,3 +236,8 @@ pip-log.txt
 *.RData
 404code/.RData
 *.RData
+
+# Data files
+*.csv
+*.feather
+*.zip
