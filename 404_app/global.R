@@ -2,7 +2,7 @@
 
 #### Load packages ####
 
-library(shiny)
+library(shiny); library(shinythemes)
 library(plotly)
 library(tidyverse)
 library(feather)

@@ -12,7 +12,6 @@
 
 *.html
 *.rda
-*\.RData
 *.RData
 *.dcf
 *.zip
@@ -236,3 +235,5 @@ pip-log.txt
 *.RData
 404code/.RData
 *.RData
+404code/.RData
+404code/.RData
