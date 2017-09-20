@@ -99,16 +99,20 @@ shinyServer(function(input, output) {
       filter(FY == input$sliderFY) %>%
       plot_ly(
         x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
-        size = ~z, color = ~org_type, marker = list(opacity = 0.5)
+        size = ~z, color = ~org_type, marker = list(opacity = 0.5),
+        hoverinfo = 'text',
+        text = ~paste(input$org_type,':', org_type,
+                      '<br>',input$x,':', x,
+                      '<br>',input$y,':', y)
       ) %>%
       layout(
-        title = '',
         xaxis = list(
           title = input$x,
           showgrid = FALSE),
         yaxis = list(
           title = input$y,
-          showgrid = FALSE)
+          showgrid = FALSE),
+        showlegend = FALSE
         )
     
   })
