@@ -7,36 +7,55 @@ shinyServer(function(input, output) {
   df_bubble <- reactive({
     
     # Relabel selected grouping variable
-    if (input$org_type == "PIHPname") {
+    if (input$org_type == "PIHP") {
       df <- data404 %>% rename(org_grp = PIHPname)
-    } else if (input$org_type == "CMHSP") {
+    } else if (input$org_type == "CMH") {
       df <- data404 %>% rename(org_grp = CMHSP)
     } else print(paste0("Error.  Unrecognized input."))
     
-    df %<>%
-      filter(ServiceType == input$select_ServiceType) %>%
-      group_by(FY,org_grp) %>%
-      summarize(
-        SumCases = sum(SumOfCases, na.rm = T),
-        SumUnits = sum(SumOfUnits, na.rm = T),
-        SumCost = sum(SumOfCost, na.rm = T),
-        CostPerCase = round(SumCost / SumCases, digits = 2),
-        CostPerUnit = round(SumCost / SumUnits, digits = 2),
-        UnitPerCase = round(SumUnits / SumCases, digits = 1),
-        Cost1kSvd = round(SumCost / 1000, digits = 1)) %>%
-      ungroup() %>%
-      group_by(FY) %>%
-      mutate(
-        Cost_Perc_Tot = round(SumUnits / sum(SumUnits, na.rm = T) * 100, digits = 1),
-        Perc_Svd = round(SumCases / sum(SumCases, na.rm = T) * 100, digits = 1)
-      ) %>%
-      ungroup()
+    if (input$select_ServiceType == "All") {
+      df <- df
+    } else if (input$select_ServiceType %in% levels(unique(df$ServiceType))) {
+      df <- df %>% filter(ServiceType %in% input$select_ServiceType)
+    } else print(paste0("Error.  Unrecognized input."))
     
     # if (input$select_PIHP == "All") {
     #   df <- data404
     # } else if (input$select_PIHP %in% levels(unique(data404$PIHPname)) ) {
     #   df <- data404 %>% filter(PIHPname %in% input$select_PIHP)
     # } else print(paste0("Error.  Unrecognized input."))
+    
+    # filt_org <-
+    #   if (input$select_PIHP == "All") {unique(df$org_type)
+    #   } else if (input$select_PIHP == "All") {unique(scrub_fas$assess_type)
+    #   } else input$radio_type
+    
+    df %<>%
+      # filter(ServiceType == input$select_ServiceType) %>%
+      group_by(FY,org_grp) %>%
+      summarize(
+        SumOfCases = sum(SumOfCases, na.rm = T),
+        SumOfUnits = sum(SumOfUnits, na.rm = T),
+        SumOfCost = sum(SumOfCost, na.rm = T),
+        CostPerCase = round(SumOfCost / SumOfCases, digits = 2),
+        CostPerUnit = round(SumOfCost / SumOfUnits, digits = 2),
+        UnitPerCase = round(SumOfUnits / SumOfCases, digits = 1),
+        Cost1kSvd = round(SumOfCost / 1000, digits = 1)) %>%
+      ungroup() %>%
+      group_by(FY) %>%
+      mutate(
+        Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 1),
+        Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 1)
+      ) %>%
+      ungroup() %>%
+      select(
+        FY
+        ,org_grp
+        ,x = matches(input$x)
+        ,y = matches(input$y)
+        ,z = matches(input$z)
+      )
+    
     # 
     # if (input$select_CMHSP == "All") {
     #   df <- data404
@@ -55,17 +74,41 @@ shinyServer(function(input, output) {
     # } else if (input$select_ServiceType %in% levels(unique(data404$ServiceType)) ) {
     #   df <- data404 %>% filter(ServiceType %in% input$select_ServiceType)
     # } else print(paste0("Error.  Unrecognized input."))
-
-    df %>%
-      select(
-        FY,
-        org_grp,
-        # w = matches(input$w),
-        x = matches(input$x),
-        y = matches(input$y),
-        z = matches(input$z)
-      )
+  
     
+  })
+  
+  #### Filters ####
+  
+  output$select_code <- renderUI({
+    
+    hcpcs <- if(input$select_ServiceType == "All"){
+      levels(data404$Code_Mod)
+    } else
+      levels(droplevels(data404$Code_Mod[data404$ServiceType == input$select_ServiceType]))
+    
+    selectInput(
+      "select_code",
+      label = "Select HCPCS Code:",
+      choices = c(hcpcs)
+    )
+    
+  })
+  
+  output$select_org <- renderUI({
+
+    org <- if(input$org_type == "PIHP"){
+      c("All",levels(unique(data404$PIHPname)))
+    } else if(input$org_type == "CMH"){
+      c("All",levels(unique(data404$CMHSP)))
+    } else print(paste0("Error.  Unrecognized input."))
+
+    selectInput(
+      "select_org",
+      label = "Filter by Organization:",
+      choices = c(org)
+    )
+
   })
 
   #### Visualizations ####
@@ -75,13 +118,15 @@ shinyServer(function(input, output) {
       filter(FY == input$sliderFY) %>%
       plot_ly(
         x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
-        size = ~z, color = ~org_type, marker = list(opacity = 0.5),
-        hoverinfo = 'text',
-        text = ~paste(input$org_type,':', org_type,
-                      '<br>',input$x,':', x,
-                      '<br>',input$y,':', y)
+      size = ~z, color = ~org_grp, marker = list(opacity = 0.5),
+      hoverinfo = 'text',
+      text = ~paste(org_grp,
+                    '<br>',input$x,':', x,
+                    '<br>',input$y,':', y)
       ) %>%
       layout(
+        title = ~paste('How does',input$x,'compare to',input$y,'for<br>',
+                       input$select_ServiceType,'across',input$org_type,"'s",'?'),
         xaxis = list(
           title = input$x,
           showgrid = FALSE),
