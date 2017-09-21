@@ -8,6 +8,7 @@ library(tidyverse); library(magrittr)
 library(shinydashboard)
 library(shinythemes)
 library(feather)
+library(scales)
 
 #### Read datasets ####
 

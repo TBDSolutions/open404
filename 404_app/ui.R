@@ -1,6 +1,6 @@
 # ui.R #
 
-dashboardPage(
+dashboardPage(skin = "blue",
   dashboardHeader(title = "explore 404"),
   dashboardSidebar(
     sidebarMenu(
@@ -22,36 +22,12 @@ dashboardPage(
       uiOutput(
         "select_code"
       ),
-      menuItem(
-        "Filters",
-        icon = icon("filter"),
-        menuSubItem(
-          icon = NULL,
-          selectInput(
-            "select_PIHP",
-            label = "Select a PIHP:",
-            choices = c("All", levels(unique(data404$PIHPname))), 
-            selected = "All"
-            )
-          ),
-        menuSubItem(
-          icon = NULL,
-          selectInput(
-            "select_CMHSP",
-            label = "Select a CMH:",
-            choices = c("All", levels(unique(data404$CMHSP))),
-            selected = "All"
-          )
-        ),
-        menuSubItem(
-          icon = NULL,
-          selectInput(
-            "select_Population",
-            label = "Select Population:",
-            choices = c("All", levels(unique(data404$Population))),
-            selected = "All"
-          )
-        )
+      radioButtons(
+        "select_Population",
+        label = "Select Population:",
+        choices = c("All", levels(unique(data404$Population))),
+        selected = "All",
+        inline = T
       ),
       menuItem(
         "Display Options",
@@ -61,10 +37,10 @@ dashboardPage(
           selectInput(
             "x",
             label = "Select Variable for X axis:",
-              choices = c("SumOfCases","SumOfUnits","SumOfCost",
-                          "CostPerCase","CostPerUnit","UnitPerCase",
-                          "Cost1kSvd","Cost_Perc_Tot","Perc_Svd"),
-              selected = "SumOfCases"
+            choices = c("Total Cases","Total Units","Total Cost",
+                        "Cost Per Case","Cost Per Unit","Unit Per Case",
+                        "Cost per 1K Served","% of Total Cost","Percent Served"),
+              selected = "Total Cases"
           )
         ),
         menuSubItem(
@@ -72,10 +48,10 @@ dashboardPage(
           selectInput(
             "y",
             label = "Select Variable for Y axis:",
-            choices = c("SumOfCases","SumOfUnits","SumOfCost",
-                        "CostPerCase","CostPerUnit","UnitPerCase",
-                        "Cost1kSvd","Cost_Perc_Tot","Perc_Svd"),
-            selected = "SumOfUnits"
+            choices = c("Total Cases","Total Units","Total Cost",
+                        "Cost Per Case","Cost Per Unit","Unit Per Case",
+                        "Cost per 1K Served","% of Total Cost","Percent Served"),
+            selected = "Total Units"
           )
         ),
         menuSubItem(
@@ -83,21 +59,12 @@ dashboardPage(
           selectInput(
             "z",
             label = "Select Sizing Variable:",
-            choices = c("SumOfCases","SumOfUnits","SumOfCost",
-                        "CostPerCase","CostPerUnit","UnitPerCase",
-                        "Cost1kSvd","Cost_Perc_Tot","Perc_Svd"),
-            selected = "Perc_Svd"
+            choices = c("Total Cases","Total Units","Total Cost",
+                        "Cost Per Case","Cost Per Unit","Unit Per Case",
+                        "Cost per 1K Served","% of Total Cost","Percent Served"),
+            selected = "Percent Served"
           )
         )
-        # menuSubItem(
-        #   icon = NULL,
-        #   selectInput(
-        #     "w",
-        #     label = "Select Grouping Variable:",
-        #     choices = c("PIHPname","CMHSP","Population","ServiceType","Service"),
-        #     selected = "PIHPname"
-        #   )
-        # )
       )
     )
   ),
