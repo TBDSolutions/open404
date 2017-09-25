@@ -120,7 +120,7 @@ shinyServer(function(input, output) {
     
     selectInput(
       "select_code",
-      label = "Select HCPCS Code:",
+      label = tags$p("Select HCPCS Code:", style = "font-size: 115%;"),
       choices = c(hcpcs)
     )
     
@@ -136,7 +136,7 @@ shinyServer(function(input, output) {
 
     selectInput(
       "select_org",
-      label = "Filter Organization Level:",
+      label = tags$p("Filter Organization Level:", style = "font-size: 115%;"),
       choices = c(org)
     )
 
@@ -147,8 +147,8 @@ shinyServer(function(input, output) {
   output$bubble <- renderPlotly({
     
     # Grab max values from x and y vars
-    max_x <- max(df_bubble()$x, na.rm = T)
-    max_y <- max(df_bubble()$y, na.rm = T)
+    max_x <- max(df_bubble()$x, na.rm = T)+max(df_bubble()$x*.1)
+    max_y <- max(df_bubble()$y, na.rm = T)+max(df_bubble()$y*.1)
     
     df_bubble() %>%
       filter(FY == input$sliderFY) %>%
@@ -158,22 +158,22 @@ shinyServer(function(input, output) {
       hoverinfo = 'text',
       text = ~paste(
         org_grp,
-        '<br>',input$x,':', 
-        ifelse(
-          grepl("Cost",input$x),
-          yes = dollar_format(big.mark = ",")(x),
-          no = format(x, big.mark = ",")
-        ),
-        '<br>',input$y,':', 
-        ifelse(
-          grepl("Cost",input$y),
-          yes = dollar_format(big.mark = ",")(y),
-          no = format(y, big.mark = ",")
-        )
+        '<br>',input$x,':',x,
+        # ifelse(
+        #   grepl("Cost",input$x),
+        #   yes = dollar_format(big.mark = ",")(x),
+        #   no = format(x, big.mark = ",")
+        # ),
+        '<br>',input$y,':',y
+        # ifelse(
+        #   grepl("Cost",input$y),
+        #   yes = dollar_format(big.mark = ",")(y),
+        #   no = format(y, big.mark = ",")
+        # )
         )
       ) %>%
       layout(
-        title = ~paste('How do',input$x,'compare to',input$y,'for<br>',
+        title = ~paste('How does',input$x,'compare to',input$y,'for<br>',
                        input$select_ServiceType,'across',input$org_type,"s",'?'),
         xaxis = list(
           title = input$x,
