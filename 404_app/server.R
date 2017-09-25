@@ -26,7 +26,6 @@ shinyServer(function(input, output) {
     } else print(paste0("Error.  Unrecognized input."))
     
     df %<>%
-      # filter(ServiceType == input$select_ServiceType) %>%
       group_by(FY,org_grp) %>%
       summarize(
         SumOfCases = sum(SumOfCases, na.rm = T),
@@ -154,7 +153,7 @@ shinyServer(function(input, output) {
       filter(FY == input$sliderFY) %>%
       plot_ly(
         x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
-      size = ~z, color = ~org_grp, marker = list(opacity = 0.5),
+      size = ~z, color = ~org_grp, colors = cmh_palette, marker = list(opacity = 0.5),
       hoverinfo = 'text',
       text = ~paste(
         org_grp,
