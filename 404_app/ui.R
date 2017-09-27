@@ -48,9 +48,9 @@ shinyUI(
           choices = c("PIHP","CMH"),
           selected = "PIHP"
         ),
-        uiOutput(
-          "select_org"
-          ),
+        # uiOutput(
+        #   "select_org"
+        #   ),
         selectInput(
           inputId = "select_ServiceType",
           label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
