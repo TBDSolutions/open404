@@ -12,9 +12,7 @@ library(scales)
 
 #### Read datasets ####
 
-# data404 <- read_feather("~/GitHub/open404/data/clean/Master.feather")
-
-data404 <- read_feather("C:/Users/jennad/Documents/GitHub/open404/404_app/data/Master.feather")
+data404 <- read_feather("data/Master.feather")
 
 #### Formatting Variables ####
 
