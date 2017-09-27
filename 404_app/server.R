@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
     
     # Filterby HCPCS Code
     code_filt <- if (input$select_code == "All") {
-      levels(df$Code_Mod)
+      levels(df$Code_Desc)
     } else input$select_code
     
     # Filter by Population
@@ -36,7 +36,7 @@ shinyServer(function(input, output) {
     df %<>%
       filter(ServiceType %in% servicetype_filt
              & Population %in% pop_filt
-             & Code_Mod %in% code_filt
+             & Code_Desc %in% code_filt
              # & org_grp %in% org_filt
              ) %>%
       group_by(FY,org_grp) %>%
@@ -127,9 +127,9 @@ shinyServer(function(input, output) {
   output$select_code <- renderUI({
     
     hcpcs <- if (input$select_ServiceType == "All") {
-      levels(data404$Code_Mod)
+      levels(data404$Code_Desc)
     } else
-      levels(droplevels(data404$Code_Mod[data404$ServiceType == input$select_ServiceType]))
+      levels(droplevels(data404$Code_Desc[data404$ServiceType == input$select_ServiceType]))
     
     selectInput(
       "select_code",
@@ -139,6 +139,64 @@ shinyServer(function(input, output) {
     )
     
   })
+  
+  output$x <- renderUI({
+    
+    x <- if (input$select_code == "All") {
+      c("Total Cases","Total Cost","Cost Per Case","Cost per 1K Served"
+        ,"Percent of Total $","Percent Served")
+    } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
+             ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
+             ,"Percent of Total $","Percent Served")
+    
+    selectInput(
+      "x",
+      label = tags$p("Select a variable for the x-axis (horizontal):"
+                     , style = "font-size: 115%;"),
+      choices = (x),
+      selected = ("Total Cases")
+    )
+    
+  })
+  
+  output$y <- renderUI({
+    
+    y <- if (input$select_code == "All") {
+      c("Total Cases","Total Cost","Cost Per Case","Cost per 1K Served"
+        ,"Percent of Total $","Percent Served")
+    } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
+             ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
+             ,"Percent of Total $","Percent Served")
+    
+    selectInput(
+      "y",
+      label = tags$p("Select a variable for the y-axis (vertical):"
+                     , style = "font-size: 115%;"),
+      choices = (y),
+      selected = ("Total Cost")
+    )
+    
+  })
+  
+  output$z <- renderUI({
+    
+    z <- if (input$select_code == "All") {
+      c("Total Cases","Total Cost","Cost Per Case","Cost per 1K Served"
+        ,"Percent of Total $","Percent Served")
+    } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
+             ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
+             ,"Percent of Total $","Percent Served")
+    
+    selectInput(
+      "z",
+      label = tags$p("Select a variable to scale the size of each bubble:"
+                     , style = "font-size: 115%;"),
+      choices = (z),
+      selected = ("Percent Served")
+    )
+    
+  })
+
   
   # output$select_org <- renderUI({
   #   
@@ -189,8 +247,13 @@ shinyServer(function(input, output) {
         )
       ) %>%
       layout(
-        title = ~paste('How does',input$x,'compare to',input$y,'for<br>',
-                       input$select_ServiceType,'across',input$org_type,"s",'?'),
+        title = if(input$select_code == "All") {
+          ~paste('How does',input$x,'compare to',input$y,'for<br>',
+                 input$select_ServiceType,'across',input$org_type,"'s",'?<br>',
+                 'Fiscal Year:', input$sliderFY)
+        } else ~paste ('How does',input$x,'compare to',input$y,'for<br>',
+                       input$select_code,'across',input$org_type,"'s",'?<br>',
+                       'Fiscal Year:', input$sliderFY),
         xaxis = list(
           title = input$x,
           range = c(0, max_x),
@@ -203,6 +266,7 @@ shinyServer(function(input, output) {
         ),
         showlegend = FALSE
       )
+    
     
   })
   

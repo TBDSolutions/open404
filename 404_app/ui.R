@@ -4,36 +4,19 @@ shinyUI(
   fluidPage(
     titlePanel("explore 404"),
     theme = shinythemes::shinytheme("yeti"),
+    #suppress errors from waiting data to be built.
+    tags$style(type="text/css",
+               ".shiny-output-error { visibility: hidden; }",
+               ".shiny-output-error:before { visibility: hidden; }"
+    ),
     sidebarLayout(
       sidebarPanel(
         tags$strong("Display Options:"),
         br(),
         br(),
-        selectInput(
-          inputId = "x",
-          label = tags$p("Select a variable for the x-axis (horizontal):", style = "font-size: 115%;"),
-          choices = c("Total Cases","Total Units","Total Cost",
-                      "Cost Per Case","Cost Per Unit","Total Unit Per Case",
-                      "Cost per 1K Served","Percent of Total $","Percent Served"),
-          selected = "Total Cases"
-        ),
-        selectInput(
-          inputId = "y",
-          label = tags$p("Select a variable for the y-axis (vertical):", style = "font-size: 115%;"),
-          choices = c("Total Cases","Total Units","Total Cost",
-                      "Cost Per Case","Cost Per Unit","Total Unit Per Case",
-                      "Cost per 1K Served","Percent of Total $","Percent Served"),
-          selected = "Total Units"
-        ),
-        selectInput(
-          inputId = "z",
-          label = tags$p("Select a variable to scale the size of each bubble:"
-                         , style = "font-size: 115%;"),
-          choices = c("Total Cases","Total Units","Total Cost",
-                      "Cost Per Case","Cost Per Unit","Total Unit Per Case",
-                      "Cost per 1K Served","Percent of Total $","Percent Served"),
-          selected = "Percent Served"
-        ),
+        uiOutput("x"),
+        uiOutput("y"),
+        uiOutput("z"),
         tags$strong("Note: The same variable cannot be selected more than once.",
                style = "font-size: 80%;"),
         br(),
@@ -66,7 +49,10 @@ shinyUI(
           choices = c("All", levels(unique(data404$Population))),
           selected = "All",
           inline = T
-        )
+        ),
+        tags$strong("Note: When Population: 'All' is selected individuals may be represented
+                    more than once if they received DD and MI services within the same year.",
+                    style = "font-size: 80%;")
       ),
       mainPanel(
         plotlyOutput("bubble"),
@@ -78,7 +64,9 @@ shinyUI(
           value = 2006,
           sep = "",
           animate = animationOptions(loop = FALSE, interval = 1000)
-        )
+        ),
+        tags$strong("Note: Graph will not display for years during which a particular 
+                    service code was not used.", style = "font-size: 80%;")
       )
     )
   )
