@@ -1,83 +1,86 @@
 # ui.R #
 
-dashboardPage(skin = "blue",
-  dashboardHeader(title = "explore 404"),
-  dashboardSidebar(
-    sidebarMenu(
-      selectInput(
-        "org_type",
-          label = "Select Organization Level:",
+shinyUI(
+  fluidPage(
+    titlePanel("explore 404"),
+    theme = shinythemes::shinytheme("yeti"),
+    sidebarLayout(
+      sidebarPanel(
+        tags$strong("Display Options:"),
+        br(),
+        br(),
+        selectInput(
+          inputId = "x",
+          label = tags$p("Select a variable for the x-axis (horizontal):", style = "font-size: 115%;"),
+          choices = c("Total Cases","Total Units","Total Cost",
+                      "Cost Per Case","Cost Per Unit","Total Unit Per Case",
+                      "Cost per 1K Served","Percent of Total $","Percent Served"),
+          selected = "Total Cases"
+        ),
+        selectInput(
+          inputId = "y",
+          label = tags$p("Select a variable for the y-axis (vertical):", style = "font-size: 115%;"),
+          choices = c("Total Cases","Total Units","Total Cost",
+                      "Cost Per Case","Cost Per Unit","Total Unit Per Case",
+                      "Cost per 1K Served","Percent of Total $","Percent Served"),
+          selected = "Total Units"
+        ),
+        selectInput(
+          inputId = "z",
+          label = tags$p("Select a variable to scale the size of each bubble:"
+                         , style = "font-size: 115%;"),
+          choices = c("Total Cases","Total Units","Total Cost",
+                      "Cost Per Case","Cost Per Unit","Total Unit Per Case",
+                      "Cost per 1K Served","Percent of Total $","Percent Served"),
+          selected = "Percent Served"
+        ),
+        tags$strong("Note: The same variable cannot be selected more than once.",
+               style = "font-size: 80%;"),
+        br(),
+        br(),
+        tags$strong("Customize the Display:"),
+        br(),
+        br(),
+        selectInput(
+          inputId = "org_type",
+          label = tags$p("At which organizational level would you like to view the data:"
+                         , style = "font-size: 115%;"),
           choices = c("PIHP","CMH"),
           selected = "PIHP"
-      ),
-      uiOutput(
-        "select_org"
-      ),
-      selectInput(
-        "select_ServiceType",
-        label = "Select a Service Type:",
-        choices = c("All",levels(unique(data404$ServiceType))),
-        selected = "Care Coordination"
-      ),
-      uiOutput(
-        "select_code"
-      ),
-      radioButtons(
-        "select_Population",
-        label = "Select Population:",
-        choices = c("All", levels(unique(data404$Population))),
-        selected = "All",
-        inline = T
-      ),
-      menuItem(
-        "Display Options",
-        icon = icon("plus-square-o"),
-        menuSubItem(
-          icon = NULL,
-          selectInput(
-            "x",
-            label = "Select Variable for X axis:",
-            choices = c("Total Cases","Total Units","Total Cost",
-                        "Cost Per Case","Cost Per Unit","Unit Per Case",
-                        "Cost per 1K Served","% of Total Cost","Percent Served"),
-              selected = "Total Cases"
-          )
         ),
-        menuSubItem(
-          icon = NULL,
-          selectInput(
-            "y",
-            label = "Select Variable for Y axis:",
-            choices = c("Total Cases","Total Units","Total Cost",
-                        "Cost Per Case","Cost Per Unit","Unit Per Case",
-                        "Cost per 1K Served","% of Total Cost","Percent Served"),
-            selected = "Total Units"
-          )
+        uiOutput(
+          "select_org"
+          ),
+        selectInput(
+          inputId = "select_ServiceType",
+          label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
+          choices = c("All",levels(unique(data404$ServiceType))),
+          selected = "Care Coordination"
         ),
-        menuSubItem(
-          icon = NULL,
-          selectInput(
-            "z",
-            label = "Select Sizing Variable:",
-            choices = c("Total Cases","Total Units","Total Cost",
-                        "Cost Per Case","Cost Per Unit","Unit Per Case",
-                        "Cost per 1K Served","% of Total Cost","Percent Served"),
-            selected = "Percent Served"
-          )
+        uiOutput(
+          "select_code"
+        ),
+        radioButtons(
+          inputId = "select_Population",
+          label = tags$p("Select a Population:", style = "font-size: 115%;"),
+          choices = c("All", levels(unique(data404$Population))),
+          selected = "All",
+          inline = T
+        )
+      ),
+      mainPanel(
+        plotlyOutput("bubble"),
+        sliderInput(
+          inputId = "sliderFY",
+          label = tags$p("Fiscal Year:", style = "font-size: 125%;"),
+          min = 2006,
+          max = 2016,
+          value = 2006,
+          sep = "",
+          animate = animationOptions(loop = FALSE, interval = 1000)
         )
       )
     )
-  ),
-  dashboardBody(
-    plotlyOutput("bubble"),
-    sliderInput(
-      "sliderFY",
-      "Fiscal Year:",
-      min = 2006,
-      max = 2016,
-      value = 2006,
-      sep = "",
-      animate = animationOptions(loop = FALSE, interval = 1000)
-    )
   )
 )
+

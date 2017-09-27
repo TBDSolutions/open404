@@ -13,20 +13,33 @@ shinyServer(function(input, output) {
       df <- data404 %>% rename(org_grp = CMHSP)
     } else print(paste0("Error.  Unrecognized input."))
     
-    if (input$select_ServiceType == "All") {
-      df <- df
-    } else if (input$select_ServiceType %in% levels(unique(df$ServiceType))) {
-      df <- df %>% filter(ServiceType %in% input$select_ServiceType)
-    } else print(paste0("Error.  Unrecognized input."))
+    # Filter by PIHP or CMH
+    org_filt <- if (input$select_org == "All") {
+      levels(df$org_grp)
+    } else input$select_org
+
+    # Filter by Service Type
+    servicetype_filt <- if (input$select_ServiceType == "All") {
+      levels(df$ServiceType)
+      } else input$select_ServiceType
     
-    if (input$select_Population == "All") {
-      df <- df
-    } else if (input$select_Population %in% levels(unique(data404$Population)) ) {
-      df <- df %>% filter(Population %in% input$select_Population)
-    } else print(paste0("Error.  Unrecognized input."))
+    # Filterby HCPCS Code
+    code_filt <- if (input$select_code == "All") {
+      levels(df$Code_Mod)
+      } else input$select_code
+    
+    # Filter by Population
+    pop_filt <- if (input$select_Population == "All") {
+      levels(df$Population)
+      } else input$select_Population
     
     df %<>%
-      #filter(Code_Mod == input$select_code) %>%
+      filter(
+        ServiceType %in% servicetype_filt
+        & Population %in% pop_filt
+        & Code_Mod %in% code_filt
+        & org_grp %in% org_filt
+      ) %>%
       group_by(FY,org_grp) %>%
       summarize(
         SumOfCases = sum(SumOfCases, na.rm = T),
@@ -55,11 +68,11 @@ shinyServer(function(input, output) {
       df %<>% rename(x = CostPerCase)
     } else if (input$x == "Cost Per Unit") {
       df %<>% rename(x = CostPerUnit)
-    } else if (input$x == "Unit Per Case") {
+    } else if (input$x == "Total Unit Per Case") {
       df %<>% rename(x = UnitPerCase)
     } else if (input$x == "Cost per 1K Served") {
       df %<>% rename(x = Cost1kSvd)
-    } else if (input$x == "% of Total Cost") {
+    } else if (input$x == "Percent of Total $") {
       df %<>% rename(x = Cost_Perc_Tot)
     } else if (input$x == "Percent Served") {
       df %<>% rename(x = Perc_Svd)
@@ -75,11 +88,11 @@ shinyServer(function(input, output) {
       df %<>% rename(y = CostPerCase)
     } else if (input$y == "Cost Per Unit") {
       df %<>% rename(y = CostPerUnit)
-    } else if (input$y == "Unit Per Case") {
+    } else if (input$y == "Total Unit Per Case") {
       df %<>% rename(y = UnitPerCase)
     } else if (input$y == "Cost per 1K Served") {
       df %<>% rename(y = Cost1kSvd)
-    } else if (input$y == "% of Total Cost") {
+    } else if (input$y == "Percent of Total $") {
       df %<>% rename(y = Cost_Perc_Tot)
     } else if (input$y == "Percent Served") {
       df %<>% rename(y = Perc_Svd)
@@ -95,11 +108,11 @@ shinyServer(function(input, output) {
       df %<>% rename(z = CostPerCase)
     } else if (input$z == "Cost Per Unit") {
       df %<>% rename(z = CostPerUnit)
-    } else if (input$z == "Unit Per Case") {
+    } else if (input$z == "Total Unit Per Case") {
       df %<>% rename(z = UnitPerCase)
     } else if (input$z == "Cost per 1K Served") {
       df %<>% rename(z = Cost1kSvd)
-    } else if (input$z == "% of Total Cost") {
+    } else if (input$z == "Percent of Total $") {
       df %<>% rename(z = Cost_Perc_Tot)
     } else if (input$z == "Percent Served") {
       df %<>% rename(z = Perc_Svd)
@@ -112,18 +125,19 @@ shinyServer(function(input, output) {
   #### Filters ####
   
   output$select_code <- renderUI({
-    
+
     hcpcs <- if (input$select_ServiceType == "All") {
       levels(data404$Code_Mod)
     } else
       levels(droplevels(data404$Code_Mod[data404$ServiceType == input$select_ServiceType]))
-    
+
     selectInput(
       "select_code",
-      label = "Select HCPCS Code:",
-      choices = c(hcpcs)
+      label = tags$p("Select a HCPCS Code:", style = "font-size: 115%;"),
+      choices = c("All",hcpcs),
+      selected = ("All")
     )
-    
+
   })
   
   output$select_org <- renderUI({
@@ -136,8 +150,10 @@ shinyServer(function(input, output) {
 
     selectInput(
       "select_org",
-      label = "Filter Organization Level:",
-      choices = c(org)
+      label = tags$p("View a Specific Organization:"
+                     , style = "font-size: 115%;"),
+      choices = c(org),
+      selected = ("All")
     )
 
   })
@@ -147,33 +163,33 @@ shinyServer(function(input, output) {
   output$bubble <- renderPlotly({
     
     # Grab max values from x and y vars
-    max_x <- max(df_bubble()$x, na.rm = T)
-    max_y <- max(df_bubble()$y, na.rm = T)
+    max_x <- max(df_bubble()$x, na.rm = T)+max(df_bubble()$x*.1)
+    max_y <- max(df_bubble()$y, na.rm = T)+max(df_bubble()$y*.1)
     
     df_bubble() %>%
       filter(FY == input$sliderFY) %>%
       plot_ly(
         x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
-      size = ~z, color = ~org_grp, marker = list(opacity = 0.5),
+      size = ~z, color = ~org_grp, colors = cmh_palette, marker = list(opacity = 0.5),
       hoverinfo = 'text',
       text = ~paste(
         org_grp,
-        '<br>',input$x,':', 
-        ifelse(
-          grepl("Cost",input$x),
-          yes = dollar_format(big.mark = ",")(x),
-          no = format(x, big.mark = ",")
-        ),
-        '<br>',input$y,':', 
-        ifelse(
-          grepl("Cost",input$y),
-          yes = dollar_format(big.mark = ",")(y),
-          no = format(y, big.mark = ",")
-        )
+        '<br>',input$x,':',
+        if(grepl("Cost",input$x)) {
+          dollar_format(big.mark = ",")(x)
+        } else if (grepl("Percent", input$x)) {
+          sprintf("%.1f %%",x)
+        } else format(x, big.mark = ','),
+        '<br>',input$y,':',
+        if(grepl("Cost",input$y)) {
+          dollar_format(big.mark = ",")(y)
+        } else if (grepl("Percent", input$y)) {
+          sprintf("%.1f %%",y)
+        } else format(y, big.mark = ',')
         )
       ) %>%
       layout(
-        title = ~paste('How do',input$x,'compare to',input$y,'for<br>',
+        title = ~paste('How does',input$x,'compare to',input$y,'for<br>',
                        input$select_ServiceType,'across',input$org_type,"s",'?'),
         xaxis = list(
           title = input$x,
