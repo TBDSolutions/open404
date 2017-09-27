@@ -3,7 +3,7 @@
 shinyServer(function(input, output) {
   
   #### Make Reactive Datasets ####
-
+  
   df_bubble <- reactive({
     
     # Relabel selected grouping variable
@@ -14,31 +14,31 @@ shinyServer(function(input, output) {
     } else print(paste0("Error.  Unrecognized input."))
     
     # Filter by PIHP or CMH
-    org_filt <- if (input$select_org == "All") {
-      levels(df$org_grp)
-    } else input$select_org
-
+    # org_filt <- if (input$select_org == "All") {
+    #   levels(df$org_grp)
+    # } else input$select_org
+    
     # Filter by Service Type
     servicetype_filt <- if (input$select_ServiceType == "All") {
       levels(df$ServiceType)
-      } else input$select_ServiceType
+    } else input$select_ServiceType
     
     # Filterby HCPCS Code
     code_filt <- if (input$select_code == "All") {
       levels(df$Code_Mod)
-      } else input$select_code
+    } else input$select_code
     
     # Filter by Population
     pop_filt <- if (input$select_Population == "All") {
       levels(df$Population)
-      } else input$select_Population
+    } else input$select_Population
     
     df %<>%
       filter(
         ServiceType %in% servicetype_filt
         & Population %in% pop_filt
         & Code_Mod %in% code_filt
-        & org_grp %in% org_filt
+        # & org_grp %in% org_filt
       ) %>%
       group_by(FY,org_grp) %>%
       summarize(
@@ -56,6 +56,7 @@ shinyServer(function(input, output) {
         Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 1)
       ) %>%
       ungroup() 
+    
     
     # Relabel display variables
     if (input$x == "Total Cases") {
@@ -125,39 +126,39 @@ shinyServer(function(input, output) {
   #### Filters ####
   
   output$select_code <- renderUI({
-
+    
     hcpcs <- if (input$select_ServiceType == "All") {
       levels(data404$Code_Mod)
     } else
       levels(droplevels(data404$Code_Mod[data404$ServiceType == input$select_ServiceType]))
-
+    
     selectInput(
       "select_code",
       label = tags$p("Select a HCPCS Code:", style = "font-size: 115%;"),
       choices = c("All",hcpcs),
       selected = ("All")
     )
-
+    
   })
   
-  output$select_org <- renderUI({
-
-    org <- if (input$org_type == "PIHP") {
-      c("All",levels(unique(data404$PIHPname)))
-    } else if (input$org_type == "CMH") {
-      c("All",levels(unique(data404$CMHSP)))
-    } else print(paste0("Error.  Unrecognized input."))
-
-    selectInput(
-      "select_org",
-      label = tags$p("View a Specific Organization:"
-                     , style = "font-size: 115%;"),
-      choices = c(org),
-      selected = ("All")
-    )
-
-  })
-
+  # output$select_org <- renderUI({
+  #   
+  #   org <- if (input$org_type == "PIHP") {
+  #     c("All",levels(unique(data404$PIHPname)))
+  #   } else if (input$org_type == "CMH") {
+  #     c("All",levels(unique(data404$CMHSP)))
+  #   } else print(paste0("Error.  Unrecognized input."))
+  #   
+  #   selectInput(
+  #     "select_org",
+  #     label = tags$p("View a Specific Organization:"
+  #                    , style = "font-size: 115%;"),
+  #     choices = c(org),
+  #     selected = ("All")
+  #   )
+  #   
+  # })
+  
   #### Visualizations ####
   
   output$bubble <- renderPlotly({
@@ -170,22 +171,22 @@ shinyServer(function(input, output) {
       filter(FY == input$sliderFY) %>%
       plot_ly(
         x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
-      size = ~z, color = ~org_grp, colors = cmh_palette, marker = list(opacity = 0.5),
-      hoverinfo = 'text',
-      text = ~paste(
-        org_grp,
-        '<br>',input$x,':',
-        if(grepl("Cost",input$x)) {
-          dollar_format(big.mark = ",")(x)
-        } else if (grepl("Percent", input$x)) {
-          sprintf("%.1f %%",x)
-        } else format(x, big.mark = ','),
-        '<br>',input$y,':',
-        if(grepl("Cost",input$y)) {
-          dollar_format(big.mark = ",")(y)
-        } else if (grepl("Percent", input$y)) {
-          sprintf("%.1f %%",y)
-        } else format(y, big.mark = ',')
+        size = ~z, color = ~org_grp, colors = cmh_palette, marker = list(opacity = 0.5),
+        hoverinfo = 'text',
+        text = ~paste(
+          org_grp,
+          '<br>',input$x,':',
+          if(grepl("Cost",input$x)) {
+            dollar_format(big.mark = ",")(x)
+          } else if (grepl("Percent", input$x)) {
+            sprintf("%.1f %%",x)
+          } else format(x, big.mark = ','),
+          '<br>',input$y,':',
+          if(grepl("Cost",input$y)) {
+            dollar_format(big.mark = ",")(y)
+          } else if (grepl("Percent", input$y)) {
+            sprintf("%.1f %%",y)
+          } else format(y, big.mark = ',')
         )
       ) %>%
       layout(
@@ -205,5 +206,5 @@ shinyServer(function(input, output) {
       )
     
   })
-
+  
 })
