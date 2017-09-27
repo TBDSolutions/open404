@@ -26,7 +26,7 @@ shinyServer(function(input, output) {
     } else print(paste0("Error.  Unrecognized input."))
     
     df %<>%
-      # filter(ServiceType == input$select_ServiceType) %>%
+      #filter(Code_Mod == input$select_code) %>%
       group_by(FY,org_grp) %>%
       summarize(
         SumOfCases = sum(SumOfCases, na.rm = T),
