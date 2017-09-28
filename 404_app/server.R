@@ -143,8 +143,7 @@ shinyServer(function(input, output) {
   output$x <- renderUI({
     
     x <- if (input$select_code == "All") {
-      c("Total Cases","Total Cost","Cost Per Case","Cost per 1K Served"
-        ,"Percent of Total $","Percent Served")
+      c("Total Cost","Cost per 1K Served","Percent of Total $")
     } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
              ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
              ,"Percent of Total $","Percent Served")
@@ -154,7 +153,7 @@ shinyServer(function(input, output) {
       label = tags$p("Select a variable for the x-axis (horizontal):"
                      , style = "font-size: 115%;"),
       choices = (x),
-      selected = ("Total Cases")
+      selected = ("Total Cost")
     )
     
   })
@@ -162,8 +161,7 @@ shinyServer(function(input, output) {
   output$y <- renderUI({
     
     y <- if (input$select_code == "All") {
-      c("Total Cases","Total Cost","Cost Per Case","Cost per 1K Served"
-        ,"Percent of Total $","Percent Served")
+      c("Total Cost","Cost per 1K Served","Percent of Total $")
     } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
              ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
              ,"Percent of Total $","Percent Served")
@@ -173,7 +171,7 @@ shinyServer(function(input, output) {
       label = tags$p("Select a variable for the y-axis (vertical):"
                      , style = "font-size: 115%;"),
       choices = (y),
-      selected = ("Total Cost")
+      selected = ("Percent of Total $")
     )
     
   })
@@ -181,8 +179,7 @@ shinyServer(function(input, output) {
   output$z <- renderUI({
     
     z <- if (input$select_code == "All") {
-      c("Total Cases","Total Cost","Cost Per Case","Cost per 1K Served"
-        ,"Percent of Total $","Percent Served")
+      c("Total Cost","Cost per 1K Served","Percent of Total $")
     } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
              ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
              ,"Percent of Total $","Percent Served")
@@ -192,7 +189,7 @@ shinyServer(function(input, output) {
       label = tags$p("Select a variable to scale the size of each bubble:"
                      , style = "font-size: 115%;"),
       choices = (z),
-      selected = ("Percent Served")
+      selected = ("Cost per 1K Served")
     )
     
   })
@@ -266,7 +263,6 @@ shinyServer(function(input, output) {
         ),
         showlegend = FALSE
       )
-    
     
   })
   
