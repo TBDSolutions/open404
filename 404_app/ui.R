@@ -2,10 +2,10 @@
 
 shinyUI(
   fluidPage(
-    titlePanel("explore 404"),
+    titlePanel("explore 904"),
     theme = shinythemes::shinytheme("yeti"),
     #suppress errors from waiting data to be built.
-    tags$style(type="text/css",
+    tags$style(type = "text/css",
                ".shiny-output-error { visibility: hidden; }",
                ".shiny-output-error:before { visibility: hidden; }"
     ),
