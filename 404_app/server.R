@@ -143,6 +143,10 @@ shinyServer(function(input, output) {
   output$x <- renderUI({
     
     x <- if (input$select_code == "All") {
+    #   select(data404[c(15,21,20)])
+    # } else select(data404[c(13:22)])
+    #   colnames(data404[c(15,21,20)])
+    # } else colnames(data404[c(13:22)])
       c("Total Cost","Cost per 1K Served","Percent of Total $")
     } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
              ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
