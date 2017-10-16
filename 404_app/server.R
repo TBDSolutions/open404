@@ -6,18 +6,18 @@ shinyServer(function(input, output) {
   
   df_bubble <- reactive({
     
+    # Filter by PIHP
+    pihp_filt <- if (input$filter_pihp == "All") {
+      data404 <- data404
+    } else df <- data404 %<>% filter(PIHPname %in% input$filter_pihp)
+    
     # Relabel selected grouping variable
     if (input$org_type == "PIHP") {
       df <- data404 %>% rename(org_grp = PIHPname)
     } else if (input$org_type == "CMH") {
       df <- data404 %>% rename(org_grp = CMHSP)
     } else print(paste0("Error.  Unrecognized input."))
-    
-    # Filter by PIHP or CMH
-    # org_filt <- if (input$select_org == "All") {
-    #   levels(df$org_grp)
-    # } else input$select_org
-    
+
     # Filter by Service Type
     servicetype_filt <- if (input$select_ServiceType == "All") {
       levels(df$ServiceType)
@@ -33,11 +33,11 @@ shinyServer(function(input, output) {
       levels(df$Population)
     } else input$select_Population
     
+    # Aggregating by selected org_grp
     df %<>%
       filter(ServiceType %in% servicetype_filt
              & Population %in% pop_filt
              & Code_Desc %in% code_filt
-             # & org_grp %in% org_filt
              ) %>%
       group_by(FY,org_grp) %>%
       summarize(
@@ -55,6 +55,31 @@ shinyServer(function(input, output) {
         Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 1)
       ) %>%
       ungroup() 
+    
+    # Calculating state average by selected org_grp    
+    # st_avg <- df %>%
+    #   group_by(FY) %>%
+    #   summarize(
+    #     SumOfCases = mean(SumOfCases),
+    #     SumOfUnits = mean(SumOfUnits),
+    #     SumOfCost = mean(SumOfCost),
+    #     CostPerCase = mean(CostPerCase),
+    #     CostPerUnit = mean(CostPerUnit),
+    #     UnitPerCase = mean(UnitPerCase),
+    #     Cost1kSvd = mean(Cost1kSvd),
+    #     Cost_Perc_Tot = mean(Cost_Perc_Tot),
+    #     Perc_Svd = mean(Perc_Svd)
+    #   ) %>%
+    #   mutate(org_grp = "State Average")
+    
+    # if (input$org_type == "PIHP") {st_avg %<>% rename(org_grp = PIHPname)}
+    # else if (input$org_type == "CMH") {st_avg %<>% rename(org_grp = CMHSP)}
+    # 
+    # st_avg[c(1,11,2:10)]
+    # 
+    # if (input$state_avg == TRUE) {
+    #   df <- rbind(df,st_avg)
+    # } else df <- df
     
     
     # Relabel display variables
@@ -122,6 +147,8 @@ shinyServer(function(input, output) {
     
   })
   
+
+  
   #### Filters ####
   
   output$select_code <- renderUI({
@@ -133,7 +160,7 @@ shinyServer(function(input, output) {
     
     selectInput(
       "select_code",
-      label = tags$p("Select a HCPCS Code:", style = "font-size: 115%;"),
+      label = tags$p("Select a Code:", style = "font-size: 115%;"),
       choices = c("All",hcpcs),
       selected = ("All")
     )
@@ -143,10 +170,6 @@ shinyServer(function(input, output) {
   output$x <- renderUI({
     
     x <- if (input$select_code == "All") {
-    #   select(data404[c(15,21,20)])
-    # } else select(data404[c(13:22)])
-    #   colnames(data404[c(15,21,20)])
-    # } else colnames(data404[c(13:22)])
       c("Total Cost","Cost per 1K Served","Percent of Total $")
     } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
              ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
@@ -199,24 +222,6 @@ shinyServer(function(input, output) {
   })
 
   
-  # output$select_org <- renderUI({
-  #   
-  #   org <- if (input$org_type == "PIHP") {
-  #     c("All",levels(unique(data404$PIHPname)))
-  #   } else if (input$org_type == "CMH") {
-  #     c("All",levels(unique(data404$CMHSP)))
-  #   } else print(paste0("Error.  Unrecognized input."))
-  #   
-  #   selectInput(
-  #     "select_org",
-  #     label = tags$p("View a Specific Organization:"
-  #                    , style = "font-size: 115%;"),
-  #     choices = c(org),
-  #     selected = ("All")
-  #   )
-  #   
-  # })
-  
   #### Visualizations ####
   
   output$bubble <- renderPlotly({
@@ -225,49 +230,115 @@ shinyServer(function(input, output) {
     max_x <- max(df_bubble()$x, na.rm = T)+max(df_bubble()$x*.1)
     max_y <- max(df_bubble()$y, na.rm = T)+max(df_bubble()$y*.1)
     
+    # Exclude potential data issues
+    if (input$ignore_z == TRUE) {
+      
     df_bubble() %>%
       filter(FY == input$sliderFY) %>%
-      plot_ly(
-        x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
-        size = ~z, color = ~org_grp, colors = cmh_palette, marker = list(opacity = 0.5),
-        hoverinfo = 'text',
-        text = ~paste(
-          org_grp,
-          '<br>',input$x,':',
-          if(grepl("Cost",input$x)) {
-            dollar_format(big.mark = ",")(x)
-          } else if (grepl("Percent", input$x)) {
-            sprintf("%.1f %%",x)
-          } else format(x, big.mark = ','),
-          '<br>',input$y,':',
-          if(grepl("Cost",input$y)) {
-            dollar_format(big.mark = ",")(y)
-          } else if (grepl("Percent", input$y)) {
-            sprintf("%.1f %%",y)
-          } else format(y, big.mark = ',')
+        plot_ly(
+          x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
+          size = 100, color = ~org_grp, colors = cmh_palette, marker = list(opacity = 0.5),
+          hoverinfo = 'text',
+          text = ~paste(
+            org_grp,
+            '<br>',input$x,':',
+            if(grepl("Cost",input$x)) {
+              dollar_format(big.mark = ",")(x)
+            } else if (grepl("Percent", input$x)) {
+              sprintf("%.1f %%",x)
+            } else format(x, big.mark = ','),
+            '<br>',input$y,':',
+            if(grepl("Cost",input$y)) {
+              dollar_format(big.mark = ",")(y)
+            } else if (grepl("Percent", input$y)) {
+              sprintf("%.1f %%",y)
+            } else format(y, big.mark = ',')
+          )
+        ) %>%
+        layout(
+          title = if(input$select_code == "All") {
+            ~paste('How does',input$x,'compare to',input$y,'for<br>',
+                   input$select_ServiceType,'across',input$org_type,"'s",'?<br>',
+                   'Fiscal Year:', input$sliderFY)
+          } else ~paste ('How does',input$x,'compare to',input$y,'for<br>',
+                         input$select_code,'across',input$org_type,"'s",'?<br>',
+                         'Fiscal Year:', input$sliderFY),
+          xaxis = list(
+            title = input$x,
+            range = c(0, max_x),
+            showgrid = FALSE
+          ),
+          yaxis = list(
+            title = input$y,
+            range = c(0, max_y),
+            showgrid = FALSE
+          ),
+          showlegend = FALSE
         )
-      ) %>%
-      layout(
-        title = if(input$select_code == "All") {
-          ~paste('How does',input$x,'compare to',input$y,'for<br>',
-                 input$select_ServiceType,'across',input$org_type,"'s",'?<br>',
-                 'Fiscal Year:', input$sliderFY)
-        } else ~paste ('How does',input$x,'compare to',input$y,'for<br>',
-                       input$select_code,'across',input$org_type,"'s",'?<br>',
-                       'Fiscal Year:', input$sliderFY),
-        xaxis = list(
-          title = input$x,
-          range = c(0, max_x),
-          showgrid = FALSE
-        ),
-        yaxis = list(
-          title = input$y,
-          range = c(0, max_y),
-          showgrid = FALSE
-        ),
-        showlegend = FALSE
+      
+    } else
+      
+      df_bubble() %>%
+        filter(FY == input$sliderFY) %>%
+          plot_ly(
+            x = ~x, y = ~y, type = 'scatter', mode = 'markers', 
+            size = ~z, color = ~org_grp, colors = cmh_palette, marker = list(opacity = 0.5),
+            hoverinfo = 'text',
+            text = ~paste(
+              org_grp,
+              '<br>',input$x,':',
+              if(grepl("Cost",input$x)) {
+                dollar_format(big.mark = ",")(x)
+              } else if (grepl("Percent", input$x)) {
+                sprintf("%.1f %%",x)
+              } else format(x, big.mark = ','),
+              '<br>',input$y,':',
+              if(grepl("Cost",input$y)) {
+                dollar_format(big.mark = ",")(y)
+              } else if (grepl("Percent", input$y)) {
+                sprintf("%.1f %%",y)
+              } else format(y, big.mark = ','),
+              '<br>',input$z,':',
+              if(grepl("Cost",input$z)) {
+                dollar_format(big.mark = ",")(z)
+              } else if (grepl("Percent", input$z)) {
+                sprintf("%.1f %%",z)
+              } else format(z, big.mark = ',')
+            )
+          ) %>%
+          layout(
+            title = if(input$select_code == "All") {
+              ~paste('How does',input$x,'compare to',input$y,'for<br>',
+                     input$select_ServiceType,'across',input$org_type,"'s",'?<br>',
+                     'Fiscal Year:', input$sliderFY)
+            } else ~paste ('How does',input$x,'compare to',input$y,'for<br>',
+                           input$select_code,'across',input$org_type,"'s",'?<br>',
+                           'Fiscal Year:', input$sliderFY),
+            xaxis = list(
+              title = input$x,
+              range = c(0, max_x),
+              showgrid = FALSE
+            ),
+            yaxis = list(
+              title = input$y,
+              range = c(0, max_y),
+              showgrid = FALSE
+            ),
+            showlegend = FALSE
+          )
+      
+  })
+  
+  output$svs_groups <- renderDataTable({
+    
+    df <- service_groups %>%
+      rename(
+        "Service Type" = ServiceType,
+        "Short Description" = short_description,
+        "Long Description" = Description,
+        "Code Modifier" = Code_Mod
       )
     
   })
   
-})
+  })
