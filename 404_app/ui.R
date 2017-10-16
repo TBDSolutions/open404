@@ -46,7 +46,7 @@ shinyUI(
             checkboxInput(
               inputId = "state_avg",
               label = tags$p("Include State Average?"),
-              value = TRUE,
+              value = FALSE,
               width = NULL
             ),
             selectInput(

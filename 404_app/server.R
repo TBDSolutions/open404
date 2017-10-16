@@ -57,29 +57,34 @@ shinyServer(function(input, output) {
       ungroup() 
     
     # Calculating state average by selected org_grp    
-    # st_avg <- df %>%
-    #   group_by(FY) %>%
-    #   summarize(
-    #     SumOfCases = mean(SumOfCases),
-    #     SumOfUnits = mean(SumOfUnits),
-    #     SumOfCost = mean(SumOfCost),
-    #     CostPerCase = mean(CostPerCase),
-    #     CostPerUnit = mean(CostPerUnit),
-    #     UnitPerCase = mean(UnitPerCase),
-    #     Cost1kSvd = mean(Cost1kSvd),
-    #     Cost_Perc_Tot = mean(Cost_Perc_Tot),
-    #     Perc_Svd = mean(Perc_Svd)
-    #   ) %>%
-    #   mutate(org_grp = "State Average")
+    st_avg <- df %>%
+      group_by(FY) %>%
+      summarize(
+        SumOfCases = mean(SumOfCases),
+        SumOfUnits = mean(SumOfUnits),
+        SumOfCost = mean(SumOfCost),
+        CostPerCase = mean(CostPerCase),
+        CostPerUnit = mean(CostPerUnit),
+        UnitPerCase = mean(UnitPerCase),
+        Cost1kSvd = mean(Cost1kSvd),
+        Cost_Perc_Tot = mean(Cost_Perc_Tot),
+        Perc_Svd = mean(Perc_Svd)
+      ) %>%
+      mutate(
+        state = "State Average"
+      )
     
-    # if (input$org_type == "PIHP") {st_avg %<>% rename(org_grp = PIHPname)}
-    # else if (input$org_type == "CMH") {st_avg %<>% rename(org_grp = CMHSP)}
-    # 
-    # st_avg[c(1,11,2:10)]
-    # 
-    # if (input$state_avg == TRUE) {
-    #   df <- rbind(df,st_avg)
-    # } else df <- df
+    if (input$org_type == "PIHP") {
+      st_avg %<>% rename(org_grp = state)
+    } else if (input$org_type == "CMH") {
+      st_avg %<>% rename(org_grp = state)
+    } else print(paste0("Error.  Unrecognized input."))
+
+    st_avg <- st_avg[c(1,11,2:10)]
+
+    if (input$state_avg == TRUE) {
+      df <- rbind(df,st_avg)
+    } else df <- df
     
     
     # Relabel display variables
