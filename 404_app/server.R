@@ -175,10 +175,8 @@ shinyServer(function(input, output) {
   output$x <- renderUI({
     
     x <- if (input$select_code == "All") {
-      c("Total Cost","Cost per 1K Served","Percent of Total $")
-    } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
-             ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
-             ,"Percent of Total $","Percent Served")
+      names(inputs_sub)
+    } else names(inputs[,!(names(inputs) %in% c(input$y, input$z))])
     
     selectInput(
       "x",
@@ -193,10 +191,8 @@ shinyServer(function(input, output) {
   output$y <- renderUI({
     
     y <- if (input$select_code == "All") {
-      c("Total Cost","Cost per 1K Served","Percent of Total $")
-    } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
-             ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
-             ,"Percent of Total $","Percent Served")
+      names(inputs_sub)
+    } else names(inputs[,!(names(inputs) %in% c(input$x, input$z))])
     
     selectInput(
       "y",
@@ -211,10 +207,8 @@ shinyServer(function(input, output) {
   output$z <- renderUI({
     
     z <- if (input$select_code == "All") {
-      c("Total Cost","Cost per 1K Served","Percent of Total $")
-    } else c("Total Cases","Total Units","Total Cost","Cost Per Case"
-             ,"Cost Per Unit","Total Unit Per Case","Cost per 1K Served"
-             ,"Percent of Total $","Percent Served")
+      names(inputs_sub)
+    } else names(inputs[,!(names(inputs) %in% c(input$x, input$y))])
     
     selectInput(
       "z",
