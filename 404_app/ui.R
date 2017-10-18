@@ -53,7 +53,7 @@ shinyUI(
               inputId = "select_ServiceType",
               label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
               choices = c("All",levels(unique(data404$ServiceType))),
-              selected = "Care Coordination"
+              selected = "Home & Community Based Services"
             ),
             uiOutput(
               "select_code"

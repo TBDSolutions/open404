@@ -167,7 +167,7 @@ shinyServer(function(input, output) {
       "select_code",
       label = tags$p("Select a Code:", style = "font-size: 115%;"),
       choices = c("All",hcpcs),
-      selected = ("All")
+      selected = ("Comp comm supp svc, 15 min  ( H2015 )")
     )
     
   })
