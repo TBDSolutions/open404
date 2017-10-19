@@ -18,7 +18,9 @@ service_groups <- unique(data404[,c('ServiceType', 'Service', 'short_description
 
 #### Formatting Variables ####
 
-data404$Code_Desc <- as.factor(paste(data404$short_description," (",(data404$Code),")"))
+data404$Code_shortDesc <- as.factor(paste(data404$short_description," (",(data404$Code),")"))
+
+data404$Code_Desc <- as.factor(paste(data404$Description," (",(data404$Code),")"))
 
 #### Defining variable inputs ####
 

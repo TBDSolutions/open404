@@ -7,7 +7,7 @@ shinyUI(
     navbarMenu(
       "Motion Chart",
       tabPanel(
-        "Chart",
+        "Chart (Aggregate)",
         sidebarLayout(
           sidebarPanel(
             tags$strong("Display Options:"),
@@ -76,9 +76,68 @@ shinyUI(
                      ".shiny-output-error:before { visibility: hidden; }"
           ),
           # content
-          plotlyOutput("bubble"),
+          plotlyOutput("bubble1"),
           sliderInput(
             inputId = "sliderFY",
+            label = tags$p("Fiscal Year:", style = "font-size: 125%;"),
+            min = 2006,
+            max = 2016,
+            value = 2006,
+            sep = "",
+            animate = animationOptions(loop = FALSE, interval = 1000)
+          ),
+          tags$strong("Note: Graph will not display for years during which a particular
+                      service code was not used.", style = "font-size: 80%;")
+        )
+      )
+    ),
+    tabPanel(
+      "Chart (Detailed)",
+      sidebarLayout(
+        sidebarPanel(
+          tags$strong("Display Options:"),
+          br(),
+          br(),
+          uiOutput("a"),
+          uiOutput("b"),
+          uiOutput("c"),
+          tags$strong("Note: The same variable cannot be selected more than once.",
+                      style = "font-size: 80%;"),
+          br(),
+          br(),
+          tags$strong("Customize the Display:"),
+          br(),
+          br(),
+          selectInput(
+            inputId = "org_type2",
+            label = tags$p("At which organizational level would you like to view the data:"
+                           , style = "font-size: 115%;"),
+            choices = c("PIHP","CMH"),
+            selected = "PIHP"
+          ),
+          uiOutput("org_filt"),
+          selectInput(
+            inputId = "select_ServiceType2",
+            label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
+            choices = levels(unique(data404$ServiceType)),
+            selected = "Home & Community Based Services"
+          ),
+          uiOutput("select_code2"),
+          radioButtons(
+            inputId = "select_Population2",
+            label = tags$p("Select a Population:", style = "font-size: 115%;"),
+            choices = c("All", levels(unique(data404$Population))),
+            selected = "All",
+            inline = T
+          ),
+          tags$strong("Note: When Population: 'All' is selected individuals may be represented
+                        more than once if they received DD and MI services within the same year.",
+                      style = "font-size: 80%;")
+        ),
+        mainPanel(
+          plotlyOutput("bubble2"),
+          sliderInput(
+            inputId = "sliderFY1",
             label = tags$p("Fiscal Year:", style = "font-size: 125%;"),
             min = 2006,
             max = 2016,
@@ -146,7 +205,18 @@ shinyUI(
                       "Percentage of people served who received this service (per year)")
             )
           ),
-          tags$strong("Visualization:", style = "font-size: 125%;"),
+          tags$strong("Motion Chart:", style = "font-size: 125%;"),
+          p(
+            tags$ul(
+              tags$li(strong("Chart (Aggregate): "),
+                      "This chart can be used to view a single Service Type and/or HCPCS/CPT code across all PIHP's,
+                      or across all CMH's within a specified PIHP.", style = "font-size: 90%;"),
+              tags$li(strong("Chart (Detailed): "),
+                      "This chart can be used to compare multiple HCPCS/CPT codes within a Service Type for multiple
+                      PIHP's or CMH's.", style = "font-size: 90%;")
+            )
+          ),
+          tags$strong("Chart Options:", style = "font-size: 100%;"),
           p(
             tags$ul(
               tags$li(strong("Zoom: "),
