@@ -135,6 +135,12 @@ shinyUI(
                       style = "font-size: 80%;")
         ),
         mainPanel(
+          # suppress errors from waiting data to be built.
+          tags$style(type="text/css",
+                     ".shiny-output-error { visibility: hidden; }",
+                     ".shiny-output-error:before { visibility: hidden; }"
+          ),
+          # content
           plotlyOutput("bubble2"),
           sliderInput(
             inputId = "sliderFY1",

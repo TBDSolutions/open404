@@ -414,6 +414,12 @@ shinyServer(function(input, output) {
   
   output$bubble1 <- renderPlotly({
     
+    withProgress(
+      message = 'Creating Visualization...',
+      detail = 'Processing...',
+      value = 0.1,
+      {
+    
     # Grab max values from x and y vars
     max_x <- max(df_bubble1()$x, na.rm = T)+max(df_bubble1()$x*.1)
     max_y <- max(df_bubble1()$y, na.rm = T)+max(df_bubble1()$y*.1)
@@ -514,10 +520,18 @@ shinyServer(function(input, output) {
             ),
             showlegend = FALSE
           )
+    
+      })
       
   })
   
   output$bubble2 <- renderPlotly({
+    
+    withProgress(
+      message = 'Creating Visualization...',
+      detail = 'Processing...',
+      value = 0.1,
+      {
     
     # Grab max values from x and y vars
     max_a <- max(df_bubble2()$a, na.rm = T)+max(df_bubble2()$a*.1)
@@ -568,6 +582,8 @@ shinyServer(function(input, output) {
           ),
           showlegend = FALSE
         )
+      
+      })
       
     })
   
