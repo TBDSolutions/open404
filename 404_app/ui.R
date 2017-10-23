@@ -7,10 +7,10 @@ shinyUI(
     navbarMenu(
       "Motion Chart",
       tabPanel(
-        "Chart (Aggregate)",
+        "Compare Organizations",
         sidebarLayout(
           sidebarPanel(
-            tags$strong("Display Options:"),
+            tags$strong("Select Metrics:"),
             br(),
             br(),
             uiOutput("x"),
@@ -26,7 +26,7 @@ shinyUI(
                    style = "font-size: 80%;"),
             br(),
             br(),
-            tags$strong("Customize the Display:"),
+            tags$strong("Group by Type:"),
             br(),
             br(),
             selectInput(
@@ -71,7 +71,7 @@ shinyUI(
         ),
         mainPanel(
           # suppress errors from waiting data to be built.
-          tags$style(type="text/css",
+          tags$style(type = "text/css",
                      ".shiny-output-error { visibility: hidden; }",
                      ".shiny-output-error:before { visibility: hidden; }"
           ),
@@ -92,10 +92,10 @@ shinyUI(
       )
     ),
     tabPanel(
-      "Chart (Detailed)",
+      "Compare Services",
       sidebarLayout(
         sidebarPanel(
-          tags$strong("Display Options:"),
+          tags$strong("Select Metrics:"),
           br(),
           br(),
           uiOutput("a"),
@@ -105,12 +105,12 @@ shinyUI(
                       style = "font-size: 80%;"),
           br(),
           br(),
-          tags$strong("Customize the Display:"),
+          tags$strong("Filter by Organization:"),
           br(),
           br(),
           selectInput(
             inputId = "org_type2",
-            label = tags$p("At which organizational level would you like to view the data:"
+            label = tags$p("Which organization(s) would you like to see data for? "
                            , style = "font-size: 115%;"),
             choices = c("PIHP","CMH"),
             selected = "PIHP"
@@ -136,7 +136,7 @@ shinyUI(
         ),
         mainPanel(
           # suppress errors from waiting data to be built.
-          tags$style(type="text/css",
+          tags$style(type = "text/css",
                      ".shiny-output-error { visibility: hidden; }",
                      ".shiny-output-error:before { visibility: hidden; }"
           ),
