@@ -12,7 +12,6 @@ shinyUI(
           sidebarPanel(
             tags$strong("Select Metrics:"),
             br(),
-            br(),
             uiOutput("x"),
             uiOutput("y"),
             uiOutput("z"),
@@ -27,11 +26,9 @@ shinyUI(
             br(),
             br(),
             tags$strong("Group by Type:"),
-            br(),
-            br(),
             selectInput(
               inputId = "org_type",
-              label = tags$p("At which organizational level would you like to view the data:"
+              label = tags$p("Which organization(s) would you like to see data for?"
                              , style = "font-size: 115%;"),
               choices = c("PIHP","CMH"),
               selected = "PIHP"
@@ -49,6 +46,8 @@ shinyUI(
               value = FALSE,
               width = NULL
             ),
+            tags$strong("Select a Service:"),
+            br(),
             selectInput(
               inputId = "select_ServiceType",
               label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
@@ -60,7 +59,7 @@ shinyUI(
             ),
             radioButtons(
               inputId = "select_Population",
-              label = tags$p("Select a Population:", style = "font-size: 115%;"),
+              label = tags$strong("Select a Population:", style = "font-size: 125%;"),
               choices = c("All", levels(unique(data404$Population))),
               selected = "All",
               inline = T
@@ -97,25 +96,20 @@ shinyUI(
         sidebarPanel(
           tags$strong("Select Metrics:"),
           br(),
-          br(),
           uiOutput("a"),
           uiOutput("b"),
           uiOutput("c"),
+          checkboxInput(
+            inputId = "ignore_c",
+            label = tags$p("Keep size of bubbles constant?"),
+            value = FALSE,
+            width = NULL
+          ),
           tags$strong("Note: The same variable cannot be selected more than once.",
                       style = "font-size: 80%;"),
           br(),
           br(),
-          tags$strong("Filter by Organization:"),
-          br(),
-          br(),
-          selectInput(
-            inputId = "org_type2",
-            label = tags$p("Which organization(s) would you like to see data for? "
-                           , style = "font-size: 115%;"),
-            choices = c("PIHP","CMH"),
-            selected = "PIHP"
-          ),
-          uiOutput("org_filt"),
+          tags$strong("Group by Service:"),
           selectInput(
             inputId = "select_ServiceType2",
             label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
@@ -123,9 +117,19 @@ shinyUI(
             selected = "Home & Community Based Services"
           ),
           uiOutput("select_code2"),
+          tags$strong("Select an Organization:"),
+          br(),
+          selectInput(
+            inputId = "org_type2",
+            label = tags$p("Which organization(s) would you like to see data for?"
+                           , style = "font-size: 115%;"),
+            choices = c("PIHP","CMH"),
+            selected = "PIHP"
+          ),
+          uiOutput("org_filt"),
           radioButtons(
             inputId = "select_Population2",
-            label = tags$p("Select a Population:", style = "font-size: 115%;"),
+            label = tags$strong("Select a Population:", style = "font-size: 125%;"),
             choices = c("All", levels(unique(data404$Population))),
             selected = "All",
             inline = T
@@ -214,10 +218,10 @@ shinyUI(
           tags$strong("Motion Chart:", style = "font-size: 125%;"),
           p(
             tags$ul(
-              tags$li(strong("Chart (Aggregate): "),
-                      "This chart can be used to view a single Service Type and/or HCPCS/CPT code across all PIHP's,
+              tags$li(strong("Compare Organizations: "),
+                      "This chart can be used to compare a single Service Type and/or HCPCS/CPT code across all PIHP's,
                       or across all CMH's within a specified PIHP.", style = "font-size: 90%;"),
-              tags$li(strong("Chart (Detailed): "),
+              tags$li(strong("Compare Services: "),
                       "This chart can be used to compare multiple HCPCS/CPT codes within a Service Type for multiple
                       PIHP's or CMH's.", style = "font-size: 90%;")
             )

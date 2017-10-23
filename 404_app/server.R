@@ -284,7 +284,7 @@ shinyServer(function(input, output) {
       "select_code2",
       label = tags$p("Select Code(s):", style = "font-size: 115%;"),
       choices = (hcpcs2),
-      selected = c("Community Living Supports (15 Minutes)  ( H2015 )","Community Living Supports (Daily)  ( H2016 )"),
+      selected = hcpcs2,
       multiple = TRUE
     )
     
@@ -400,9 +400,9 @@ shinyServer(function(input, output) {
                      , style = "font-size: 115%;"),
       choices = (org_filt),
       selected = if(input$org_type2 == "PIHP") {
-        "CMHPSM"
+        levels(unique(data404$PIHPname))
       } else if(input$org_type2 == "CMH") {
-        "Allegan"
+        levels(unique(data404$CMHSP))
       } else print(paste0("Error.  Unrecognized input.")),
       multiple = TRUE
     )
@@ -536,12 +536,57 @@ shinyServer(function(input, output) {
     # Grab max values from x and y vars
     max_a <- max(df_bubble2()$a, na.rm = T)+max(df_bubble2()$a*.1)
     max_b <- max(df_bubble2()$b, na.rm = T)+max(df_bubble2()$b*.1)
+    
+    # Ignore sizing variable
+    if (input$ignore_c == TRUE) {
       
       df_bubble2() %>%
         filter(FY == input$sliderFY1) %>%
         plot_ly(
           x = ~a, y = ~b, type = 'scatter', mode = 'markers',
-          size = ~c, color = ~Code_Desc, colors = cmh_palette, marker = list(opacity = 0.5),
+          color = ~org_grp2, colors = cmh_palette, marker = list(opacity = 0.5),
+          hoverinfo = 'text',
+          text = ~paste(
+            org_grp2,
+            '<br>',Code_Desc,
+            '<br>',input$a,':',
+            if(grepl("Cost",input$a)) {
+              dollar_format(big.mark = ",")(a)
+            } else if (grepl("Percent", input$a)) {
+              sprintf("%.1f %%",a)
+            } else format(a, big.mark = ','),
+            '<br>',input$b,':',
+            if(grepl("Cost",input$b)) {
+              dollar_format(big.mark = ",")(b)
+            } else if (grepl("Percent", input$b)) {
+              sprintf("%.1f %%",b)
+            } else format(b, big.mark = ',')
+          )
+        ) %>%
+        layout(
+          title = ~paste('How does',input$a,'compare to',input$b,'for<br>',
+                         input$select_ServiceType2,'service codes at the selected PIHP(s)/CMH(s)?<br>',
+                         'Fiscal Year:', input$sliderFY1),
+          xaxis = list(
+            title = input$a,
+            range = c(0, max_a),
+            showgrid = FALSE
+          ),
+          yaxis = list(
+            title = input$b,
+            range = c(0, max_b),
+            showgrid = FALSE
+          ),
+          showlegend = FALSE
+        )
+      
+    } else
+      
+      df_bubble2() %>%
+        filter(FY == input$sliderFY1) %>%
+        plot_ly(
+          x = ~a, y = ~b, type = 'scatter', mode = 'markers',
+          size = ~c, color = ~org_grp2, colors = cmh_palette, marker = list(opacity = 0.5),
           hoverinfo = 'text',
           text = ~paste(
             org_grp2,
