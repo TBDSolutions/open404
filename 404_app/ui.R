@@ -35,7 +35,7 @@ shinyUI(
             ),
             selectInput(
               inputId = "filter_pihp",
-              label = tags$p("View a Specific PIHP:"
+              label = tags$p("View a Specific PIHP/CMH:"
                              , style = "font-size: 115%;"),
               choices = c("All",levels(unique(data404$PIHPname))),
               selected = "All"
@@ -111,12 +111,13 @@ shinyUI(
           br(),
           tags$strong("Group by Service:"),
           selectInput(
-            inputId = "select_ServiceType2",
-            label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
-            choices = levels(unique(data404$ServiceType)),
-            selected = "Home & Community Based Services"
+            inputId = "service_type",
+            label = tags$p("At which level would you like to select services?"
+                           , style = "font-size: 115%;"),
+            choices = c("Service Type","Service","HCPCS Code","Code Modifier"),
+            selected = "Service Type"
           ),
-          uiOutput("select_code2"),
+          uiOutput("svslvl_filt"),
           tags$strong("Select an Organization:"),
           br(),
           selectInput(

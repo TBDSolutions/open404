@@ -155,13 +155,24 @@ shinyServer(function(input, output) {
   
   df_bubble2 <- reactive({
     
-    # Relabel selected grouping variable
+    # Relabel selected grouping variable (PIHP/CMH)
     if (input$org_type2 == "PIHP") {
       df <- data404 %>% rename(org_grp2 = PIHPname)
     } else if (input$org_type2 == "CMH") {
       df <- data404 %>% rename(org_grp2 = CMHSP)
     } else print(paste0("Error.  Unrecognized input."))
     
+    # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
+    if (input$service_type == "Service Type") {
+      df <- df %>% rename(svs_grp = ServiceType)
+    } else if (input$service_type == "Service") {
+      df <- df %>% rename(svs_grp = Service)
+    } else if (input$service_type == "HCPCS Code") {
+      df <- df %>% rename(svs_grp = Code)
+    } else if (input$service_type == "Code Modifier") {
+      df <- df %>% rename(svs_grp = Code_Mod)
+    } else print(paste0("Error.  Unrecognized input."))
+
     # Filter by Population
     pop_filt2 <- if (input$select_Population2 == "All") {
       levels(df$Population)
@@ -171,10 +182,9 @@ shinyServer(function(input, output) {
     df %<>%
       filter(
         org_grp2 %in% input$org_filt
-        & ServiceType == input$select_ServiceType2
-        & Population %in% pop_filt2
-        & Code_Desc %in% input$select_code2) %>%
-      group_by(FY,org_grp2,ServiceType,Code_Desc) %>%
+        & svs_grp %in% input$svslvl_filt
+        & Population %in% pop_filt2) %>%
+      group_by(FY,org_grp2,svs_grp) %>%
       summarize(
         SumOfCases = sum(SumOfCases, na.rm = T),
         SumOfUnits = sum(SumOfUnits, na.rm = T),
@@ -253,7 +263,7 @@ shinyServer(function(input, output) {
       df %<>% rename(c = Perc_Svd)
     } else print(paste0("Error.  Unrecognized input."))
 
-    df %<>% select(FY, org_grp2, ServiceType, Code_Desc, a, b, c)
+    df %<>% select(FY, org_grp2, svs_grp, a, b, c)
 
   })
 
@@ -272,20 +282,6 @@ shinyServer(function(input, output) {
       label = tags$p("Select a Code:", style = "font-size: 115%;"),
       choices = c("All",hcpcs),
       selected = ("Community Living Supports (15 Minutes)  ( H2015 )")
-    )
-    
-  })
-  
-  output$select_code2 <- renderUI({
-    
-    hcpcs2 <- levels(droplevels(data404$Code_Desc[data404$ServiceType == input$select_ServiceType2]))
-    
-    selectInput(
-      "select_code2",
-      label = tags$p("Select Code(s):", style = "font-size: 115%;"),
-      choices = (hcpcs2),
-      selected = hcpcs2,
-      multiple = TRUE
     )
     
   })
@@ -339,51 +335,70 @@ shinyServer(function(input, output) {
   })
   
   output$a <- renderUI({
-    
-    a <- if (input$select_code == "All") {
-      names(inputs_sub)
-    } else names(inputs[,!(names(inputs) %in% c(input$b, input$c))])
-    
+
     selectInput(
       "a",
       label = tags$p("Select a variable for the x-axis (horizontal):"
                      , style = "font-size: 115%;"),
-      choices = (a),
+      choices = (names(inputs[,!(names(inputs) %in% c(input$b, input$c))])),
       selected = ("Total Cost")
     )
-    
+
   })
-  
+
   output$b <- renderUI({
-    
-    b <- if (input$select_code == "All") {
-      names(inputs_sub)
-    } else names(inputs[,!(names(inputs) %in% c(input$a, input$c))])
-    
+
     selectInput(
       "b",
       label = tags$p("Select a variable for the y-axis (vertical):"
                      , style = "font-size: 115%;"),
-      choices = (b),
+      choices = (names(inputs[,!(names(inputs) %in% c(input$a, input$c))])),
       selected = ("Percent of Total $")
     )
-    
+
   })
-  
+
   output$c <- renderUI({
-    
-    c <- if (input$select_code == "All") {
-      names(inputs_sub)
-    } else names(inputs[,!(names(inputs) %in% c(input$a, input$b))])
-    
+
     selectInput(
       "c",
       label = tags$p("Select a variable to scale the size of each bubble:"
                      , style = "font-size: 115%;"),
-      choices = (c),
+      choices = (names(inputs[,!(names(inputs) %in% c(input$a, input$b))])),
       selected = ("Cost per 1K Served")
     )
-    
+
+  })
+
+  output$svslvl_filt <- renderUI({
+
+    svslvl_filt <- if (input$service_type=="Service Type"){
+      levels(unique(data404$ServiceType))
+    } else if (input$service_type=="Service"){
+      levels(unique(data404$Service))
+    } else if (input$service_type=="HCPCS Code"){
+      levels(unique(data404$Code_shortDesc))
+    } else if (input$service_type=="Code Modifier"){
+      levels(unique(data404$CodeM_shortDesc))
+    } else print(paste0("Error.  Unrecognized input."))
+
+    selectInput(
+      "svslvl_filt",
+      label = tags$p("Which service(s) would you like to see data for?"
+                     , style = "font-size: 115%;"),
+    choices = (svslvl_filt),
+    selected = if(input$service_type=="Service Type") {
+      levels(unique(data404$ServiceType))
+    } else if(input$service_type=="Service") {
+      levels(unique(data404$Service))
+    } else if(input$service_type=="HCPCS Code") {
+      levels(unique(data404$Code_shortDesc))
+    } else if(input$service_type=="Code Modifier") {
+      levels(unique(data404$CodeM_shortDesc))
+    } else print(paste0("Error.  Unrecognized input.")),
+    multiple = TRUE
+    )
+
   })
   
   output$org_filt <- renderUI({
@@ -526,20 +541,20 @@ shinyServer(function(input, output) {
   })
   
   output$bubble2 <- renderPlotly({
-    
+
     withProgress(
       message = 'Creating Visualization...',
       detail = 'Processing...',
       value = 0.1,
       {
-    
+
     # Grab max values from x and y vars
     max_a <- max(df_bubble2()$a, na.rm = T)+max(df_bubble2()$a*.1)
     max_b <- max(df_bubble2()$b, na.rm = T)+max(df_bubble2()$b*.1)
-    
+
     # Ignore sizing variable
     if (input$ignore_c == TRUE) {
-      
+
       df_bubble2() %>%
         filter(FY == input$sliderFY1) %>%
         plot_ly(
@@ -548,7 +563,7 @@ shinyServer(function(input, output) {
           hoverinfo = 'text',
           text = ~paste(
             org_grp2,
-            '<br>',Code_Desc,
+            '<br>',svs_grp,
             '<br>',input$a,':',
             if(grepl("Cost",input$a)) {
               dollar_format(big.mark = ",")(a)
@@ -565,7 +580,7 @@ shinyServer(function(input, output) {
         ) %>%
         layout(
           title = ~paste('How does',input$a,'compare to',input$b,'for<br>',
-                         input$select_ServiceType2,'service codes at the selected PIHP(s)/CMH(s)?<br>',
+                         'the selected services at the selected PIHP(s)/CMH(s)?<br>',
                          'Fiscal Year:', input$sliderFY1),
           xaxis = list(
             title = input$a,
@@ -579,9 +594,9 @@ shinyServer(function(input, output) {
           ),
           showlegend = FALSE
         )
-      
+
     } else
-      
+
       df_bubble2() %>%
         filter(FY == input$sliderFY1) %>%
         plot_ly(
@@ -590,7 +605,7 @@ shinyServer(function(input, output) {
           hoverinfo = 'text',
           text = ~paste(
             org_grp2,
-            '<br>',Code_Desc,
+            '<br>',svs_grp,
             '<br>',input$a,':',
             if(grepl("Cost",input$a)) {
               dollar_format(big.mark = ",")(a)
@@ -613,7 +628,7 @@ shinyServer(function(input, output) {
         ) %>%
         layout(
           title = ~paste('How does',input$a,'compare to',input$b,'for<br>',
-                   input$select_ServiceType2,'service codes at the selected PIHP(s)/CMH(s)?<br>',
+                   'the selected services at the selected PIHP(s)/CMH(s)?<br>',
                    'Fiscal Year:', input$sliderFY1),
           xaxis = list(
             title = input$a,
@@ -627,9 +642,9 @@ shinyServer(function(input, output) {
           ),
           showlegend = FALSE
         )
-      
+
       })
-      
+
     })
   
   output$svs_groups <- renderDataTable({
