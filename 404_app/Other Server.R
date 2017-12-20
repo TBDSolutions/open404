@@ -155,230 +155,119 @@ shinyServer(function(input, output) {
   
   df_bubble2 <- reactive({
     
-    if (input$org_type2 %in% c("PIHP", "CMH")) {
-    
     # Relabel selected grouping variable (PIHP/CMH)
-      # if (input$org_type2 == "PIHP") {
-      #   df <- data404 %>% rename(org_grp2 = PIHPname)
-      # } else if (input$org_type2 == "CMH") {
-      #   df <- data404 %>% rename(org_grp2 = CMHSP)
-      # } else print(paste0("Error.  Unrecognized input."))
-      
-      # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
-      if (input$select_service == "Service Type") {
-        df <- df %>% rename(svs_grp = ServiceType)
-      } else if (input$select_service == "Service") {
-        df <- df %>% rename(svs_grp = Service)
-      } else if (input$select_service == "HCPCS Code") {
-        df <- df %>% rename(svs_grp = Code_shortDesc)
-      } else if (input$select_service == "Code Modifier") {
-        df <- df %>% rename(svs_grp = CodeM_shortDesc)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      # Filter by Population
-      pop_filt2 <- if (input$select_Population2 == "All") {
-        levels(df$Population)
-      } else input$select_Population2
-      
-      # Aggregating by selected org_grp
-      df %<>%
-        filter(
-          # org_grp2 %in% input$org_filt
-          svs_grp %in% input$svslvl_filt
-          & Population %in% pop_filt2) %>%
-        group_by(FY,svs_grp) %>%
-        summarize(
-          SumOfCases = sum(SumOfCases, na.rm = T),
-          SumOfUnits = sum(SumOfUnits, na.rm = T),
-          SumOfCost = sum(SumOfCost, na.rm = T),
-          CostPerCase = round(SumOfCost / SumOfCases, digits = 2),
-          CostPerUnit = round(SumOfCost / SumOfUnits, digits = 2),
-          UnitPerCase = round(SumOfUnits / SumOfCases, digits = 1),
-          Cost1kSvd = round(SumOfCost / 1000, digits = 1)) %>%
-        ungroup() %>%
-        group_by(FY) %>%
-        mutate(
-          Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 5),
-          Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 5)
-        ) %>%
-        ungroup()
-      
-      
-      # Relabel display variables
-      if (input$a == "Total Cases") {
-        df %<>% rename(a = SumOfCases)
-      } else if (input$a == "Total Units") {
-        df %<>% rename(a = SumOfUnits)
-      } else if (input$a == "Total Cost") {
-        df %<>% rename(a = SumOfCost)
-      } else if (input$a == "Cost Per Case") {
-        df %<>% rename(a = CostPerCase)
-      } else if (input$a == "Cost Per Unit") {
-        df %<>% rename(a = CostPerUnit)
-      } else if (input$a == "Total Unit Per Case") {
-        df %<>% rename(a = UnitPerCase)
-      } else if (input$a == "Cost per 1K Served") {
-        df %<>% rename(a = Cost1kSvd)
-      } else if (input$a == "Percent of Total $") {
-        df %<>% rename(a = Cost_Perc_Tot)
-      } else if (input$a == "Percent Served") {
-        df %<>% rename(a = Perc_Svd)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      if (input$b == "Total Cases") {
-        df %<>% rename(b = SumOfCases)
-      } else if (input$b == "Total Units") {
-        df %<>% rename(b = SumOfUnits)
-      } else if (input$b == "Total Cost") {
-        df %<>% rename(b = SumOfCost)
-      } else if (input$b == "Cost Per Case") {
-        df %<>% rename(b = CostPerCase)
-      } else if (input$b == "Cost Per Unit") {
-        df %<>% rename(b = CostPerUnit)
-      } else if (input$b == "Total Unit Per Case") {
-        df %<>% rename(b = UnitPerCase)
-      } else if (input$b == "Cost per 1K Served") {
-        df %<>% rename(b = Cost1kSvd)
-      } else if (input$b == "Percent of Total $") {
-        df %<>% rename(b = Cost_Perc_Tot)
-      } else if (input$b == "Percent Served") {
-        df %<>% rename(b = Perc_Svd)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      if (input$c == "Total Cases") {
-        df %<>% rename(c = SumOfCases)
-      } else if (input$c == "Total Units") {
-        df %<>% rename(c = SumOfUnits)
-      } else if (input$c == "Total Cost") {
-        df %<>% rename(c = SumOfCost)
-      } else if (input$c == "Cost Per Case") {
-        df %<>% rename(c = CostPerCase)
-      } else if (input$c == "Cost Per Unit") {
-        df %<>% rename(c = CostPerUnit)
-      } else if (input$c == "Total Unit Per Case") {
-        df %<>% rename(c = UnitPerCase)
-      } else if (input$c == "Cost per 1K Served") {
-        df %<>% rename(c = Cost1kSvd)
-      } else if (input$c == "Percent of Total $") {
-        df %<>% rename(c = Cost_Perc_Tot)
-      } else if (input$c == "Percent Served") {
-        df %<>% rename(c = Perc_Svd)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      df %<>% select(FY, svs_grp, a, b, c)
-      
-    }
+    if (input$org_type2 == "PIHP") {
+      df <- data404 %>% rename(org_grp2 = PIHPname)
+    } else if (input$org_type2 == "CMH") {
+      df <- data404 %>% rename(org_grp2 = CMHSP)
+    } else print(paste0("Error.  Unrecognized input."))
     
-    else if (input$org_type2 == "State of MI") {
-      
-      # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
-      if (input$select_service == "Service Type") {
-        df <- df %>% rename(svs_grp = ServiceType)
-      } else if (input$select_service == "Service") {
-        df <- df %>% rename(svs_grp = Service)
-      } else if (input$select_service == "HCPCS Code") {
-        df <- df %>% rename(svs_grp = Code_shortDesc)
-      } else if (input$select_service == "Code Modifier") {
-        df <- df %>% rename(svs_grp = CodeM_shortDesc)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      # Filter by Population
-      pop_filt2 <- if (input$select_Population2 == "All") {
-        levels(df$Population)
-      } else input$select_Population2
-      
-      # Aggregating by selected org_grp
-      df %<>%
-        filter(
-          svs_grp %in% input$svslvl_filt
-          & Population %in% pop_filt2) %>%
-        group_by(FY,svs_grp) %>%
-        summarize(
-          SumOfCases = sum(SumOfCases, na.rm = T),
-          SumOfUnits = sum(SumOfUnits, na.rm = T),
-          SumOfCost = sum(SumOfCost, na.rm = T),
-          CostPerCase = round(SumOfCost / SumOfCases, digits = 2),
-          CostPerUnit = round(SumOfCost / SumOfUnits, digits = 2),
-          UnitPerCase = round(SumOfUnits / SumOfCases, digits = 1),
-          Cost1kSvd = round(SumOfCost / 1000, digits = 1)) %>%
-        ungroup() %>%
-        group_by(FY) %>%
-        mutate(
-          Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 5),
-          Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 5)
-        ) %>%
-        ungroup()
-      
-      
-      # Relabel display variables
-      if (input$a == "Total Cases") {
-        df %<>% rename(a = SumOfCases)
-      } else if (input$a == "Total Units") {
-        df %<>% rename(a = SumOfUnits)
-      } else if (input$a == "Total Cost") {
-        df %<>% rename(a = SumOfCost)
-      } else if (input$a == "Cost Per Case") {
-        df %<>% rename(a = CostPerCase)
-      } else if (input$a == "Cost Per Unit") {
-        df %<>% rename(a = CostPerUnit)
-      } else if (input$a == "Total Unit Per Case") {
-        df %<>% rename(a = UnitPerCase)
-      } else if (input$a == "Cost per 1K Served") {
-        df %<>% rename(a = Cost1kSvd)
-      } else if (input$a == "Percent of Total $") {
-        df %<>% rename(a = Cost_Perc_Tot)
-      } else if (input$a == "Percent Served") {
-        df %<>% rename(a = Perc_Svd)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      if (input$b == "Total Cases") {
-        df %<>% rename(b = SumOfCases)
-      } else if (input$b == "Total Units") {
-        df %<>% rename(b = SumOfUnits)
-      } else if (input$b == "Total Cost") {
-        df %<>% rename(b = SumOfCost)
-      } else if (input$b == "Cost Per Case") {
-        df %<>% rename(b = CostPerCase)
-      } else if (input$b == "Cost Per Unit") {
-        df %<>% rename(b = CostPerUnit)
-      } else if (input$b == "Total Unit Per Case") {
-        df %<>% rename(b = UnitPerCase)
-      } else if (input$b == "Cost per 1K Served") {
-        df %<>% rename(b = Cost1kSvd)
-      } else if (input$b == "Percent of Total $") {
-        df %<>% rename(b = Cost_Perc_Tot)
-      } else if (input$b == "Percent Served") {
-        df %<>% rename(b = Perc_Svd)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      if (input$c == "Total Cases") {
-        df %<>% rename(c = SumOfCases)
-      } else if (input$c == "Total Units") {
-        df %<>% rename(c = SumOfUnits)
-      } else if (input$c == "Total Cost") {
-        df %<>% rename(c = SumOfCost)
-      } else if (input$c == "Cost Per Case") {
-        df %<>% rename(c = CostPerCase)
-      } else if (input$c == "Cost Per Unit") {
-        df %<>% rename(c = CostPerUnit)
-      } else if (input$c == "Total Unit Per Case") {
-        df %<>% rename(c = UnitPerCase)
-      } else if (input$c == "Cost per 1K Served") {
-        df %<>% rename(c = Cost1kSvd)
-      } else if (input$c == "Percent of Total $") {
-        df %<>% rename(c = Cost_Perc_Tot)
-      } else if (input$c == "Percent Served") {
-        df %<>% rename(c = Perc_Svd)
-      } else print(paste0("Error.  Unrecognized input."))
-      
-      df %<>% select(FY, svs_grp, a, b, c)
-      
-    }
+    # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
+    if (input$service_type == "Service Type") {
+      df <- df %>% rename(svs_grp = ServiceType)
+    } else if (input$service_type == "Service") {
+      df <- df %>% rename(svs_grp = Service)
+    } else if (input$service_type == "HCPCS Code") {
+      df <- df %>% rename(svs_grp = Code)
+    } else if (input$service_type == "Code Modifier") {
+      df <- df %>% rename(svs_grp = Code_Mod)
+    } else print(paste0("Error.  Unrecognized input."))
+    
+    # Filter by Population
+    pop_filt2 <- if (input$select_Population2 == "All") {
+      levels(df$Population)
+    } else input$select_Population2
+    
+    # Aggregating by selected org_grp
+    df %<>%
+      filter(
+        org_grp2 %in% input$org_filt
+        & svs_grp %in% input$svslvl_filt
+        & Population %in% pop_filt2) %>%
+      group_by(FY,org_grp2,svs_grp) %>%
+      summarize(
+        SumOfCases = sum(SumOfCases, na.rm = T),
+        SumOfUnits = sum(SumOfUnits, na.rm = T),
+        SumOfCost = sum(SumOfCost, na.rm = T),
+        CostPerCase = round(SumOfCost / SumOfCases, digits = 2),
+        CostPerUnit = round(SumOfCost / SumOfUnits, digits = 2),
+        UnitPerCase = round(SumOfUnits / SumOfCases, digits = 1),
+        Cost1kSvd = round(SumOfCost / 1000, digits = 1)) %>%
+      ungroup() %>%
+      group_by(FY) %>%
+      mutate(
+        Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 5),
+        Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 5)
+      ) %>%
+      ungroup()
+    
+    
+    # Relabel display variables
+    if (input$a == "Total Cases") {
+      df %<>% rename(a = SumOfCases)
+    } else if (input$a == "Total Units") {
+      df %<>% rename(a = SumOfUnits)
+    } else if (input$a == "Total Cost") {
+      df %<>% rename(a = SumOfCost)
+    } else if (input$a == "Cost Per Case") {
+      df %<>% rename(a = CostPerCase)
+    } else if (input$a == "Cost Per Unit") {
+      df %<>% rename(a = CostPerUnit)
+    } else if (input$a == "Total Unit Per Case") {
+      df %<>% rename(a = UnitPerCase)
+    } else if (input$a == "Cost per 1K Served") {
+      df %<>% rename(a = Cost1kSvd)
+    } else if (input$a == "Percent of Total $") {
+      df %<>% rename(a = Cost_Perc_Tot)
+    } else if (input$a == "Percent Served") {
+      df %<>% rename(a = Perc_Svd)
+    } else print(paste0("Error.  Unrecognized input."))
+    
+    if (input$b == "Total Cases") {
+      df %<>% rename(b = SumOfCases)
+    } else if (input$b == "Total Units") {
+      df %<>% rename(b = SumOfUnits)
+    } else if (input$b == "Total Cost") {
+      df %<>% rename(b = SumOfCost)
+    } else if (input$b == "Cost Per Case") {
+      df %<>% rename(b = CostPerCase)
+    } else if (input$b == "Cost Per Unit") {
+      df %<>% rename(b = CostPerUnit)
+    } else if (input$b == "Total Unit Per Case") {
+      df %<>% rename(b = UnitPerCase)
+    } else if (input$b == "Cost per 1K Served") {
+      df %<>% rename(b = Cost1kSvd)
+    } else if (input$b == "Percent of Total $") {
+      df %<>% rename(b = Cost_Perc_Tot)
+    } else if (input$b == "Percent Served") {
+      df %<>% rename(b = Perc_Svd)
+    } else print(paste0("Error.  Unrecognized input."))
+    
+    if (input$c == "Total Cases") {
+      df %<>% rename(c = SumOfCases)
+    } else if (input$c == "Total Units") {
+      df %<>% rename(c = SumOfUnits)
+    } else if (input$c == "Total Cost") {
+      df %<>% rename(c = SumOfCost)
+    } else if (input$c == "Cost Per Case") {
+      df %<>% rename(c = CostPerCase)
+    } else if (input$c == "Cost Per Unit") {
+      df %<>% rename(c = CostPerUnit)
+    } else if (input$c == "Total Unit Per Case") {
+      df %<>% rename(c = UnitPerCase)
+    } else if (input$c == "Cost per 1K Served") {
+      df %<>% rename(c = Cost1kSvd)
+    } else if (input$c == "Percent of Total $") {
+      df %<>% rename(c = Cost_Perc_Tot)
+    } else if (input$c == "Percent Served") {
+      df %<>% rename(c = Perc_Svd)
+    } else print(paste0("Error.  Unrecognized input."))
+    
+    df %<>% select(FY, org_grp2, svs_grp, a, b, c)
     
   })
   
   
-
   #### Filters ####
   
   output$select_code <- renderUI({
@@ -391,8 +280,8 @@ shinyServer(function(input, output) {
     selectInput(
       "select_code",
       label = tags$p("Select a Code:", style = "font-size: 115%;"),
-      choices = c("","All",hcpcs),
-      selected = ""
+      choices = c("All",hcpcs),
+      selected = ("Community Living Supports (15 Minutes)  ( H2015 )")
     )
     
   })
@@ -401,14 +290,14 @@ shinyServer(function(input, output) {
     
     x <- if (input$select_code == "All") {
       names(inputs_sub)
-    } else names(inputs)
+    } else names(inputs[,!(names(inputs) %in% c(input$y, input$z))])
     
     selectInput(
       "x",
-      label = tags$p("I'm interested in comparing"
-                     , style = "font-size: 115%"),
-      choices = c("",x),
-      selected = ""
+      label = tags$p("Select a variable for the x-axis (horizontal):"
+                     , style = "font-size: 115%;"),
+      choices = (x),
+      selected = ("Total Cost")
     )
     
   })
@@ -417,14 +306,14 @@ shinyServer(function(input, output) {
     
     y <- if (input$select_code == "All") {
       names(inputs_sub)
-    } else names(inputs[,!(names(inputs) %in% (input$x))])
+    } else names(inputs[,!(names(inputs) %in% c(input$x, input$z))])
     
     selectInput(
       "y",
-      label = tags$p("and"
-                     , style = "font-size: 115%"),
-      choices = c("",y),
-      selected = ""
+      label = tags$p("Select a variable for the y-axis (vertical):"
+                     , style = "font-size: 115%;"),
+      choices = (y),
+      selected = ("Percent of Total $")
     )
     
   })
@@ -439,72 +328,57 @@ shinyServer(function(input, output) {
       "z",
       label = tags$p("Select a variable to scale the size of each bubble:"
                      , style = "font-size: 115%;"),
-      choices = c("",z),
-      selected = ""
+      choices = (z),
+      selected = ("Cost per 1K Served")
     )
     
   })
   
   output$a <- renderUI({
     
-    a <- if (input$select_service == "Service Type" |
-             input$select_service == "Service") {
-      names(inputs_sub)
-    } else names(inputs)
-    
     selectInput(
       "a",
-      label = tags$p("I'm interested in comparing"
-                     , style = "font-size: 115%"),
-      choices = c("",a),
-      selected = ("")
+      label = tags$p("Select a variable for the x-axis (horizontal):"
+                     , style = "font-size: 115%;"),
+      choices = (names(inputs[,!(names(inputs) %in% c(input$b, input$c))])),
+      selected = ("Total Cost")
     )
     
   })
   
   output$b <- renderUI({
     
-    b <- if (input$select_service == "Service Type" |
-             input$select_service == "Service") {
-      names(inputs_sub)
-    } else names(inputs[,!(names(inputs) %in% (input$a))])
-    
     selectInput(
       "b",
-      label = tags$p("and"
-                     , style = "font-size: 115%"),
-      choices = c("",b),
-      selected = ("")
+      label = tags$p("Select a variable for the y-axis (vertical):"
+                     , style = "font-size: 115%;"),
+      choices = (names(inputs[,!(names(inputs) %in% c(input$a, input$c))])),
+      selected = ("Percent of Total $")
     )
     
   })
   
   output$c <- renderUI({
     
-    c <- if (input$select_service == "Service Type" |
-             input$select_service == "Service") {
-      names(inputs_sub)
-    } else names(inputs[,!(names(inputs) %in% c(input$a, input$b))])
-    
     selectInput(
       "c",
       label = tags$p("Select a variable to scale the size of each bubble:"
                      , style = "font-size: 115%;"),
-      choices = c("",c),
-      selected = ("")
+      choices = (names(inputs[,!(names(inputs) %in% c(input$a, input$b))])),
+      selected = ("Cost per 1K Served")
     )
     
   })
   
   output$svslvl_filt <- renderUI({
     
-    svslvl_filt <- if (input$select_service=="Service Type"){
+    svslvl_filt <- if (input$service_type=="Service Type"){
       levels(unique(data404$ServiceType))
-    } else if (input$select_service=="Service"){
+    } else if (input$service_type=="Service"){
       levels(unique(data404$Service))
-    } else if (input$select_service=="HCPCS Code"){
+    } else if (input$service_type=="HCPCS Code"){
       levels(unique(data404$Code_shortDesc))
-    } else if (input$select_service=="Code Modifier"){
+    } else if (input$service_type=="Code Modifier"){
       levels(unique(data404$CodeM_shortDesc))
     } else print(paste0("Error.  Unrecognized input."))
     
@@ -512,8 +386,16 @@ shinyServer(function(input, output) {
       "svslvl_filt",
       label = tags$p("Which service(s) would you like to see data for?"
                      , style = "font-size: 115%;"),
-      choices = c("",svslvl_filt),
-      selected = "",
+      choices = (svslvl_filt),
+      selected = if(input$service_type=="Service Type") {
+        levels(unique(data404$ServiceType))
+      } else if(input$service_type=="Service") {
+        levels(unique(data404$Service))
+      } else if(input$service_type=="HCPCS Code") {
+        levels(unique(data404$Code_shortDesc))
+      } else if(input$service_type=="Code Modifier") {
+        levels(unique(data404$CodeM_shortDesc))
+      } else print(paste0("Error.  Unrecognized input.")),
       multiple = TRUE
     )
     
@@ -531,9 +413,13 @@ shinyServer(function(input, output) {
       "org_filt",
       label = tags$p("Select PIHP(s)/CMH(s):"
                      , style = "font-size: 115%;"),
-      choices = c("",org_filt),
-      selected = "",
-      multiple = FALSE
+      choices = (org_filt),
+      selected = if(input$org_type2 == "PIHP") {
+        levels(unique(data404$PIHPname))
+      } else if(input$org_type2 == "CMH") {
+        levels(unique(data404$CMHSP))
+      } else print(paste0("Error.  Unrecognized input.")),
+      multiple = TRUE
     )
     
   })
@@ -665,18 +551,19 @@ shinyServer(function(input, output) {
         # Grab max values from x and y vars
         max_a <- max(df_bubble2()$a, na.rm = T)+max(df_bubble2()$a*.1)
         max_b <- max(df_bubble2()$b, na.rm = T)+max(df_bubble2()$b*.1)
-
+        
         # Ignore sizing variable
         if (input$ignore_c == TRUE) {
           
           df_bubble2() %>%
             filter(FY == input$sliderFY1) %>%
             plot_ly(
-              x = ~a, y = ~b, type = 'scatter', mode = 'markers', size = 100,
-              color = ~svs_grp, colors = cmh_palette, marker = list(opacity = 0.5),
+              x = ~a, y = ~b, type = 'scatter', mode = 'markers',
+              color = ~org_grp2, colors = cmh_palette, marker = list(opacity = 0.5),
               hoverinfo = 'text',
               text = ~paste(
-                svs_grp,
+                org_grp2,
+                '<br>',svs_grp,
                 '<br>',input$a,':',
                 if(grepl("Cost",input$a)) {
                   dollar_format(big.mark = ",")(a)
@@ -693,7 +580,7 @@ shinyServer(function(input, output) {
             ) %>%
             layout(
               title = ~paste('How does',input$a,'compare to',input$b,'for<br>',
-                             'the selected', input$select_service,'at', input$org_filt, '?<br>',
+                             'the selected services at the selected PIHP(s)/CMH(s)?<br>',
                              'Fiscal Year:', input$sliderFY1),
               xaxis = list(
                 title = input$a,
@@ -714,11 +601,11 @@ shinyServer(function(input, output) {
           filter(FY == input$sliderFY1) %>%
           plot_ly(
             x = ~a, y = ~b, type = 'scatter', mode = 'markers',
-            size = ~c, color = ~svs_grp,
-            colors = cmh_palette, marker = list(opacity = 0.5),
+            size = ~c, color = ~org_grp2, colors = cmh_palette, marker = list(opacity = 0.5),
             hoverinfo = 'text',
             text = ~paste(
-              svs_grp,
+              org_grp2,
+              '<br>',svs_grp,
               '<br>',input$a,':',
               if(grepl("Cost",input$a)) {
                 dollar_format(big.mark = ",")(a)
@@ -741,7 +628,7 @@ shinyServer(function(input, output) {
           ) %>%
           layout(
             title = ~paste('How does',input$a,'compare to',input$b,'for<br>',
-                           'the selected', input$select_service,'at', input$org_filt, '?<br>',
+                           'the selected services at the selected PIHP(s)/CMH(s)?<br>',
                            'Fiscal Year:', input$sliderFY1),
             xaxis = list(
               title = input$a,
@@ -755,7 +642,7 @@ shinyServer(function(input, output) {
             ),
             showlegend = FALSE
           )
-
+        
       })
     
   })

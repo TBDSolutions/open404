@@ -5,167 +5,9 @@ shinyUI(
     "Explore 404",
     theme = shinythemes::shinytheme("yeti"),
     navbarMenu(
-      "Motion Chart",
+      "About",
       tabPanel(
-        "Compare Organizations",
-        sidebarLayout(
-          sidebarPanel(
-            tags$strong("Select Metrics:"),
-            br(),
-            uiOutput("x"),
-            uiOutput("y"),
-            uiOutput("z"),
-            checkboxInput(
-              inputId = "ignore_z",
-              label = tags$p("Keep size of bubbles constant?"),
-              value = FALSE,
-              width = NULL
-            ),
-            tags$strong("Note: The same variable cannot be selected more than once.",
-                   style = "font-size: 80%;"),
-            br(),
-            br(),
-            tags$strong("Group by Type:"),
-            selectInput(
-              inputId = "org_type",
-              label = tags$p("Which organization(s) would you like to see data for?"
-                             , style = "font-size: 115%;"),
-              choices = c("PIHP","CMH"),
-              selected = "PIHP"
-            ),
-            selectInput(
-              inputId = "filter_pihp",
-              label = tags$p("View a Specific PIHP/CMH:"
-                             , style = "font-size: 115%;"),
-              choices = c("All",levels(unique(data404$PIHPname))),
-              selected = "All"
-            ),
-            checkboxInput(
-              inputId = "state_avg",
-              label = tags$p("Include State Average?"),
-              value = FALSE,
-              width = NULL
-            ),
-            tags$strong("Select a Service:"),
-            br(),
-            selectInput(
-              inputId = "select_ServiceType",
-              label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
-              choices = c("All",levels(unique(data404$ServiceType))),
-              selected = "Home & Community Based Services"
-            ),
-            uiOutput(
-              "select_code"
-            ),
-            radioButtons(
-              inputId = "select_Population",
-              label = tags$strong("Select a Population:", style = "font-size: 125%;"),
-              choices = c("All", levels(unique(data404$Population))),
-              selected = "All",
-              inline = T
-            ),
-            tags$strong("Note: When Population: 'All' is selected individuals may be represented
-                        more than once if they received DD and MI services within the same year.",
-                        style = "font-size: 80%;")
-        ),
-        mainPanel(
-          # suppress errors from waiting data to be built.
-          tags$style(type = "text/css",
-                     ".shiny-output-error { visibility: hidden; }",
-                     ".shiny-output-error:before { visibility: hidden; }"
-          ),
-          # content
-          plotlyOutput("bubble1"),
-          sliderInput(
-            inputId = "sliderFY",
-            label = tags$p("Fiscal Year:", style = "font-size: 125%;"),
-            min = 2006,
-            max = 2016,
-            value = 2006,
-            sep = "",
-            animate = animationOptions(loop = FALSE, interval = 1000)
-          ),
-          tags$strong("Note: Graph will not display for years during which a particular
-                      service code was not used.", style = "font-size: 80%;")
-        )
-      )
-    ),
-    tabPanel(
-      "Compare Services",
-      sidebarLayout(
-        sidebarPanel(
-          tags$strong("Select Metrics:"),
-          br(),
-          uiOutput("a"),
-          uiOutput("b"),
-          uiOutput("c"),
-          checkboxInput(
-            inputId = "ignore_c",
-            label = tags$p("Keep size of bubbles constant?"),
-            value = FALSE,
-            width = NULL
-          ),
-          tags$strong("Note: The same variable cannot be selected more than once.",
-                      style = "font-size: 80%;"),
-          br(),
-          br(),
-          tags$strong("Group by Service:"),
-          selectInput(
-            inputId = "service_type",
-            label = tags$p("At which level would you like to select services?"
-                           , style = "font-size: 115%;"),
-            choices = c("Service Type","Service","HCPCS Code","Code Modifier"),
-            selected = "Service Type"
-          ),
-          uiOutput("svslvl_filt"),
-          tags$strong("Select an Organization:"),
-          br(),
-          selectInput(
-            inputId = "org_type2",
-            label = tags$p("Which organization(s) would you like to see data for?"
-                           , style = "font-size: 115%;"),
-            choices = c("PIHP","CMH"),
-            selected = "PIHP"
-          ),
-          uiOutput("org_filt"),
-          radioButtons(
-            inputId = "select_Population2",
-            label = tags$strong("Select a Population:", style = "font-size: 125%;"),
-            choices = c("All", levels(unique(data404$Population))),
-            selected = "All",
-            inline = T
-          ),
-          tags$strong("Note: When Population: 'All' is selected individuals may be represented
-                        more than once if they received DD and MI services within the same year.",
-                      style = "font-size: 80%;")
-        ),
-        mainPanel(
-          # suppress errors from waiting data to be built.
-          tags$style(type = "text/css",
-                     ".shiny-output-error { visibility: hidden; }",
-                     ".shiny-output-error:before { visibility: hidden; }"
-          ),
-          # content
-          plotlyOutput("bubble2"),
-          sliderInput(
-            inputId = "sliderFY1",
-            label = tags$p("Fiscal Year:", style = "font-size: 125%;"),
-            min = 2006,
-            max = 2016,
-            value = 2006,
-            sep = "",
-            animate = animationOptions(loop = FALSE, interval = 1000)
-          ),
-          tags$strong("Note: Graph will not display for years during which a particular
-                      service code was not used.", style = "font-size: 80%;")
-        )
-      )
-    )
-  ),
-    navbarMenu(
-    "About",
-    tabPanel(
-      "General",
+        "General",
         mainPanel(
           tags$strong("404 Data:", style = "font-size: 125%;"),
           p("The cost and utilization data reported by Michigan’s Community Mental Health Service Providers 
@@ -176,6 +18,22 @@ shinyUI(
             in using data to understand current service use, cost trends and inconsistencies across the state for 
             vulnerable populations."
           ),
+          tags$strong("Motion Chart:", style = "font-size: 125%;"),
+          p(
+            tags$ul(
+              tags$li(strong("Compare Organizations: "),
+                      "This chart can be used to compare a single Service Type and/or HCPCS/CPT code across all PIHP's,
+                      or across all CMH's within a specified PIHP.", style = "font-size: 90%;"),
+              tags$li(strong("Compare Services: "),
+                      "This chart can be used to compare multiple HCPCS/CPT codes within a Service Type for a single
+                      PIHP or CMH.", style = "font-size: 90%;")
+            )
+          )
+        )
+      ),
+      tabPanel(
+        "Definitions",
+        mainPanel(
           tags$strong("Definitions:", style = "font-size: 125%;"),
           p(
             tags$ul(
@@ -215,35 +73,185 @@ shinyUI(
               tags$li(strong("Percent Served: "),
                       "Percentage of people served who received this service (per year)")
             )
-          ),
-          tags$strong("Motion Chart:", style = "font-size: 125%;"),
-          p(
-            tags$ul(
-              tags$li(strong("Compare Organizations: "),
-                      "This chart can be used to compare a single Service Type and/or HCPCS/CPT code across all PIHP's,
-                      or across all CMH's within a specified PIHP.", style = "font-size: 90%;"),
-              tags$li(strong("Compare Services: "),
-                      "This chart can be used to compare multiple HCPCS/CPT codes within a Service Type for multiple
-                      PIHP's or CMH's.", style = "font-size: 90%;")
-            )
-          ),
-          tags$strong("Chart Options:", style = "font-size: 100%;"),
-          p(
-            tags$ul(
-              tags$li(strong("Zoom: "),
-                      "Interested in a a particular cluster of bubbles? Highlight a specific area of the chart to zoom in.",
-                      br(), p("Note: This functionality only works when the chart is static.", style = "font-size: 90%;"))
-            )
           )
         )
       ),
+      tabPanel(
+        "Service Groupings",
+        mainPanel(
+          tags$strong("Service Groups: ", stype = "font-size: 125%;"),
+          p("The table below provides a detailed hierarchy of CPT/HCPCS codes into broader service groups.",
+            br(), "Use the search bar on the right to find a specific code or service."),
+          dataTableOutput("svs_groups")
+        )
+      )
+    ),
+    navbarMenu(
+      "Motion Chart",
+      tabPanel(
+        "Compare Organizations",
+        sidebarLayout(
+          sidebarPanel(
+            tags$strong("Use this chart to compare organizations"
+                        , style = "font-size: 120%;"),
+            br(),
+            br(),
+            selectInput(
+              inputId = "org_type",
+              label = tags$strong("Which organization(s) would you like to compare?"
+                             , style = "font-size: 115%;"),
+              choices = c("","PIHP","CMH"),
+              selected = ""
+            ),
+            selectInput(
+              inputId = "filter_pihp",
+              label = tags$p("View a Specific PIHP:"
+                             , style = "font-size: 115%;"),
+              choices = c("","All",levels(unique(data404$PIHPname))),
+              selected = ""
+            ),
+            checkboxInput(
+              inputId = "state_avg",
+              label = tags$p("Include a bubble for the State Average?"),
+              value = FALSE,
+              width = NULL
+            ),
+            tags$strong("Which service(s) would you like to learn about?"),
+            br(),
+            selectInput(
+              inputId = "select_ServiceType",
+              label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
+              choices = c("","All",levels(unique(data404$ServiceType))),
+              selected = ""
+            ),
+            uiOutput(
+              "select_code"
+            ),
+            br(),
+            tags$strong("Which metrics would you like to view?"),
+            br(),
+            uiOutput("x"),
+            uiOutput("y"),
+            uiOutput("z"),
+            checkboxInput(
+              inputId = "ignore_z",
+              label = tags$p("Keep size of bubbles constant?"),
+              value = FALSE,
+              width = NULL
+            ),
+            tags$strong("Note: The same variable cannot be selected more than once.",
+                   style = "font-size: 80%;"),
+            br(),
+            br(),
+            radioButtons(
+              inputId = "select_Population",
+              label = tags$strong("Are you interested in a specific population?"
+                                  , style = "font-size: 125%;"),
+              choices = c("All", levels(unique(data404$Population))),
+              selected = "All",
+              inline = T
+            ),
+            tags$strong("Note: When Population: 'All' is selected individuals may be represented
+                        more than once if they received DD and MI services within the same year.",
+                        style = "font-size: 80%;")
+        ),
+        mainPanel(
+          # suppress errors from waiting data to be built.
+          tags$style(type = "text/css",
+                     ".shiny-output-error { visibility: hidden; }",
+                     ".shiny-output-error:before { visibility: hidden; }"
+          ),
+          # content
+          plotlyOutput("bubble1"),
+          sliderInput(
+            inputId = "sliderFY",
+            label = tags$strong("Press the play button below to see how the \ndata changes year over year"
+                           , style = "font-size: 90%;"),
+            min = 2006,
+            max = 2016,
+            value = 2006,
+            sep = "",
+            animate = animationOptions(loop = FALSE, interval = 1000)
+          ),
+          tags$strong("Note: Graph will not display for years during which a particular
+                      service code was not used.", style = "font-size: 80%;")
+        )
+      )
+    ),
     tabPanel(
-      "Service Groupings",
-      mainPanel(
-        tags$strong("Service Groups: ", stype = "font-size: 125%;"),
-        p("The table below provides a detailed hierarchy of CPT/HCPCS codes into broader service groups.",
-        br(), "Use the search bar on the right to find a specific code or service."),
-        dataTableOutput("svs_groups")
+      "Compare Services",
+      sidebarLayout(
+        sidebarPanel(
+          tags$strong("Use this chart to compare services"
+                      , style = "font-size: 120%;"),
+          br(),
+          br(),
+          selectInput(
+            inputId = "org_type2",
+            label = tags$strong("Which type of organization are you interested in?"
+                           , style = "font-size: 115%;"),
+            choices = c("","State of MI","PIHP","CMH"),
+            selected = ""
+          ),
+          uiOutput("org_filt"),
+          tags$strong("Which service(s) would you like to learn about?"),
+          selectInput(
+            "select_service",
+            label = tags$p("At which level would you like to select services?"
+                           , style = "font-size: 115%;"),
+            choices = c("","Service Type","Service","HCPCS Code","Code Modifier"),
+            selected = ""
+          ),
+          uiOutput("svslvl_filt"),
+          br(),
+          tags$strong("Which metrics would you like to view?"),
+          br(),
+          uiOutput("a"),
+          uiOutput("b"),
+          uiOutput("c"),
+          checkboxInput(
+            inputId = "ignore_c",
+            label = tags$p("Keep size of bubbles constant?"),
+            value = FALSE,
+            width = NULL
+          ),
+          tags$strong("Note: The same variable cannot be selected more than once.",
+                      style = "font-size: 80%;"),
+          br(),
+          br(),
+          radioButtons(
+            inputId = "select_Population2",
+            label = tags$strong("Are you interested in a specific population?"
+                                , style = "font-size: 125%;"),
+            choices = c("All", levels(unique(data404$Population))),
+            selected = "All",
+            inline = T
+          ),
+          tags$strong("Note: When Population: 'All' is selected individuals may be represented
+                        more than once if they received DD and MI services within the same year.",
+                      style = "font-size: 80%;")
+        ),
+        mainPanel(
+          # suppress errors from waiting data to be built.
+          tags$style(type = "text/css",
+                     ".shiny-output-error { visibility: hidden; }",
+                     ".shiny-output-error:before { visibility: hidden; }"
+          ),
+          # content
+          plotlyOutput("bubble2"),
+          sliderInput(
+            inputId = "sliderFY1",
+            label = tags$strong("Press the play button below to see how the \ndata changes year over year"
+                                , style = "font-size: 90%;"),
+            min = 2006,
+            max = 2016,
+            value = 2006,
+            sep = "",
+            animate = animationOptions(loop = FALSE, interval = 1000)
+          ),
+          tags$strong("Note: Graph will not display for years during which a particular
+                      service code was not used.", style = "font-size: 80%;")
+        )
       )
     )
     )
