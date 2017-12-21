@@ -9,26 +9,40 @@ shinyUI(
       tabPanel(
         "General",
         mainPanel(
-          tags$strong("404 Data:", style = "font-size: 125%;"),
+          tags$strong("open404", style = "font-size: 125%;"),
+          br(),
           p("The cost and utilization data reported by Michigan’s Community Mental Health Service Providers 
             (also known as the Section 404 report) has potential to be a beneficial tool in improving services 
             for the populations served by the CMHs. Currently, this data is officially reported to the Michigan 
             legislature and collected by the Michigan Department of Health and Human Services (MDHHS) via reporting 
             by the CMHs. Given the ongoing changes to Michigan’s public health system, there is increasing utility 
             in using data to understand current service use, cost trends and inconsistencies across the state for 
-            vulnerable populations."
+            vulnerable populations. The data is drawn from source tables collected by MDHHS, provided by the 
+            Behavioral Health and Developmental Disabilities Administration (BHDDA)."
           ),
-          tags$strong("Motion Chart:", style = "font-size: 125%;"),
+          tags$strong("navigation", style = "font-size: 125%;"),
+          br(),
+          p("The two drop down menus above can be used to navigate the application. The 'About' menu includes a general
+            description of the application, including definitions of each available data element and an overview of the
+            service groupings used to aggregate similar services. The 'Motion Chart' menu includes two separate data
+            visualizations that can be used to expore the 404 data in varying levels of detail (see additional descriptions below)."
+          ),
+          br(),
+          tags$strong("motion chart", style = "font-size: 125%;"),
           p(
             tags$ul(
               tags$li(strong("Compare Organizations: "),
                       "This chart can be used to compare a single Service Type and/or HCPCS/CPT code across all PIHP's,
-                      or across all CMH's within a specified PIHP.", style = "font-size: 90%;"),
+                      or across all CMH's within a specified PIHP. This chart is helpful in answering the question 'How does total cost
+                      compare to total units per case for all CMH's within Mid-State Health Network.'", style = "font-size: 100%;"),
               tags$li(strong("Compare Services: "),
                       "This chart can be used to compare multiple HCPCS/CPT codes within a Service Type for a single
-                      PIHP or CMH.", style = "font-size: 90%;")
+                      PIHP or CMH. This chart is helpful in answering the question 'How does total cost compare total units per
+                      case for each CLS code (H0043, H2015, H2016) at Mid-State Health Network'", style = "font-size: 100%;")
             )
-          )
+          ),
+          br(),
+          uiOutput("download")
         )
       ),
       tabPanel(
