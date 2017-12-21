@@ -158,11 +158,11 @@ shinyServer(function(input, output) {
     if (input$org_type2 %in% c("PIHP", "CMH")) {
     
     # Relabel selected grouping variable (PIHP/CMH)
-      # if (input$org_type2 == "PIHP") {
-      #   df <- data404 %>% rename(org_grp2 = PIHPname)
-      # } else if (input$org_type2 == "CMH") {
-      #   df <- data404 %>% rename(org_grp2 = CMHSP)
-      # } else print(paste0("Error.  Unrecognized input."))
+      if (input$org_type2 == "PIHP") {
+        df <- data404 %>% rename(org_grp2 = PIHPname)
+      } else if (input$org_type2 == "CMH") {
+        df <- data404 %>% rename(org_grp2 = CMHSP)
+      } else print(paste0("Error.  Unrecognized input."))
       
       # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
       if (input$select_service == "Service Type") {
@@ -183,10 +183,10 @@ shinyServer(function(input, output) {
       # Aggregating by selected org_grp
       df %<>%
         filter(
-          # org_grp2 %in% input$org_filt
-          svs_grp %in% input$svslvl_filt
+          org_grp2 %in% input$org_filt
+          & svs_grp %in% input$svslvl_filt
           & Population %in% pop_filt2) %>%
-        group_by(FY,svs_grp) %>%
+        group_by(FY,org_grp2,svs_grp) %>%
         summarize(
           SumOfCases = sum(SumOfCases, na.rm = T),
           SumOfUnits = sum(SumOfUnits, na.rm = T),
@@ -265,29 +265,29 @@ shinyServer(function(input, output) {
         df %<>% rename(c = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
       
-      df %<>% select(FY, svs_grp, a, b, c)
+      df %<>% select(FY, org_grp2, svs_grp, a, b, c)
       
     }
     
     else if (input$org_type2 == "State of MI") {
-      
+
       # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
       if (input$select_service == "Service Type") {
-        df <- df %>% rename(svs_grp = ServiceType)
+        df <- data404 %>% rename(svs_grp = ServiceType)
       } else if (input$select_service == "Service") {
-        df <- df %>% rename(svs_grp = Service)
+        df <- data404 %>% rename(svs_grp = Service)
       } else if (input$select_service == "HCPCS Code") {
-        df <- df %>% rename(svs_grp = Code_shortDesc)
+        df <- data404 %>% rename(svs_grp = Code_shortDesc)
       } else if (input$select_service == "Code Modifier") {
-        df <- df %>% rename(svs_grp = CodeM_shortDesc)
+        df <- data404 %>% rename(svs_grp = CodeM_shortDesc)
       } else print(paste0("Error.  Unrecognized input."))
-      
+
       # Filter by Population
       pop_filt2 <- if (input$select_Population2 == "All") {
         levels(df$Population)
       } else input$select_Population2
-      
-      # Aggregating by selected org_grp
+
+      # Aggregating by selected svs_grp
       df %<>%
         filter(
           svs_grp %in% input$svslvl_filt
@@ -308,8 +308,8 @@ shinyServer(function(input, output) {
           Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 5)
         ) %>%
         ungroup()
-      
-      
+
+
       # Relabel display variables
       if (input$a == "Total Cases") {
         df %<>% rename(a = SumOfCases)
@@ -330,7 +330,7 @@ shinyServer(function(input, output) {
       } else if (input$a == "Percent Served") {
         df %<>% rename(a = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
-      
+
       if (input$b == "Total Cases") {
         df %<>% rename(b = SumOfCases)
       } else if (input$b == "Total Units") {
@@ -350,7 +350,7 @@ shinyServer(function(input, output) {
       } else if (input$b == "Percent Served") {
         df %<>% rename(b = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
-      
+
       if (input$c == "Total Cases") {
         df %<>% rename(c = SumOfCases)
       } else if (input$c == "Total Units") {
@@ -370,9 +370,9 @@ shinyServer(function(input, output) {
       } else if (input$c == "Percent Served") {
         df %<>% rename(c = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
-      
+
       df %<>% select(FY, svs_grp, a, b, c)
-      
+
     }
     
   })
@@ -519,22 +519,31 @@ shinyServer(function(input, output) {
     
   })
   
+  
   output$org_filt <- renderUI({
+    
+    if (input$org_type2 %in% c("PIHP", "CMH")) {
     
     org_filt <- if (input$org_type2 == "PIHP") {
       levels(unique(data404$PIHPname))
     } else if (input$org_type2 == "CMH") {
       levels(unique(data404$CMHSP))
     } else print(paste0("Error.  Unrecognized input."))
-    
+
     selectInput(
       "org_filt",
-      label = tags$p("Select PIHP(s)/CMH(s):"
+      label = tags$p("Select PIHP/CMH:"
                      , style = "font-size: 115%;"),
       choices = c("",org_filt),
       selected = "",
       multiple = FALSE
     )
+    
+    } else if (input$org_type2 == "State of MI") {
+      
+      br()
+      
+    }
     
   })
   
