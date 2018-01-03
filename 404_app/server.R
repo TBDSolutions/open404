@@ -711,9 +711,13 @@ shinyServer(function(input, output) {
               )
             ) %>%
             layout(
-              title = ~paste('How does',input$a,'compare to',input$b,'for<br>',
-                             'the selected', input$select_service,'at', input$org_filt, '?<br>',
-                             'Fiscal Year:', input$sliderFY1),
+              title = if(input$org_type2 %in% c('PIHP','CMH')) {
+                ~paste('How does',input$a,'compare to',input$b,'for<br>','the selected',
+                       input$select_service,'at',input$org_filt, '?<br>',
+                       'Fiscal Year:',input$sliderFY1)
+                } else ~paste('How does',input$a,'compare to',input$b,'for<br>',
+                              'the selected',input$select_service,
+                                  'for the State of MI?<br>','Fiscal Year:',input$sliderFY1),
               xaxis = list(
                 title = input$a,
                 range = c(0, max_a),
@@ -759,9 +763,13 @@ shinyServer(function(input, output) {
             )
           ) %>%
           layout(
-            title = ~paste('How does',input$a,'compare to',input$b,'for<br>',
-                           'the selected', input$select_service,'at', input$org_filt, '?<br>',
-                           'Fiscal Year:', input$sliderFY1),
+            title = if(input$org_type2 %in% c('PIHP','CMH')) {
+              ~paste('How does',input$a,'compare to',input$b,'for<br>','the selected',
+                     input$select_service,'at',input$org_filt, '?<br>',
+                     'Fiscal Year:',input$sliderFY1)
+            } else ~paste('How does',input$a,'compare to',input$b,'for<br>',
+                          'the selected',input$select_service,
+                          'for the State of MI?<br>','Fiscal Year:',input$sliderFY1),
             xaxis = list(
               title = input$a,
               range = c(0, max_a),

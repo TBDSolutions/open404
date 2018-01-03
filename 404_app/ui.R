@@ -34,11 +34,11 @@ shinyUI(
               tags$li(strong("Compare Organizations: "),
                       "This chart can be used to compare a single Service Type and/or HCPCS/CPT code across all PIHP's,
                       or across all CMH's within a specified PIHP. This chart is helpful in answering the question 'How does total cost
-                      compare to total units per case for all CMH's within Mid-State Health Network.'", style = "font-size: 100%;"),
+                      compare to total units per case for all CMH's within Mid-State Health Network?'", style = "font-size: 100%;"),
               tags$li(strong("Compare Services: "),
                       "This chart can be used to compare multiple HCPCS/CPT codes within a Service Type for a single
                       PIHP or CMH. This chart is helpful in answering the question 'How does total cost compare total units per
-                      case for each CLS code (H0043, H2015, H2016) at Mid-State Health Network'", style = "font-size: 100%;")
+                      case for each CLS code (H0043, H2015, H2016) at Mid-State Health Network?'", style = "font-size: 100%;")
             )
           ),
           br(),
@@ -106,7 +106,7 @@ shinyUI(
         "Compare Organizations",
         sidebarLayout(
           sidebarPanel(
-            tags$strong("Use this chart to compare organizations"
+            tags$strong("Make selections below to start comparing organizations"
                         , style = "font-size: 120%;"),
             br(),
             br(),
@@ -196,7 +196,7 @@ shinyUI(
       "Compare Services",
       sidebarLayout(
         sidebarPanel(
-          tags$strong("Use this chart to compare services"
+          tags$strong("Make selections below to start comparing services"
                       , style = "font-size: 120%;"),
           br(),
           br(),
