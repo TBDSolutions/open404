@@ -547,16 +547,6 @@ shinyServer(function(input, output) {
     
   })
   
-  output$download <- renderUI({
-    
-    tagList(
-      h6(
-        "You can download the 404 data used in this application below:"
-      ),
-      downloadButton('downloadData', 'Download')
-    )
-  })
-  
   
   #### Visualizations ####
   
@@ -800,10 +790,12 @@ shinyServer(function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
-    filename = "Master.csv",
+    filename = function() {
+      paste("data404_", Sys.Date(),".csv",sep="")
+    },
     content = function(file) {
-      write.csv(Master.csv, filename, row.names = F, fileEncoding = 'UTF-8')
-    })
-  
+      write.csv(data404, file)
+    }
+  )
   
 })
