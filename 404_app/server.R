@@ -151,8 +151,7 @@ shinyServer(function(input, output) {
     df %<>% select(FY, org_grp, x, y, z)
     
   })
-  
-  
+ 
   df_bubble2 <- reactive({
     
     if (input$org_type2 %in% c("PIHP", "CMH")) {
@@ -377,8 +376,6 @@ shinyServer(function(input, output) {
     
   })
   
-  
-
   #### Filters ####
   
   output$select_code <- renderUI({

@@ -8,41 +8,81 @@ shinyUI(
       "About",
       tabPanel(
         "General",
-        mainPanel(
-          tags$strong("open404", style = "font-size: 125%;"),
-          br(),
-          p("The cost and utilization data reported by Michigan’s Community Mental Health Service Providers 
-            (also known as the Section 404 report) has potential to be a beneficial tool in improving services 
-            for the populations served by the CMHs. Currently, this data is officially reported to the Michigan 
-            legislature and collected by the Michigan Department of Health and Human Services (MDHHS) via reporting 
-            by the CMHs. Given the ongoing changes to Michigan’s public health system, there is increasing utility 
-            in using data to understand current service use, cost trends and inconsistencies across the state for 
-            vulnerable populations. The data is drawn from source tables collected by MDHHS, provided by the 
-            Behavioral Health and Developmental Disabilities Administration (BHDDA)."
-          ),
-          tags$strong("navigation", style = "font-size: 125%;"),
-          br(),
-          p("The two drop down menus above can be used to navigate the application. The 'About' menu includes a general
-            description of the application, including definitions of each available data element and an overview of the
-            service groupings used to aggregate similar services. The 'Motion Chart' menu includes two separate data
-            visualizations that can be used to expore the 404 data in varying levels of detail (see additional descriptions below)."
-          ),
-          br(),
-          tags$strong("motion chart", style = "font-size: 125%;"),
-          p(
-            tags$ul(
-              tags$li(strong("Compare Organizations: "),
-                      "This chart can be used to compare a single Service Type and/or HCPCS/CPT code across all PIHP's,
-                      or across all CMH's within a specified PIHP. This chart is helpful in answering the question 'How does total cost
-                      compare to total units per case for all CMH's within Mid-State Health Network?'", style = "font-size: 100%;"),
-              tags$li(strong("Compare Services: "),
-                      "This chart can be used to compare multiple HCPCS/CPT codes within a Service Type for a single
-                      PIHP or CMH. This chart is helpful in answering the question 'How does total cost compare total units per
-                      case for each CLS code (H0043, H2015, H2016) at Mid-State Health Network?'", style = "font-size: 100%;")
+        fluidRow(
+          column(
+            width = 6,
+            mainPanel(
+              tags$strong("open404", style = "font-size: 125%;"),
+              br(),
+              p(
+                "The cost and utilization data is collected by the Michigan 
+                Department of Health and Human Services' (MDHHS) Behavioral 
+                Health and Developmental Disabilities Administration (BHDDA) 
+                and reported annually to the Michigan legislature. Given the 
+                ongoing changes to Michigan’s public health system, this data 
+                can be used to understand service use, cost trends and 
+                variation across the state for vulnerable populations.  This 
+                application has been developed by"
+              ),
+              img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),
+              br(),
+              br(),
+              tags$strong("license", style = "font-size: 125%;"),
+              br(),
+              p(
+                "These data and visualizations, and the code supporting them, 
+                are licensed under a ",
+                tags$a(
+                  href = "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                  "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)"
+                ),
+                " license.  You can find documentation on ",
+                tags$a(
+                  href = "https://github.com/j-hagedorn/open404",
+                  "our GitHub repository"
+                ),
+                ".  We ask that any users of this application for reporting or 
+                research purposes cite this source appropriately."
+              )
             )
           ),
-          br(),
-          uiOutput("download")
+          column(
+            width = 6,
+            mainPanel(
+              tags$strong("navigation", style = "font-size: 125%;"),
+              br(),
+              p(
+                "The drop down menus above can be used to navigate the 
+                application. The 'About' menu includes definitions of available 
+                data elements and service groupings. The 'Motion Chart' menu 
+                includes data visualizations that can be used to explore the data."
+              ),
+              tags$strong("motion chart", style = "font-size: 125%;"),
+              br(),
+              p(
+                tags$ul(
+                  tags$li(
+                    strong("Compare Organizations: "),
+                    "This chart compares a single Service Type or Service across 
+                    PIHPs or CMHs. This chart answers questions such as: 
+                    'How does total cost compare to units per case for all CMHs 
+                    within my PIHP?'", 
+                    style = "font-size: 100%;"
+                  ),
+                  tags$li(
+                    strong("Compare Services: "),
+                    "This chart compares multiple services within a single PIHP 
+                    or CMH. This chart answers questions such as: 
+                    'How does total cost compare to total units per case for 
+                    community living services within my PIHP?'", 
+                    style = "font-size: 100%;"
+                  )
+                )
+              ),
+              br(),
+              uiOutput("download")
+            )
+          )
         )
       ),
       tabPanel(
