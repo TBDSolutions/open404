@@ -80,7 +80,8 @@ shinyUI(
                 )
               ),
               br(),
-              uiOutput("download")
+              p("You can download the 404 data used in this application below:"),
+              downloadButton('downloadData', 'Download')
             )
           )
         )
