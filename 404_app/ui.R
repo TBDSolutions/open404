@@ -97,6 +97,11 @@ shinyUI(
           tags$strong("Service Groups: ", stype = "font-size: 125%;"),
           p("The table below provides a detailed hierarchy of CPT/HCPCS codes into broader service groups.",
             br(), "Use the search bar on the right to find a specific code or service."),
+          br(),
+          p("You can download the service groupings used in this application below:"),
+          downloadButton('downloadData2', 'Download'),
+          br(),
+          br(),
           dataTableOutput("svs_groups")
         )
       )

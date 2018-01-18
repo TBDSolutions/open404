@@ -798,4 +798,13 @@ shinyServer(function(input, output) {
     }
   )
   
+  output$downloadData2 <- downloadHandler(
+    filename = function() {
+      paste("ServiceGroups_", Sys.Date(),".csv",sep="")
+    },
+    content = function(file) {
+      write.csv(service_groups, file)
+    }
+  )
+  
 })
