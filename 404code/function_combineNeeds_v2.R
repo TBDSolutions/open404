@@ -6,7 +6,7 @@ combineNeeds <- function(directory) {
   library(tidyr)
   library(stringr)
   
-  files <- list.files(directory,full.names = TRUE) # make list of full file names
+  files <- list.files("C:/Users/Jeong KyuHyun/Documents/GitHub/open404/data/needs",full.names = TRUE) # make list of full file names
   n <- length(files)
   df <- data.frame() #create empty data frame
   
@@ -19,11 +19,21 @@ combineNeeds <- function(directory) {
     FY <- as.character(x[2,2])
     FY <- str_sub(FY, start = -4L, end = -1L) #extract last 4 chars for Fiscal Year
     
+    # identify CMHSP NA errors... Should I filter it??
+    if( is.na(CMHSP) ){
+      print(paste0("CMHSP error: " , CMHSP, " in ", files[i]))
+    }
+    
+    # identify FY errors... Should I filter it?? (detroit11 might be fixable)
+    if(is.na(as.numeric(FY))){
+      print(paste0("FY error: ", FY, " in ", files[i]))
+    }
+    
     if (ncol(x) >= 6) {
       
       x <- x[-1:-6,] #remove rows 1-6
       x <- x[-8:-10,] #remove rows 8-10
-      names(x)[1] <- "Item"   # Rename column 
+      names(x)[1] <- "Item"   # Rename column
       names(x)[2] <- "Desc"   # Rename column
       names(x)[3] <- "DD"   # Rename column
       names(x)[4] <- "MIA"   # Rename column 
@@ -34,13 +44,23 @@ combineNeeds <- function(directory) {
       
       x <-
         x %>%
-        mutate(CMHSP = CMHSP, FY = FY, Undup = Undup,
-               Item = gsub("\\..*","",Item)) %>%
-        mutate(Item = gsub("[[:punct:]]", "", Item)) %>%
+        mutate( CMHSP = CMHSP, FY = FY, Undup = Undup,
+               Item = gsub("[[:punct:]]", "", gsub(".*w","",Item))) %>%
         select(FY, CMHSP, Item, Desc, DD, MIA, MIC, Other, Undup) %>% 
         filter(!is.na(Item) & !is.na(Desc)) %>%
         filter(Item != "17" & Item != "2") %>%
         gather(Population, People, DD:Other) 
+      
+      # Identify the place where the Item is an empty string. (allegan16 -> due to * in an item column)
+      if("" %in% x$Item){
+        print(paste0("Empty item in ", files[i]))
+      }
+      # identify the non integer numbers for people variable
+      if(x$People %>% is.na() %>% sum() > 0){
+        print(paste0("NA people in ", files[i], i))
+      }else if(x$People %>% as.numeric() %>% is.na()){
+        print(paste0("Non integer number of people in ", files[i]))
+      }
       
       df <- rbind(df, x)
       
