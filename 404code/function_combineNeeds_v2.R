@@ -77,8 +77,8 @@ combineNeeds <- function(directory) {
     df %>%
     mutate(FY = factor(FY), CMHSP = factor(CMHSP),
            Desc = factor(Desc),
-           People = as.numeric(People)) %>%
-    filter(!is.na(People))
+           People = as.numeric(People))
+    # %>% filter(!is.na(People))
   
   library(car)
   df$Name <- recode(df$Item,"'1'='total_in';
