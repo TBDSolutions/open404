@@ -6,7 +6,7 @@ combineNeeds <- function(directory) {
   library(tidyr)
   library(stringr)
   
-  files <- list.files("C:/Users/Jeong KyuHyun/Documents/GitHub/open404/data/needs",full.names = TRUE) # make list of full file names
+  files <- list.files(directory,full.names = TRUE) # make list of full file names
   n <- length(files)
   df <- data.frame() #create empty data frame
   
@@ -55,12 +55,12 @@ combineNeeds <- function(directory) {
       if("" %in% x$Item){
         print(paste0("Empty item in ", files[i]))
       }
-      # identify the non integer numbers for people variable
-      if(x$People %>% is.na() %>% sum() > 0){
-        print(paste0("NA people in ", files[i], i))
-      }else if(x$People %>% as.numeric() %>% is.na()){
-        print(paste0("Non integer number of people in ", files[i]))
-      }
+      # # identify the non integer numbers for people variable
+      # if(x$People %>% is.na() %>% sum() > 0){
+      #   print(paste0("NA people in ", files[i], i))
+      # }else if(x$People %>% as.numeric() %>% is.na()){
+      #   print(paste0("Non integer number of people in ", files[i]))
+      # }
       
       df <- rbind(df, x)
       
@@ -77,7 +77,8 @@ combineNeeds <- function(directory) {
     df %>%
     mutate(FY = factor(FY), CMHSP = factor(CMHSP),
            Desc = factor(Desc),
-           People = as.numeric(People))
+           People = as.numeric(People)) %>%
+    filter(!is.na(People))
   
   library(car)
   df$Name <- recode(df$Item,"'1'='total_in';
