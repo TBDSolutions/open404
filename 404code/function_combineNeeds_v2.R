@@ -3,7 +3,7 @@ combineNeeds <- function(directory) {
 
   library(readxl); library(dplyr); library(tidyr); library(stringr); library(stringdist); library(magrittr)
   
-  files <- list.files("C:/Users/Jeong KyuHyun/Documents/GitHub/open404/data/needs",full.names = TRUE) # make list of full file names
+  files <- list.files("C:/Users/joshh/Documents/GitHub/open404/data/needs",full.names = TRUE) # make list of full file names
   n <- length(files)
   df <- data.frame() #create empty data frame
   
