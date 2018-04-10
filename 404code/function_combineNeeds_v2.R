@@ -1,12 +1,9 @@
 combineNeeds <- function(directory) {
   ## 'directory' is a char vector of len 1 indicating location of CSV files
 
-  library(readxl)
-  library(dplyr)
-  library(tidyr)
-  library(stringr)
+  library(readxl); library(dplyr); library(tidyr); library(stringr); library(stringdist); library(magrittr)
   
-  files <- list.files(directory,full.names = TRUE) # make list of full file names
+  files <- list.files("C:/Users/Jeong KyuHyun/Documents/GitHub/open404/data/needs",full.names = TRUE) # make list of full file names
   n <- length(files)
   df <- data.frame() #create empty data frame
   
@@ -16,9 +13,11 @@ combineNeeds <- function(directory) {
     try(x <- read_excel(files[i],  col_names = F, sheet = 1))
     
     CMHSP <- as.character(x[1,6])
+    FileName <- gsub("[0-9]*.xls", "", basename(files[i]))
     FY <- as.character(x[2,2])
     FY <- str_sub(FY, start = -4L, end = -1L) #extract last 4 chars for Fiscal Year
     
+    # print(paste0(file_name))
     # identify CMHSP NA errors... Should I filter it??
     if( is.na(CMHSP) ){
       print(paste0("CMHSP error: " , CMHSP, " in ", files[i]))
@@ -44,9 +43,9 @@ combineNeeds <- function(directory) {
       
       x <-
         x %>%
-        mutate( CMHSP = CMHSP, FY = FY, Undup = Undup,
+        mutate( CMHSP = CMHSP, FileName = FileName, FY = FY, Undup = Undup,
                Item = gsub("[[:punct:]]", "", gsub(".*w","",Item))) %>%
-        select(FY, CMHSP, Item, Desc, DD, MIA, MIC, Other, Undup) %>% 
+        select(FY, CMHSP, FileName, Item, Desc, DD, MIA, MIC, Other, Undup) %>% 
         filter(!is.na(Item) & !is.na(Desc)) %>%
         filter(Item != "17" & Item != "2") %>%
         gather(Population, People, DD:Other) 
@@ -76,7 +75,7 @@ combineNeeds <- function(directory) {
   df <-
     df %>%
     mutate(FY = factor(FY), CMHSP = factor(CMHSP),
-           Desc = factor(Desc),
+           Desc = factor(Desc), FileName = factor(FileName),
            People = as.numeric(People))
     # %>% filter(!is.na(People))
   
@@ -125,13 +124,115 @@ combineNeeds <- function(directory) {
 #   library(gdata)
 #   df$Phase <- reorder(df$Phase, new.order=c("Start","Entry","Screening","Eligibility","Waiting"))
   
+  
+  
+  # recode filename to get standard CMHSP by using fuzzy string matching
+  CMHSP_code <- c(
+    "Allegan", "AuSable Valley", "Barry", "Bay-Arenac", "Berrien", "Clinton Eaton Ingham", "CMH for Central Michigan", "Manistee-Benzie",
+    "Copper Country", "Detroit-Wayne", "Genesee", "Gogebic", "Gratiot", "Muskegon", "Hiawatha", "Huron", "Ionia", "Kalamazoo", "Lapeer",
+    "Lenawee", "Lifeways", "Livingston", "Macomb", "Monroe", "Montcalm", "North Country", "Network180", "Newaygo", "Northern Lakes", 
+    "Northeast Michigan", "Northpointe", "Oakland", "Ottawa", "Pathways", "Pines", "Saginaw", "Sanilac", "Shiawassee", "St. Clair", 
+    "St. Joseph", "Summit Pointe", "Tuscola", "Van Buren", "Washtenaw", "West Michigan", "Woodlands" 
+  )
+  
+  FileName_raw <- df$FileName %>% unique()
+  
+  CMHSP_ref_jw <- 
+    stringdistmatrix(
+      FileName_raw, CMHSP_code, 
+      method = 'jw', p = 0.1, useNames = T
+    )  %>%
+    as.data.frame() %>%
+    mutate(rawtext = row.names(.)) %>%
+    group_by(rawtext) %>%
+    gather(coded_jw,score_jw,-rawtext) %>%
+    mutate(rank = row_number(score_jw)) %>%
+    # select match with lowest (best) score
+    filter(rank == min(rank)) %>%
+    select(-rank)
+  
+  CMHSP_ref_lcs <- 
+    # Create distance matrix computing string diff
+    stringdistmatrix(
+      FileName_raw, CMHSP_code, 
+      method = 'lcs', useNames = T
+    )  %>%
+    as.data.frame() %>%
+    mutate(rawtext = row.names(.)) %>%
+    group_by(rawtext) %>%
+    gather(coded_lcs,score_lcs,-rawtext) %>%
+    mutate(rank = row_number(score_lcs)) %>%
+    # select match with lowest (best) score
+    filter(rank == min(rank)) %>%
+    select(-rank)
+  
+  CMHSP_ref_osa <- 
+    # Create distance matrix computing string diff
+    stringdistmatrix(
+      FileName_raw, CMHSP_code, 
+      method = 'osa', useNames = T
+    )  %>%
+    as.data.frame() %>%
+    mutate(rawtext = row.names(.)) %>%
+    group_by(rawtext) %>%
+    gather(coded_osa,score_osa,-rawtext) %>%
+    mutate(rank = row_number(score_osa)) %>%
+    # select match with lowest (best) score
+    filter(rank == min(rank)) %>%
+    select(-rank)
+  
+  CMHSP_ref <-
+    CMHSP_ref_jw %>%
+    left_join(CMHSP_ref_lcs, by = "rawtext") %>%
+    left_join(CMHSP_ref_osa, by = "rawtext") %>%
+    mutate(
+      all_match = coded_jw == coded_lcs & coded_lcs == coded_osa,
+      # Keep only output where the top-ranking match 
+      # from all three algorithms match each other
+      FileName_coded = case_when(
+        all_match == T ~ coded_jw
+      )
+    ) %>%
+    select(rawtext,FileName_coded) %>%
+    mutate(
+      Exception_coded = case_when(
+        # change a few minor exceptions:
+        rawtext == "ausable" ~ "AuSable Valley", #originally Tuscola
+        rawtext == "central" ~ "CMH for Central Michigan", #originally Tuscola
+        rawtext == "centrawellness" ~ "Manistee-Benzie", #originally Tuscola
+        rawtext == "nlakes" ~ "Northern Lakes", #originally Tuscola
+        
+        # map the unmapped items:
+        rawtext %in% c("cei", "ceix") ~ "Clinton Eaton Ingham",
+        rawtext == "copper" ~ "Copper Country",
+        rawtext %in% c("detroit", "detroitx") ~ "Detroit-Wayne",
+        rawtext == "healthwest" ~ "Muskegon",
+        rawtext == "ncountry" ~ "North Country",
+        rawtext %in% c("northeast", "northeastx") ~ "Northeast Michigan",
+        rawtext %in% c("westmich", "westmichx") ~ "West Michigan"
+      ),
+      CMHSP_coded = case_when(
+        is.na(Exception_coded) ~ FileName_coded,
+        !is.na(Exception_coded) ~ Exception_coded
+      )
+    ) %>%
+    select(rawtext, CMHSP_coded)
+  
+  # identify any further unmapped names
+  if(sum(is.na(CMHSP_ref$CMHSP_coded))>0){
+    paste("The names below require manual review")
+    interviewer_review %>%
+      filter(is.na(CMHSP_coded)==T) %>%
+      select(rawtext) 
+  } else paste("All names have been mapped")
+  
   df <-
-  df %>% 
+    df %>%
     mutate(Item = factor(Item), Name = factor(Name), Phase = factor(Phase)) %>%
-    select(FY, CMHSP, Population, Phase, Name, Item, Desc, People, Undup)
+    select(FY, CMHSP, FileName, Population, Phase, Name, Item, Desc, People, Undup) %>%
+    # Map orig interviewer values to fuzzy-matched values (filtered for high similarity)
+    left_join(CMHSP_ref, by = c("FileName" = "rawtext"))
   
   return(df)
   
 }
-
-
