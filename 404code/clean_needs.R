@@ -1,12 +1,11 @@
 # library(plyr)
-library(dplyr)
-library(tidyr)
+library(dplyr); library(tidyr)
 
 # Source function from GitHub
 source("https://raw.githubusercontent.com/j-hagedorn/open404/master/404code/function_combineNeeds_v2.R")
 
 #needs <- combineNeeds(directory = "C:/Users/Josh/SkyDrive/Projects/NeedsAssessment/data")
-needs <- combineNeeds(directory = "C:/Users/Jeong KyuHyun/Documents/GitHub/open404/data/needs")
+needs <- combineNeeds(directory = "C:/Users/joshh/Documents/GitHub/open404/data/needs")
 
 # Others doing this would have to download .xls from the folder at:
 # "https://github.com/j-hagedorn/open404/tree/master/data/needs"
@@ -130,7 +129,7 @@ needs <- combineNeeds(directory = "C:/Users/Jeong KyuHyun/Documents/GitHub/open4
 #   group_by(CMHSP, FY) %>%
 #   summarise(n = n())
 
-  needs$PIHP<-recode(needs$CMHSP, "'Copper Country'='1';
+needs$PIHP <- recode(needs$CMHSP, "'Copper Country'='1';
                         'Network180'='3'; 
                      'Gogebic'='1';
                      'Hiawatha'='1';
@@ -180,7 +179,7 @@ needs <- combineNeeds(directory = "C:/Users/Jeong KyuHyun/Documents/GitHub/open4
   
   needs$PIHP <- as.factor(needs$PIHP)
   
-  needs$PIHPname<-recode(needs$PIHP, "'1'='Northcare';
+  needs$PIHPname <- recode(needs$PIHP, "'1'='Northcare';
                          '2'='NMRE';
                          '3'='LRP';
                          '4'='SWMBH';
