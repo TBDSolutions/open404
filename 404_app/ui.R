@@ -314,6 +314,15 @@ shinyUI(
         )
       )
     )
+    ),
+    navbarMenu(
+      "Service Needs",
+      tabPanel(
+        "Access Flow"
+      ),
+      tabPanel(
+        "Acess Metrics"
+      )
     )
   )
 )
