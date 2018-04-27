@@ -27,6 +27,9 @@ High level groupings of services into the following overall types: *"Care Coordi
 ### "Service"
 Lower level groupings of services into multiple types, each falling into one of the "ServiceType" groupings.
 
+### "short_description"
+A shortened description of the HCPCS code, drawn from the official CMS documentation.  See option "Current LCDs" from CMS site [here](https://www.cms.gov/medicare-coverage-database/downloads/downloadable-databases.aspx)
+
 ### "Description" 
 The name of the service, taken from the MDCH-generated 404 report.
 
@@ -67,7 +70,7 @@ The annual cost of the service as a % of the total annual cost of all services, 
 Cost per 1,000 people served by the CMHSP.  Uses the general formula *(Sum Of Cost/Unique Persons Served by CMHSP) x 1000*
 
 ### "Perc_Svd"
-Percentage of people served by the CMHSP who received this service (per year/population).
+Percentage of people served by the CMHSP who received this service (per year).
 
 ## 2010 to 2013 files only 
 
