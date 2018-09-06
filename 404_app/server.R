@@ -51,27 +51,27 @@ shinyServer(function(input, output) {
       ungroup() %>%
       group_by(FY) %>%
       mutate(
-        Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 1),
-        Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 1)
+        Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 5),
+        Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 5)
       ) %>%
       ungroup() 
     
-    # Calculating state average by selected org_grp    
+    # Calculating average by selected org_grp    
     st_avg <- df %>%
       group_by(FY) %>%
       summarize(
-        SumOfCases = mean(SumOfCases),
-        SumOfUnits = mean(SumOfUnits),
-        SumOfCost = mean(SumOfCost),
-        CostPerCase = mean(CostPerCase),
-        CostPerUnit = mean(CostPerUnit),
-        UnitPerCase = mean(UnitPerCase),
-        Cost1kSvd = mean(Cost1kSvd),
-        Cost_Perc_Tot = mean(Cost_Perc_Tot),
-        Perc_Svd = mean(Perc_Svd)
+        SumOfCases = mean(SumOfCases, na.rm = T),
+        SumOfUnits = mean(SumOfUnits, na.rm = T),
+        SumOfCost = mean(SumOfCost, na.rm = T),
+        CostPerCase = mean(CostPerCase, na.rm = T),
+        CostPerUnit = mean(CostPerUnit, na.rm = T),
+        UnitPerCase = mean(UnitPerCase, na.rm = T),
+        Cost1kSvd = mean(Cost1kSvd, na.rm = T),
+        Cost_Perc_Tot = mean(Cost_Perc_Tot, na.rm = T),
+        Perc_Svd = mean(Perc_Svd, na.rm = T)
       ) %>%
       mutate(
-        state = "State Average"
+        state = "Average"
       )
     
     if (input$org_type == "PIHP") {
