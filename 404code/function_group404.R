@@ -4,82 +4,96 @@
 
 # Takes as arg a Master df that has been processed by "function_read404.R"
 
+library(tidyverse)
+
 group404 <- function(Master) {
   # Removing punctuation from factor name in UnitType
   Master$UnitType <- gsub("[[:punct:]]","",Master$UnitType)
   
-  ## Formatting UnitType to be quantiative and standardized##
   
-  #NA =  non-numeric unit types
-  #For any time ranges, used highest value
-  #All values are based on 1.00 = 1 hour
-  
-  #install.packages('car')
-  library(car)
-  Master$Unit_Hours <-car::recode(Master$UnitType,
-                             "'' = NA;
-                             ' of items'= NA;
-                             ' of tests'= NA;
-                             ' of treatments'= NA;
-                             ' of units'= NA;
-                             ' of visits'= NA;
-                             '15 minutes'='.25';
-                             '15 Minutes'='.25';
-                             '30 Minutes'='.50';
-                             '30 Minutes or less'='.50';
-                             'Days'='24.00';
-                             'Encounter'= NA;
-                             'Encounter  Trip'= NA;
-                             'Encounter 2030 Min'='.50';
-                             'Encounter 4550 Min'='.83';
-                             'Encounter 7580 Min'='1.33';
-                             'Encounter Face-to-Face'= NA;
-                             'Evaluation'= NA;
-                             'Face to Face Contact'= NA;
-                             'Hour'='1.00';
-                             'Items'= NA;
-                             'Minutes'= NA;
-                             'Month'='720.00';
-                             'Per diem'='24.00';
-                             'Per Diem'='24.00';
-                             'Per mile'= NA;
-                             'Per Mile'= NA;
-                             'Per oneway trip'= NA;
-                             'Refer to code descriptions'= NA;
-                             'Service'= NA;
-                             'Up to 15 min'='.25';
-                             'Per Hour'='1.00';
-                             'Per Screen'= NA;
-                             'Per Test'= NA;
-                             '25 minutes'='.42';
-                             '35 Minutes'='.58';
-                             '50 Minutes'='.83';
-                             '70 Minutes'='1.17';
-                             'Direct Observation Encounter'= NA;
-                             'Each Additional 15 Minutes'='.25'; 
-                             'Encounter Trip  Per session One day partial day'='8.00';
-                             'Encounter Trip  Per session One day partial day'='8.00';
-                             'Encounter Trip Per session One night one session'='8.00';
-                             'Encounter FacetoFace generally less than 10 minutes'='.17';
-                             'Encounter Session at least 45 min'='.75';
-                             'First Hour'='1.00';
-                             'Month   Service'='720.00';
-                             'Per Service'= NA;
-                             'Per Item'= NA;
-                             'Per session One day partial day'='8.00';
-                             'Per session One night'='8.00';
-                             else = NA")
-  
-  Master$Unit_Hours <- as.numeric(Master$Unit_Hours)
-  
-  # Clean CPT / HCPCS codes
-  
-  Master <-
+  tst <-
     Master %>%
-    mutate(Code = ifelse(is.na(FirstOfHCPCS.Code) == T,
-                         yes = gsub("[[:punct:]].*","",FirstOfRevenue.Code),
-                         no = gsub("[[:punct:]].*","",FirstOfHCPCS.Code))) %>%
-    filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) %>%
+    # Clean UnitType var
+    mutate(
+      UnitType = str_replace_all(UnitType,"[[:punct:]]",""),
+      UnitType = str_squish(UnitType),
+      UnitType = str_to_lower(UnitType)
+    ) %>%
+    mutate(
+      # Formatting UnitHours to be quantiative and standardized
+      # For time ranges, use highest value; 1.00 = 1 hour
+      UnitHours = recode(
+        UnitType,
+        `encounter facetoface generally less than 10 minutes` = '0.17',
+        `15 minutes`         = '0.25',
+        `each additional 15 minutes` = '0.25', 
+        `up to 15 min`       = '0.25',
+        `25 minutes`         = '0.42',
+        `30 minutes or less` = '0.50',
+        `encounter 2030 min` = '0.50',
+        `35 minutes`         = '0.58',
+        `encounter session at least 45 min` = '0.75',
+        `encounter 4550 min` = '0.83',
+        `50 minutes`         = '0.83',
+        `hour`               = '1.00',
+        `first hour`         = '1.00',
+        `per hour`           = '1.00',
+        `70 minutes`         = '1.17',
+        `encounter 7580 min` = '1.33',
+        `encounter trip per session one day partial day` = '8.00',
+        `per session one night = one session`            = '8.00',
+        `per session one daypartial day = one session`   = '8.00',
+        `encounter trip per session one night = one session` = '8.00',
+        `encounter trip per session one daypartial day = one session` = '8.00',
+        `days`               = '24.00',
+        `per diem`           = '24.00',
+        `month`              = '720.00',
+        `month service`      = '720.00',
+        .default = NA_character_
+      ),
+      UnitHours = as.numeric(UnitHours),
+      # Change to standard types
+      UnitType = case_when(
+        UnitType %in% c(
+          "encounter 2030 min","encounter 4550 min","encounter 7580 min",
+          "first hour","each additional 15 minutes","15 minutes","30 minutes",
+          "30 minutes or less","hour","per diem","minutes","month","up to 15 min",
+          "50 minutes","70 minutes","25 minutes","35 minutes","per hour",
+          "encounter session at least 45 min","days","40 minutes","80 minutes",
+          "20 minutes","55 minutes","110 minutes","first 30 minutes","first 60 minutes",
+          "encounter facetoface generally less than 10 minutes","day","45 minutes",
+          "60 minutes","first 3074 min","each additional 30 minutes","10 minutes",
+          "month service","per date of service","per session one night = one session",
+          "per session one daypartial day = one session",
+          "encounter trip per session one night = one session",
+          "encounter trip per session one daypartial day = one session"
+        ) ~ "Time",
+        UnitType %in% c(
+          "of treatments","of visits","of units","encounter","face to face contact",                                       
+          "encounter facetoface","service","per service","direct observation encounter",
+          "evaluation","per screen","each procedure"
+        ) ~ "Encounter",
+        UnitType %in% c(
+          "of tests","of items","items","amount","item","per item","per test"
+        ) ~ "Item",
+        UnitType %in% c(
+          "per mile","per oneway trip","encounter trip"
+        ) ~ "Trip",
+        TRUE ~ NA_character_
+      )
+    ) %>%
+    # Clean CPT / HCPCS codes
+    mutate(
+      Code = ifelse(
+        is.na(FirstOfHCPCS.Code) == T,
+        yes = gsub("[[:punct:]].*","",FirstOfRevenue.Code),
+        no = gsub("[[:punct:]].*","",FirstOfHCPCS.Code)
+      )
+    ) %>%
+    filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) 
+  
+  
+  %>%
     mutate(Code2 = car::recode(FirstofService.Description,
                           "'Other' = 'Other';
                           'Peer Directed and Operated Support Services' = 'Peer';
@@ -112,7 +126,6 @@ group404 <- function(Master) {
   
   # Checking to make sure there are no missing HCPCS codes
   sum(is.na(Master$Code)) #Result is 0
-  
   
   #Grouping Service.Description into more general categories (variable named 'Service')
   Master$Service <- car::recode(Master$Code,
