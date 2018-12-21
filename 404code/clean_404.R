@@ -18,7 +18,7 @@ library(dplyr)
       ServiceType,Service,short_description,Description,Code,Code_Mod
     ) %>%
     summarize(
-      Unit_Hours = max(Unit_Hours),
+      Unit_Hours = max(UnitHours),
       SumOfCases = sum(SumOfCases),
       SumOfUnits = sum(SumOfUnits),
       SumOfCost = sum(SumOfCost)
