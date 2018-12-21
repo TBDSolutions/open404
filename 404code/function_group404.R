@@ -4,115 +4,128 @@
 
 # Takes as arg a Master df that has been processed by "function_read404.R"
 
+library(tidyverse)
+
 group404 <- function(Master) {
   # Removing punctuation from factor name in UnitType
-  Master$UnitType <- gsub("[[:punct:]]","",Master$UnitType)
-  
-  ## Formatting UnitType to be quantiative and standardized##
-  
-  #NA =  non-numeric unit types
-  #For any time ranges, used highest value
-  #All values are based on 1.00 = 1 hour
-  
-  #install.packages('car')
-  library(car)
-  Master$Unit_Hours <-car::recode(Master$UnitType,
-                             "'' = NA;
-                             ' of items'= NA;
-                             ' of tests'= NA;
-                             ' of treatments'= NA;
-                             ' of units'= NA;
-                             ' of visits'= NA;
-                             '15 minutes'='.25';
-                             '15 Minutes'='.25';
-                             '30 Minutes'='.50';
-                             '30 Minutes or less'='.50';
-                             'Days'='24.00';
-                             'Encounter'= NA;
-                             'Encounter  Trip'= NA;
-                             'Encounter 2030 Min'='.50';
-                             'Encounter 4550 Min'='.83';
-                             'Encounter 7580 Min'='1.33';
-                             'Encounter Face-to-Face'= NA;
-                             'Evaluation'= NA;
-                             'Face to Face Contact'= NA;
-                             'Hour'='1.00';
-                             'Items'= NA;
-                             'Minutes'= NA;
-                             'Month'='720.00';
-                             'Per diem'='24.00';
-                             'Per Diem'='24.00';
-                             'Per mile'= NA;
-                             'Per Mile'= NA;
-                             'Per oneway trip'= NA;
-                             'Refer to code descriptions'= NA;
-                             'Service'= NA;
-                             'Up to 15 min'='.25';
-                             'Per Hour'='1.00';
-                             'Per Screen'= NA;
-                             'Per Test'= NA;
-                             '25 minutes'='.42';
-                             '35 Minutes'='.58';
-                             '50 Minutes'='.83';
-                             '70 Minutes'='1.17';
-                             'Direct Observation Encounter'= NA;
-                             'Each Additional 15 Minutes'='.25'; 
-                             'Encounter Trip  Per session One day partial day'='8.00';
-                             'Encounter Trip  Per session One day partial day'='8.00';
-                             'Encounter Trip Per session One night one session'='8.00';
-                             'Encounter FacetoFace generally less than 10 minutes'='.17';
-                             'Encounter Session at least 45 min'='.75';
-                             'First Hour'='1.00';
-                             'Month   Service'='720.00';
-                             'Per Service'= NA;
-                             'Per Item'= NA;
-                             'Per session One day partial day'='8.00';
-                             'Per session One night'='8.00';
-                             else = NA")
-  
-  Master$Unit_Hours <- as.numeric(Master$Unit_Hours)
-  
-  # Clean CPT / HCPCS codes
-  
+
   Master <-
     Master %>%
-    mutate(Code = ifelse(is.na(FirstOfHCPCS.Code) == T,
-                         yes = gsub("[[:punct:]].*","",FirstOfRevenue.Code),
-                         no = gsub("[[:punct:]].*","",FirstOfHCPCS.Code))) %>%
+    # Clean UnitType var
+    mutate(
+      UnitType = str_replace_all(UnitType,"[[:punct:]]",""),
+      UnitType = str_squish(UnitType),
+      UnitType = str_to_lower(UnitType)
+    ) %>%
+    mutate(
+      # Formatting UnitHours to be quantiative and standardized
+      # For time ranges, use highest value; 1.00 = 1 hour
+      UnitHours = recode(
+        UnitType,
+        `encounter facetoface generally less than 10 minutes` = '0.17',
+        `15 minutes`         = '0.25',
+        `each additional 15 minutes` = '0.25', 
+        `up to 15 min`       = '0.25',
+        `25 minutes`         = '0.42',
+        `30 minutes or less` = '0.50',
+        `encounter 2030 min` = '0.50',
+        `35 minutes`         = '0.58',
+        `encounter session at least 45 min` = '0.75',
+        `encounter 4550 min` = '0.83',
+        `50 minutes`         = '0.83',
+        `hour`               = '1.00',
+        `first hour`         = '1.00',
+        `per hour`           = '1.00',
+        `70 minutes`         = '1.17',
+        `encounter 7580 min` = '1.33',
+        `encounter trip per session one day partial day` = '8.00',
+        `per session one night = one session`            = '8.00',
+        `per session one daypartial day = one session`   = '8.00',
+        `encounter trip per session one night = one session` = '8.00',
+        `encounter trip per session one daypartial day = one session` = '8.00',
+        `days`               = '24.00',
+        `per diem`           = '24.00',
+        `month`              = '720.00',
+        `month service`      = '720.00',
+        .default = NA_character_
+      ),
+      UnitHours = as.numeric(UnitHours),
+      # Change to standard types
+      UnitType = case_when(
+        UnitType %in% c(
+          "encounter 2030 min","encounter 4550 min","encounter 7580 min",
+          "first hour","each additional 15 minutes","15 minutes","30 minutes",
+          "30 minutes or less","hour","per diem","minutes","month","up to 15 min",
+          "50 minutes","70 minutes","25 minutes","35 minutes","per hour",
+          "encounter session at least 45 min","days","40 minutes","80 minutes",
+          "20 minutes","55 minutes","110 minutes","first 30 minutes","first 60 minutes",
+          "encounter facetoface generally less than 10 minutes","day","45 minutes",
+          "60 minutes","first 3074 min","each additional 30 minutes","10 minutes",
+          "month service","per date of service","per session one night = one session",
+          "per session one daypartial day = one session",
+          "encounter trip per session one night = one session",
+          "encounter trip per session one daypartial day = one session"
+        ) ~ "Time",
+        UnitType %in% c(
+          "of treatments","of visits","of units","encounter","face to face contact",                                       
+          "encounter facetoface","service","per service","direct observation encounter",
+          "evaluation","per screen","each procedure"
+        ) ~ "Encounter",
+        UnitType %in% c(
+          "of tests","of items","items","amount","item","per item","per test"
+        ) ~ "Item",
+        UnitType %in% c(
+          "per mile","per oneway trip","encounter trip"
+        ) ~ "Trip",
+        TRUE ~ NA_character_
+      )
+    ) %>%
+    # Clean CPT / HCPCS codes
+    mutate(
+      Code = ifelse(
+        is.na(FirstOfHCPCS.Code) == T,
+        yes = gsub("[[:punct:]].*","",FirstOfRevenue.Code),
+        no = gsub("[[:punct:]].*","",FirstOfHCPCS.Code)
+      )
+    ) %>%
     filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) %>%
-    mutate(Code2 = car::recode(FirstofService.Description,
-                          "'Other' = 'Other';
-                          'Peer Directed and Operated Support Services' = 'Peer';
-                          'Pharmacy (Drugs and Other Biologicals)' = 'Pharm'"),
-           Code = ifelse(is.na(Code) == T,
-                         yes = Code2,
-                         no = as.character(Code)),
-           Code = car::recode(Code, 
-                         "'00104' = '0104'; 
-                         '104' = '0104';
-                         '102' = '0102';
-                         '105' = '0105';
-                         '370' = '0370';
-                         '450' = '0450';
-                         '762' = '0762';
-                         '901' = '0901';
-                         '90791\n' = '90791';
-                         '912' = '0912';
-                         '913' = '0913'"),
-           Code = as.factor(gsub("[\r\n]","",Code)), # remove line breaks
-           # Make new var concat Code / Modifier. Most granular level of service
-           Code_Mod = paste0(Code,FirstOfModifier, sep = "", collapse = NULL),
-           Code_Mod = as.factor(gsub("NA", "", Code_Mod)) # Remove NA values 
-           ) %>%
-    select(CMHSP:Population, Description = FirstofService.Description,
-           Code, Modifier = FirstOfModifier, Code_Mod, Unit_Hours,
-           SumOfCases:UnitPerCase) %>%
+    mutate(
+      Code2 = recode(
+        FirstofService.Description,
+        `Other` = 'Other',
+        `Peer Directed and Operated Support Services` = 'Peer',
+        `Pharmacy (Drugs and Other Biologicals)` = 'Pharm'
+      ),
+      Code = ifelse(is.na(Code) == T,yes = Code2,no = as.character(Code)),
+      Code = recode(
+        Code, 
+        `00104` = '0104', 
+        `104` = '0104',
+        `102` = '0102',
+        `105` = '0105',
+        `370` = '0370',
+        `450` = '0450',
+        `762` = '0762',
+        `901` = '0901',
+        `90791\n` = '90791',
+        `912` = '0912',
+        `913` = '0913'
+      ),
+      Code = as.factor(gsub("[\r\n]","",Code)), # remove line breaks
+      # Make new var concat Code / Modifier. Most granular level of service
+      Code_Mod = paste0(Code,FirstOfModifier, sep = "", collapse = NULL),
+      Code_Mod = as.factor(gsub("NA", "", Code_Mod)) # Remove NA values 
+    ) %>%
+    select(
+      CMHSP:Population, Description = FirstofService.Description,
+      Code, Modifier = FirstOfModifier, Code_Mod, UnitType, UnitHours,
+      SumOfCases:UnitPerCase
+    ) %>%
     droplevels()
   
   
   # Checking to make sure there are no missing HCPCS codes
   sum(is.na(Master$Code)) #Result is 0
-  
   
   #Grouping Service.Description into more general categories (variable named 'Service')
   Master$Service <- car::recode(Master$Code,
@@ -220,6 +233,16 @@ group404 <- function(Master) {
                           '92521'='OT/PT/SLT';
                           '92522'='OT/PT/SLT';
                           '92523'='OT/PT/SLT';
+                          '92607'='OT/PT/SLT';
+                          '92608'='OT/PT/SLT';
+                          '97161'='OT/PT/SLT';
+                          '97162'='OT/PT/SLT';
+                          '97163'='OT/PT/SLT';
+                          '97164'='OT/PT/SLT';
+                          '97165'='OT/PT/SLT';
+                          '97166'='OT/PT/SLT';
+                          '97167'='OT/PT/SLT';
+                          '97168'='OT/PT/SLT';
                           'G0177'='Family Services';
                           'S5110'='Family Services';
                           'S5111'='Family Services';
@@ -233,10 +256,12 @@ group404 <- function(Master) {
                           'T1016'='Supports Coordination';
                           'T1017'='Case Management';
                           'T2023'='Case Management';
+                          'T1007'='Case Management';
                           'H0023'='Peer Services';
                           'H0038'='Peer Services';
                           'H0046'='Peer Services';
                           '118' = 'Peer Services';
+                          'Peer' = 'Peer Services';
                           'H2030'='Clubhouse';
                           'T1012'='Peer Services';
                           'A0080'='Transportation';
@@ -396,6 +421,8 @@ group404 <- function(Master) {
                           'T1002'='Health Services';
                           'T1003'='Health Services';
                           '97811'='Health Services';
+                          '99304'='Health Services';
+                          '99306'='Health Services';
                           'K0739'='Ancillary Hospital Services';
                           'ALL'='Other';
                           '98'='Other';
@@ -406,7 +433,13 @@ group404 <- function(Master) {
                           '100'='Inpatient Psychiatric Hospital';
                           '39'='Inpatient Psychiatric Hospital';
                           '40'='Inpatient Psychiatric Hospital';
+                          '144'='Inpatient Psychiatric Hospital';
+                          'Local Psychiatric Hospital/Acute Community'='Inpatient Psychiatric Hospital';
+                          'Local Psychiatric Hospital/IMD'='Inpatient Psychiatric Hospital';
+                          'Cost Estimates of Current Year IBNR/Accrual Local Psychiatric Hospital/Acute Community'='Inpatient Psychiatric Hospital';
+                          'Cost Estimates of Current Year IBNR/Accrual Local Psychiatric Hospital/IMD'='Inpatient Psychiatric Hospital';
                           '0901'='Ancillary Hospital Services';
+                          '710'='Ancillary Hospital Services';
                           '0370'='Ancillary Hospital Services';
                           '0450'='Ancillary Hospital Services';
                           '450'='Ancillary Hospital Services';
@@ -422,6 +455,7 @@ group404 <- function(Master) {
                           '0102'='Peer Services';
                           '0105'='Pharmaceuticals';
                           '121'='Pharmaceuticals';
+                          'Pharm'='Pharmaceuticals';
                           '0762'='Crisis Services';
                           '762'='Crisis Services';
                           '0912'='Partial Hospitalization';
@@ -460,8 +494,28 @@ group404 <- function(Master) {
                           '99343'='Assessment';
                           '99344'='Assessment';
                           '99345'='Assessment';
+                          '80305'='Assessment';
+                          'Q3014'='Telemedicine';
+                          '0364T'='Autism Services';
+                          '0365T'='Autism Services';
+                          '0369T'='Autism Services';
+                          '0368T'='Autism Services';
+                          '0359T'='Autism Services';
+                          '0363T'='Autism Services';
+                          '0362T'='Autism Services';
+                          '0371T'='Autism Services';
+                          '0374T'='Autism Services';
+                          '0373T'='Autism Services';
+                          '0370T'='Autism Services';
+                          '0367T'='Autism Services';
+                          '0366T'='Autism Services';
+                          '0372T'='Autism Services';
                           else = 'Ungrouped'")
   
+  
+
+  
+
   
   #Grouping Service into even more general categories (variable named 'ServiceType')
   Master$ServiceType <- car::recode(Master$Service,

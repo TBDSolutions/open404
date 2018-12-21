@@ -18,7 +18,7 @@ library(dplyr)
       ServiceType,Service,short_description,Description,Code,Code_Mod
     ) %>%
     summarize(
-      Unit_Hours = max(Unit_Hours),
+      Unit_Hours = max(UnitHours),
       SumOfCases = sum(SumOfCases),
       SumOfUnits = sum(SumOfUnits),
       SumOfCost = sum(SumOfCost)
@@ -53,7 +53,7 @@ library(dplyr)
 #   tst <- calc404pop(census_key=census_key)
   
 # Output Master .csv file
-  write.csv(Master,"../data/clean/Master.csv", row.names = F)
+  write_csv(Master,"../data/clean/Master.csv")
 # Output Master .feather file
   feather::write_feather(Master,"../data/clean/Master.feather")
 
