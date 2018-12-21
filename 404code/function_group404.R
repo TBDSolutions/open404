@@ -233,6 +233,16 @@ group404 <- function(Master) {
                           '92521'='OT/PT/SLT';
                           '92522'='OT/PT/SLT';
                           '92523'='OT/PT/SLT';
+                          '92607'='OT/PT/SLT';
+                          '92608'='OT/PT/SLT';
+                          '97161'='OT/PT/SLT';
+                          '97162'='OT/PT/SLT';
+                          '97163'='OT/PT/SLT';
+                          '97164'='OT/PT/SLT';
+                          '97165'='OT/PT/SLT';
+                          '97166'='OT/PT/SLT';
+                          '97167'='OT/PT/SLT';
+                          '97168'='OT/PT/SLT';
                           'G0177'='Family Services';
                           'S5110'='Family Services';
                           'S5111'='Family Services';
@@ -246,10 +256,12 @@ group404 <- function(Master) {
                           'T1016'='Supports Coordination';
                           'T1017'='Case Management';
                           'T2023'='Case Management';
+                          'T1007'='Case Management';
                           'H0023'='Peer Services';
                           'H0038'='Peer Services';
                           'H0046'='Peer Services';
                           '118' = 'Peer Services';
+                          'Peer' = 'Peer Services';
                           'H2030'='Clubhouse';
                           'T1012'='Peer Services';
                           'A0080'='Transportation';
@@ -409,6 +421,8 @@ group404 <- function(Master) {
                           'T1002'='Health Services';
                           'T1003'='Health Services';
                           '97811'='Health Services';
+                          '99304'='Health Services';
+                          '99306'='Health Services';
                           'K0739'='Ancillary Hospital Services';
                           'ALL'='Other';
                           '98'='Other';
@@ -419,7 +433,13 @@ group404 <- function(Master) {
                           '100'='Inpatient Psychiatric Hospital';
                           '39'='Inpatient Psychiatric Hospital';
                           '40'='Inpatient Psychiatric Hospital';
+                          '144'='Inpatient Psychiatric Hospital';
+                          'Local Psychiatric Hospital/Acute Community'='Inpatient Psychiatric Hospital';
+                          'Local Psychiatric Hospital/IMD'='Inpatient Psychiatric Hospital';
+                          'Cost Estimates of Current Year IBNR/Accrual Local Psychiatric Hospital/Acute Community'='Inpatient Psychiatric Hospital';
+                          'Cost Estimates of Current Year IBNR/Accrual Local Psychiatric Hospital/IMD'='Inpatient Psychiatric Hospital';
                           '0901'='Ancillary Hospital Services';
+                          '710'='Ancillary Hospital Services';
                           '0370'='Ancillary Hospital Services';
                           '0450'='Ancillary Hospital Services';
                           '450'='Ancillary Hospital Services';
@@ -435,6 +455,7 @@ group404 <- function(Master) {
                           '0102'='Peer Services';
                           '0105'='Pharmaceuticals';
                           '121'='Pharmaceuticals';
+                          'Pharm'='Pharmaceuticals';
                           '0762'='Crisis Services';
                           '762'='Crisis Services';
                           '0912'='Partial Hospitalization';
@@ -473,8 +494,28 @@ group404 <- function(Master) {
                           '99343'='Assessment';
                           '99344'='Assessment';
                           '99345'='Assessment';
+                          '80305'='Assessment';
+                          'Q3014'='Telemedicine';
+                          '0364T'='Autism Services';
+                          '0365T'='Autism Services';
+                          '0369T'='Autism Services';
+                          '0368T'='Autism Services';
+                          '0359T'='Autism Services';
+                          '0363T'='Autism Services';
+                          '0362T'='Autism Services';
+                          '0371T'='Autism Services';
+                          '0374T'='Autism Services';
+                          '0373T'='Autism Services';
+                          '0370T'='Autism Services';
+                          '0367T'='Autism Services';
+                          '0366T'='Autism Services';
+                          '0372T'='Autism Services';
                           else = 'Ungrouped'")
   
+  
+
+  
+
   
   #Grouping Service into even more general categories (variable named 'ServiceType')
   Master$ServiceType <- car::recode(Master$Service,
