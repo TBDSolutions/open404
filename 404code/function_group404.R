@@ -8,10 +8,8 @@ library(tidyverse)
 
 group404 <- function(Master) {
   # Removing punctuation from factor name in UnitType
-  Master$UnitType <- gsub("[[:punct:]]","",Master$UnitType)
-  
-  
-  tst <-
+
+  Master <-
     Master %>%
     # Clean UnitType var
     mutate(
@@ -90,37 +88,39 @@ group404 <- function(Master) {
         no = gsub("[[:punct:]].*","",FirstOfHCPCS.Code)
       )
     ) %>%
-    filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) 
-  
-  
-  %>%
-    mutate(Code2 = car::recode(FirstofService.Description,
-                          "'Other' = 'Other';
-                          'Peer Directed and Operated Support Services' = 'Peer';
-                          'Pharmacy (Drugs and Other Biologicals)' = 'Pharm'"),
-           Code = ifelse(is.na(Code) == T,
-                         yes = Code2,
-                         no = as.character(Code)),
-           Code = car::recode(Code, 
-                         "'00104' = '0104'; 
-                         '104' = '0104';
-                         '102' = '0102';
-                         '105' = '0105';
-                         '370' = '0370';
-                         '450' = '0450';
-                         '762' = '0762';
-                         '901' = '0901';
-                         '90791\n' = '90791';
-                         '912' = '0912';
-                         '913' = '0913'"),
-           Code = as.factor(gsub("[\r\n]","",Code)), # remove line breaks
-           # Make new var concat Code / Modifier. Most granular level of service
-           Code_Mod = paste0(Code,FirstOfModifier, sep = "", collapse = NULL),
-           Code_Mod = as.factor(gsub("NA", "", Code_Mod)) # Remove NA values 
-           ) %>%
-    select(CMHSP:Population, Description = FirstofService.Description,
-           Code, Modifier = FirstOfModifier, Code_Mod, Unit_Hours,
-           SumOfCases:UnitPerCase) %>%
+    filter(SumOfCases > 0 | SumOfCases > 0 | SumOfCost > 0) %>%
+    mutate(
+      Code2 = recode(
+        FirstofService.Description,
+        `Other` = 'Other',
+        `Peer Directed and Operated Support Services` = 'Peer',
+        `Pharmacy (Drugs and Other Biologicals)` = 'Pharm'
+      ),
+      Code = ifelse(is.na(Code) == T,yes = Code2,no = as.character(Code)),
+      Code = recode(
+        Code, 
+        `00104` = '0104', 
+        `104` = '0104',
+        `102` = '0102',
+        `105` = '0105',
+        `370` = '0370',
+        `450` = '0450',
+        `762` = '0762',
+        `901` = '0901',
+        `90791\n` = '90791',
+        `912` = '0912',
+        `913` = '0913'
+      ),
+      Code = as.factor(gsub("[\r\n]","",Code)), # remove line breaks
+      # Make new var concat Code / Modifier. Most granular level of service
+      Code_Mod = paste0(Code,FirstOfModifier, sep = "", collapse = NULL),
+      Code_Mod = as.factor(gsub("NA", "", Code_Mod)) # Remove NA values 
+    ) %>%
+    select(
+      CMHSP:Population, Description = FirstofService.Description,
+      Code, Modifier = FirstOfModifier, Code_Mod, UnitType, UnitHours,
+      SumOfCases:UnitPerCase
+    ) %>%
     droplevels()
   
   
