@@ -24,7 +24,7 @@ shinyUI(
                 variation across the state for vulnerable populations.  This 
                 application has been developed by"
               ),
-              img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),p(tags$a(href = "https://www.tbdsolutions.com/","©2019")),
+              img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2019"))),
               br(),
               br(),
               tags$strong("license", style = "font-size: 125%;"),
