@@ -24,7 +24,7 @@ shinyUI(
                 variation across the state for vulnerable populations.  This 
                 application has been developed by"
               ),
-              img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),
+              img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),p(tags$a(href = "https://www.tbdsolutions.com/","©2019")),
               br(),
               br(),
               tags$strong("license", style = "font-size: 125%;"),
@@ -228,7 +228,7 @@ shinyUI(
             label = tags$strong("Press the play button below to see how the \ndata changes year over year"
                            , style = "font-size: 90%;"),
             min = 2006,
-            max = 2016,
+            max = 2017,
             value = 2006,
             sep = "",
             animate = animationOptions(loop = FALSE, interval = 1000)
@@ -304,7 +304,7 @@ shinyUI(
             label = tags$strong("Press the play button below to see how the \ndata changes year over year"
                                 , style = "font-size: 90%;"),
             min = 2006,
-            max = 2016,
+            max = 2017,
             value = 2006,
             sep = "",
             animate = animationOptions(loop = FALSE, interval = 1000)
