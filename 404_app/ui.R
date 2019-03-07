@@ -1,3 +1,6 @@
+#To update the data yearly: 2 sliders and data
+#
+
 # ui.R #
 
 shinyUI(
@@ -81,7 +84,14 @@ shinyUI(
               ),
               br(),
               p("You can download the 404 data used in this application below:"),
-              downloadButton('downloadData', 'Download')
+              downloadButton('downloadData', 'Download'),
+              tags$small(
+                tags$i(
+                  paste("Data Updated through",max(as.character(data404$FY)
+                                                   )
+                        )
+                  )
+                )
             )
           )
         )
