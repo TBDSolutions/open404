@@ -85,6 +85,7 @@ shinyUI(
               br(),
               p("You can download the 404 data used in this application below:"),
               downloadButton('downloadData', 'Download'),
+              br(),
               tags$small(
                 tags$i(
                   paste("Data Updated through",max(as.character(data404$FY)
