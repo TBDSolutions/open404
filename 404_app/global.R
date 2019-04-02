@@ -12,7 +12,11 @@ library(scales)
 
 #### Read datasets ####
 
-data404 <- read_feather("../data/clean/Master.feather")
+data404 <- read_feather("data/clean/Master.feather") %>%
+  mutate(
+    PIHPname = as.factor(PIHPname),
+    CMHSP = as.factor(CMHSP)
+  )
 
 service_groups <- unique(data404[,c('ServiceType', 'Service', 'short_description', 'Description', 'Code', 'Code_Mod')])
 
