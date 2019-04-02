@@ -1,6 +1,3 @@
-#To update the data yearly: 2 sliders and data
-#
-
 # ui.R #
 
 shinyUI(
