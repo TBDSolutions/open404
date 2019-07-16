@@ -180,7 +180,7 @@ shinyUI(
             ),
             checkboxInput(
               inputId = "state_avg",
-              label = tags$p("Include a bubble for the State Average?"),
+              label = tags$p("Include a bubble for the average?"),
               value = FALSE,
               width = NULL
             ),
