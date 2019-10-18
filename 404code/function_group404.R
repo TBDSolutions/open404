@@ -641,7 +641,6 @@ group404 <- function(Master) {
   hcpcs_file <- readr::read_csv("~/GitHub/open404/data/hcpc_code_lookup.csv")
   
   hcpcs_file %<>% 
-    #semi_join(locus_to_svs, by = c("hcpc_code_id" = "proccode")) %>%
     group_by(hcpc_code_id) %>%
     filter(hcpc_code_version == max(hcpc_code_version)) %>%
     select(hcpc_code_id, short_description) 

@@ -2,11 +2,11 @@
 library(dplyr)
 
 # Combine 404 datasets
-  source("function_read404.R")
-  Master <- combine404("../data/raw")
+  source("404code/function_read404.R")
+  Master <- combine404("data/raw")
 
 # Clean CPT/HCPCS and apply groupings
-  source("function_group404.R")
+  source("404code/function_group404.R")
   Master <- group404(Master)
 
 # Group for consistent factor levels, calc units and cost at Code_Mod level

@@ -1,13 +1,3 @@
-#############################################################
-########             open404                        ######### 
-########                                            #########
-########      Formats multiple years of MDCH CMH    #########
-########      Sub-Element Cost Report(404) Data     #########
-########                                            #########
-########             by J. Hagedorn                 #########
-########                                            #########
-#############################################################
-
 ## Currently, the cost reports are separated based on year and population
 ## To have a meaningful master dataset, first have to compile and format each individual dataset
 
