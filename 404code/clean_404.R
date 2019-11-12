@@ -1,5 +1,5 @@
 
-library(dplyr)
+library(tidyverse)
 
 # Combine 404 datasets
   source("404code/function_read404.R")
@@ -53,15 +53,18 @@ library(dplyr)
 #   tst <- calc404pop(census_key=census_key)
   
 # Output Master .csv file
-  write_csv(Master,"../data/clean/Master.csv")
+  write_csv(Master,"data/clean/Master.csv")
 # Output Master .feather file
-  feather::write_feather(Master,"../data/clean/Master.feather")
+  feather::write_feather(Master,"data/clean/Master.feather")
 
 # Output Service Groups .csv file
   service_groups <- 
     Master %>% 
-    group_by(ServiceType,Service,short_description,Description,Code,Code_Mod) %>%
+    group_by(
+      ServiceType,Service,short_description,
+      Description,Code,Code_Mod,Unit_Hours
+    ) %>%
     summarize(n = n())
   
-  write.csv(service_groups,"../data/clean/Service_Groups.csv", row.names = F)
+  write_csv(service_groups,"data/clean/Service_Groups.csv")
 

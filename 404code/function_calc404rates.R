@@ -9,6 +9,8 @@ calc404rates <- function(df) {
   
   # Read in unique counts of people served from 2006-2014
   unique <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/TotalServedAnnual.csv")
+  # unique <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/update-2018/data/TotalServedAnnual.csv")
+  
   
   # Create unique keys...
   df$Key <- paste(df$FY,df$CMHSP, sep = "", collapse = NULL)
