@@ -118,6 +118,15 @@ clean404 <- function(df) {
       ),
       # Remove pesky carriage returns
       code = str_replace_all(code,"\n|\r","")
+    ) %>%
+    ## Standardize CMHSP names
+    mutate(
+      cmhsp = recode(
+        cmhsp,
+        `LifeWays` = 'Lifeways',
+        `Manistee-Benzie (Centra Wellness)` = 'Manistee-Benzie',
+        `Muskegon (HealthWest)` = 'Muskegon'
+      )
     )
   
   return(df)
