@@ -1,0 +1,308 @@
+Code,mod_desc
+0100,Inpatient Psychiatric Hospital
+0104,Additional Codes
+0114,Inpatient Psychiatric Hospital
+0250,Inpatient Hospital Ancillary Services
+0270,Inpatient Hospital Ancillary Services
+0300,Inpatient Hospital Ancillary Services
+0370,Ect Anesthesia
+0410,Inpatient Hospital Ancillary Services
+0430,Inpatient Hospital Ancillary Services
+0450,Inpatient Hospital Ancillary Services
+0460,Inpatient Hospital Ancillary Services
+0636,Inpatient Hospital Ancillary Services
+0730,Inpatient Hospital Ancillary Services
+0762,Crisis Observation Care
+0900,Inpatient Hospital Ancillary Services
+0901,Additional Codes
+0912,Outpatient Partial Hospitalization
+0913,Outpatient Partial Hospitalization
+231,Inpatient Psychiatric Hospital
+232,Inpatient Psychiatric Hospital
+80100,Drug Screen For Methadone Clients Only
+80101,Drug Screen For Methadone Clients Only
+82075,Alcohol Breath Test For Methadone Clients Only
+89,Other
+90772,Medication Administration
+90782,Medication Administration
+90785,Outpatient Therapy
+90788,Medication Administration
+90791,Assessment
+90792,Assessment
+90801,Outpatient Therapy
+90802,Outpatient Therapy
+90804,Outpatient Therapy
+90805,Outpatient Therapy
+90806,Outpatient Therapy
+90807,Outpatient Therapy
+90808,Outpatient Therapy
+90809,Outpatient Therapy
+90810,Outpatient Therapy
+90811,Outpatient Therapy
+90812,Outpatient Therapy
+90813,Outpatient Therapy
+90814,Outpatient Therapy
+90815,Outpatient Therapy
+90816,Outpatient Therapy
+90817,Outpatient Therapy
+90818,Outpatient Therapy
+90819,Outpatient Therapy
+90821,Outpatient Therapy
+90822,Outpatient Therapy
+90823,Outpatient Therapy
+90824,Outpatient Therapy
+90826,Outpatient Therapy
+90827,Outpatient Therapy
+90828,Outpatient Therapy
+90829,Outpatient Therapy
+90832,Outpatient Therapy
+90833,Outpatient Therapy
+90834,Outpatient Therapy
+90836,Outpatient Therapy
+90837,Outpatient Therapy
+90838,Outpatient Therapy
+90839,Outpatient Therapy
+90840,Outpatient Therapy
+90846,Outpatient Therapy
+90847,Outpatient Therapy
+90849,Outpatient Therapy
+90853,Outpatient Therapy
+90857,Outpatient Therapy
+90862,Outpatient Therapy
+90870,Outpatient Therapy
+90887,Outpatient Therapy
+92506,Speech & Language Therapy
+92507,Speech & Language Therapy
+92508,Speech & Language Therapy
+92521,Speech & Language Therapy
+92522,Speech & Language Therapy
+92523,Speech & Language Therapy
+92524,Speech & Language Therapy
+92526,Speech & Language Therapy
+92610,Speech & Language Therapy
+93,Peer Directed And Operated Support Services
+96100,Assessment
+96101,Psychological Testing
+96102,Psychological Testing
+96103,Psychological Testing
+96105,Assessment
+96110,Assessment
+96111,Assessment
+96115,Assessment
+96116,Neurobehavioral Status Exam
+96117,Assessment
+96118,Neuropsychological Testing
+96119,Neuropsychological Testing
+96120,Neuropsychological Testing
+96372,Medication Administration
+97,Pharmacy
+97001,Occupational And Physical Therapy
+97002,Occupational And Physical Therapy
+97003,Occupational And Physical Therapy
+97004,Occupational And Physical Therapy
+97110,Occupational And Physical Therapy
+97112,Occupational And Physical Therapy
+97113,Occupational And Physical Therapy
+97116,Occupational And Physical Therapy
+97124,Occupational And Physical Therapy
+97140,Occupational And Physical Therapy
+97150,Occupational And Physical Therapy
+97504,Occupational And Physical Therapy
+97530,Occupational And Physical Therapy
+97532,Occupational And Physical Therapy
+97533,Occupational And Physical Therapy
+97535,Occupational And Physical Therapy
+97537,Occupational And Physical Therapy
+97542,Occupational And Physical Therapy
+97703,Occupational And Physical Therapy
+97750,Occupational And Physical Therapy
+97755,Occupational And Physical Therapy
+97760,Occupational And Physical Therapy
+97761,Prosthetic Training
+97762,C/O For Orthotic/Prosth Use
+97802,Assessment
+97803,Assessment
+97804,Health Services
+97810,Substance Abuse Acupuncture
+97811,Substance Abuse Acupuncture
+99201,Psychiatric Evaluation And Management
+99202,Psychiatric Evaluation And Management
+99203,Psychiatric Evaluation And Management
+99204,Psychiatric Evaluation And Management
+99205,Psychiatric Evaluation And Management
+99211,Psychiatric Evaluation And Management
+99212,Psychiatric Evaluation And Management
+99213,Psychiatric Evaluation And Management
+99214,Psychiatric Evaluation And Management
+99215,Psychiatric Evaluation And Management
+99221,Psychiatric Evaluation And Management
+99222,Psychiatric Evaluation And Management
+99223,Psychiatric Evaluation And Management
+99224,Psychiatric Evaluation And Management
+99231,Psychiatric Evaluation And Management
+99232,Psychiatric Evaluation And Management
+99233,Psychiatric Evaluation And Management
+99238,Psychiatric Evaluation And Management
+99241,Psychiatric Evaluation And Management
+99242,Psychiatric Evaluation And Management
+99243,Psychiatric Evaluation And Management
+99244,Psychiatric Evaluation And Management
+99245,Psychiatric Evaluation And Management
+99251,Psychiatric Evaluation And Management
+99252,Psychiatric Evaluation And Management
+99253,Psychiatric Evaluation And Management
+99254,Psychiatric Evaluation And Management
+99255,Psychiatric Evaluation And Management
+99261,Psychiatric Evaluation And Management
+99262,Psychiatric Evaluation And Management
+99263,Psychiatric Evaluation And Management
+99274,Psychiatric Evaluation And Management
+99305,Psychiatric Evaluation And Management
+99307,Psychiatric Evaluation And Management
+99308,Psychiatric Evaluation And Management
+99309,Psychiatric Evaluation And Management
+99310,Psychiatric Evaluation And Management
+99324,Psychiatric Evaluation And Management
+99325,Psychiatric Evaluation And Management
+99326,Psychiatric Evaluation And Management
+99327,Psychiatric Evaluation And Management
+99328,Psychiatric Evaluation And Management
+99334,Psychiatric Evaluation And Management
+99335,Psychiatric Evaluation And Management
+99336,Psychiatric Evaluation And Management
+99337,Psychiatric Evaluation And Management
+99341,Psychiatric Evaluation And Management
+99347,Psychiatric Evaluation And Management
+99348,Psychiatric Evaluation And Management
+99349,Psychiatric Evaluation And Management
+99350,Psychiatric Evaluation And Management
+99506,Medication Administration
+99605,Psychiatric Evaluation And Management
+A0080,Transportation
+A0090,Transportation
+A0100,Transportation
+A0110,Transportation
+A0120,Transportation
+A0130,Transportation
+A0160,Transportation
+A0170,Transportation
+A0425,Additional Codes
+A0427,Additional Codes
+A0428,Additional Codes
+ALL,Aggregate For 'J' Codes
+D0150,General Dental Services
+D0180,Comp Periodontal Evaluation
+D1110,Prophylaxis Adult
+D2330,Resin Based Comp
+D2332,Resin Based Comp
+D2391,Resin Based Comp
+E1399,Enhanced Medical Equipment
+G0176,Activity Therapy
+G0177,Family Training
+G0351,Medication Administration
+G0409,Substance Abuse Recovery Support Services
+H0001,Assessment
+H0002,Assessment
+H0003,Substance Abuse Laboratory
+H0004,Substance Abuse Outpatient Treatment
+H0005,Substance Abuse Outpatient Treatment
+H0006,Substance Abuse Case Management
+H0010,Substance Abuse Sub Acute Detoxification
+H0012,Substance Abuse Sub Acute Detoxification
+H0014,Substance Abuse Sub Acute Detoxification
+H0015,Substance Abuse Outpatient Care
+H0018,Crisis Residential Services
+H0019,Substance Abuse Residential
+H0020,Substance Abuse Methadone
+H0022,Substance Abuse Early Intervention
+H0023,Peer Directed And Operated Support Services
+H0025,Prevention Services
+H0030,Crisis Intervention
+H0031,Assessment
+H0032,Treatment Planning
+H0033,Substance Abuse Pharmalogical Support
+H0034,Health Services
+H0036,Home Based Services
+H0038,Peer Directed And Operated Support Services
+H0039,Assertive Community Treatment
+H0043,Community Living Supports In Independent Living/Own Home
+H0045,Respite Care
+H0046,Peer Directed And Operated Support Services
+H0048,Substance Abuse Laboratory
+H0049,Assessment
+H0050,Substance Abuse Outpatient Treatment
+H2000,Behavior Management Review
+H2010,Comprehensive Medication Services
+H2011,Crisis Intervention
+H2014,Out Of Home Non Vocational Habilitation
+H2015,Community Living Supports (15 Minutes)
+H2016,Community Living Supports (Per Diem)
+H2019,Applied Behavioral Intervention
+H2020,Crisis Intervention
+H2021,Wraparound
+H2022,Wraparound
+H2023,Supported Employment Services
+H2027,Outpatient Therapy
+H2030,Clubhouse Psychosocial Rehabilitation Programs
+H2033,Home Based Services
+H2035,Substance Abuse Outpatient Care
+H2036,Substance Abuse Outpatient Care
+M0064,Medication Review
+S0209,Transportation
+S0215,Transportation
+S5108,Home Care Training
+S5110,Family Training
+S5111,Family Training
+S5116,Home Care Training
+S5120,Chore Services
+S5140,Foster Care
+S5145,Foster Care
+S5150,Respite Care
+S5151,Respite Care
+S5160,Personal Emergency Response System
+S5161,Personal Emergency Response System
+S5165,Environmental Modification
+S5199,Enhanced Medical Equipment
+S8990,Occupational And Physical Therapy
+S9123,Private Duty Nursing
+S9124,Private Duty Nursing
+S9125,Respite Care
+S9445,Health Services
+S9446,Health Services
+S9470,Health Services
+S9482,Prevention Services
+S9484,Intensive Crisis Stabilization
+S9976,Residential Room And Board
+T1000,Private Duty Nursing
+T1001,Assessment
+T1002,Health Services
+T1003,Health Services
+T1005,Respite Care
+T1007,Substance Abuse Treatment Planning
+T1009,Substance Abuse Child Sitting Services
+T1012,Substance Abuse Recovery Support Services
+T1015,Family Psychoeducation
+T1016,Supports Coordination
+T1017,Targeted Case Management
+T1020,Personal Care In Licensed Specialized Residential Setting
+T1023,Assessment
+T1027,Prevention Services
+T1999,Enhanced Medical Equipment
+T2001,Transportation
+T2002,Transportation
+T2003,Transportation
+T2004,Transportation
+T2005,Transportation
+T2011,Pasrr Level Ii Screens
+T2015,Out Of Home Prevocational Service
+T2023,Targeted Case Management
+T2024,Prevention Services
+T2025,Fiscal Intermediary Services
+T2028,Enhanced Medical Equipment
+T2029,Enhanced Medical Equipment
+T2034,Crisis Intervention
+T2036,Respite Care
+T2037,Respite Care
+T2038,Housing Assistance
+T2039,Enhanced Medical Equipment
+T5999,Goods And Services
