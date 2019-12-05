@@ -78,6 +78,39 @@ write_csv(groups,"data/clean/svc_grps.csv")
 
 rm(list = c("ref_404", "hcpc_ref", "rev_ref", "tst"))
 
-# library(DBI); library(odbc);library(dbplyr);
-# # Requires that user has a system DSN using Windows authentication for each DB names below, with same names
-# ref_tables_bh_db <- DBI::dbConnect(odbc::odbc(), "ref_tables_bh")
+# Create ref for CMHs
+
+cmhsps <-
+  df %>%
+  group_by(cmhsp) %>%
+  summarize() %>% ungroup() %>%
+  mutate(
+    pihp = recode(
+      cmhsp, 'Copper Country'='1','Network180'='3',
+      'Gogebic'='1','Hiawatha'='1','Northpointe'='1', 
+      'Pathways'='1','AuSable Valley'='2',
+      'Manistee-Benzie'='2','North Country'='2',
+      'Northeast Michigan'='2','Northern Lakes'='2',
+      'Allegan'='3','Muskegon'='3','Network180'='3',
+      'Ottawa'='3','West Michigan'='3','Barry'='4',
+      'Berrien'='4','Kalamazoo'='4','Pines'='4',
+      'St. Joseph'='4','Summit Pointe'='4','Van Buren'='4',
+      'Woodlands'='4','Bay-Arenac'='5','Clinton Eaton Ingham'='5',
+      'CMH for Central Michigan'='5','Gratiot'='5','Huron'='5',
+      'Ionia'='5','Lifeways'='5','Montcalm'='5','Newaygo'='5',
+      'Saginaw'='5','Shiawassee'='5','Tuscola'='5',
+      'Lenawee'='6','Livingston'='6','Monroe'='6',
+      'Washtenaw'='6','Detroit-Wayne'='7','Oakland'='8',
+      'Macomb'='9','Genesee'='10','Lapeer'='10',
+      'Sanilac'='10','St. Clair'='10'
+    ),
+    pihp_name = recode(
+      pihp, '1'='Northcare','2'='NMRE',
+      '3'='LRE','4'='SWMBH','5'='MSHN', 
+      '6'='CMHPSM','7'='DWMHA','8'='OCCMHA',
+      '9'='MCMHS','10'='Region10'
+    )
+  )
+
+write_csv(cmhsps,"data/clean/cmh_ref.csv")
+
