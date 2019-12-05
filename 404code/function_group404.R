@@ -20,8 +20,8 @@ group404 <- function(df) {
       cases:unit_per_case
     ) %>%
     group_by(
-      fy,pihp,cmhsp,population,
-      svc_type,svc_grp,code,modifier,
+      fy,pihp,pihp_name,cmhsp,population,
+      svc_type,svc_grp,code,short_desc, modifier,
       unit_type,unit_hrs
     ) %>%
     summarize(
