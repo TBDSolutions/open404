@@ -11,20 +11,19 @@ calc404rates <- function(df) {
   unique <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/master/data/TotalServedAnnual.csv")
   # unique <- read.csv("https://raw.githubusercontent.com/j-hagedorn/open404/update-2018/data/TotalServedAnnual.csv")
   
-  
   # Create unique keys...
-  df$Key <- paste(df$FY,df$CMHSP, sep = "", collapse = NULL)
-  unique$Key <- paste(unique$FY,unique$CMHSP, sep = "", collapse = NULL)
+  df$key <- paste(df$fy,df$cmhsp, sep = "", collapse = NULL)
+  unique$key <- paste(unique$FY,unique$CMHSP, sep = "", collapse = NULL)
   
   # ...and join
   df <- 
     df %>%
-    inner_join(unique, by = "Key") %>%
-    mutate(Cost1kSvd = round(SumOfCost/TotalServed*1000, digits = 2),
-           Perc_Svd = round(SumOfCases/TotalServed*100, digits = 1)
-           ) %>%
-    rename(FY = FY.x, CMHSP = CMHSP.x) %>%
-    select(-Key, -FY.y, -CMHSP.y, -TotalServed)
+    inner_join(unique %>% select(key,TotalServed), by = "key") %>%
+    mutate(
+      cost_1k_served = round(cost/TotalServed*1000, digits = 2),
+      pct_cmh_served = round(cases/TotalServed*100, digits = 1)
+    ) %>%
+    select(-key,-TotalServed)
   
   return(df)
   
