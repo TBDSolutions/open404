@@ -13,9 +13,9 @@ shinyServer(function(input, output) {
     
     # Relabel selected grouping variable
     if (input$org_type == "PIHP") {
-      df <- data404 %>% rename(org_grp = PIHPname)
+      df <- data404 %>% dplyr::rename(org_grp = PIHPname)
     } else if (input$org_type == "CMH") {
-      df <- data404 %>% rename(org_grp = CMHSP)
+      df <- data404 %>% dplyr::rename(org_grp = CMHSP)
     } else print(paste0("Error.  Unrecognized input."))
     
     # Filter by Service Type
@@ -51,33 +51,33 @@ shinyServer(function(input, output) {
       ungroup() %>%
       group_by(FY) %>%
       mutate(
-        Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 1),
-        Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 1)
+        Cost_Perc_Tot = round(SumOfUnits / sum(SumOfUnits, na.rm = T) * 100, digits = 5),
+        Perc_Svd = round(SumOfCases / sum(SumOfCases, na.rm = T) * 100, digits = 5)
       ) %>%
       ungroup() 
     
-    # Calculating state average by selected org_grp    
+    # Calculating average by selected org_grp    
     st_avg <- df %>%
       group_by(FY) %>%
       summarize(
-        SumOfCases = mean(SumOfCases),
-        SumOfUnits = mean(SumOfUnits),
-        SumOfCost = mean(SumOfCost),
-        CostPerCase = mean(CostPerCase),
-        CostPerUnit = mean(CostPerUnit),
-        UnitPerCase = mean(UnitPerCase),
-        Cost1kSvd = mean(Cost1kSvd),
-        Cost_Perc_Tot = mean(Cost_Perc_Tot),
-        Perc_Svd = mean(Perc_Svd)
+        SumOfCases = mean(SumOfCases, na.rm = T),
+        SumOfUnits = mean(SumOfUnits, na.rm = T),
+        SumOfCost = mean(SumOfCost, na.rm = T),
+        CostPerCase = mean(CostPerCase, na.rm = T),
+        CostPerUnit = mean(CostPerUnit, na.rm = T),
+        UnitPerCase = mean(UnitPerCase, na.rm = T),
+        Cost1kSvd = mean(Cost1kSvd, na.rm = T),
+        Cost_Perc_Tot = mean(Cost_Perc_Tot, na.rm = T),
+        Perc_Svd = mean(Perc_Svd, na.rm = T)
       ) %>%
       mutate(
-        state = "State Average"
+        state = "Average"
       )
     
     if (input$org_type == "PIHP") {
-      st_avg %<>% rename(org_grp = state)
+      st_avg %<>% dplyr::rename(org_grp = state)
     } else if (input$org_type == "CMH") {
-      st_avg %<>% rename(org_grp = state)
+      st_avg %<>% dplyr::rename(org_grp = state)
     } else print(paste0("Error.  Unrecognized input."))
     
     st_avg <- st_avg[c(1,11,2:10)]
@@ -89,63 +89,63 @@ shinyServer(function(input, output) {
     
     # Relabel display variables
     if (input$x == "Total Cases") {
-      df %<>% rename(x = SumOfCases)
+      df %<>% dplyr::rename(x = SumOfCases)
     } else if (input$x == "Total Units") {
-      df %<>% rename(x = SumOfUnits)
+      df %<>% dplyr::rename(x = SumOfUnits)
     } else if (input$x == "Total Cost") {
-      df %<>% rename(x = SumOfCost)
+      df %<>% dplyr::rename(x = SumOfCost)
     } else if (input$x == "Cost Per Case") {
-      df %<>% rename(x = CostPerCase)
+      df %<>% dplyr::rename(x = CostPerCase)
     } else if (input$x == "Cost Per Unit") {
-      df %<>% rename(x = CostPerUnit)
+      df %<>% dplyr::rename(x = CostPerUnit)
     } else if (input$x == "Total Unit Per Case") {
-      df %<>% rename(x = UnitPerCase)
+      df %<>% dplyr::rename(x = UnitPerCase)
     } else if (input$x == "Cost per 1K Served") {
-      df %<>% rename(x = Cost1kSvd)
+      df %<>% dplyr::rename(x = Cost1kSvd)
     } else if (input$x == "Percent of Total $") {
-      df %<>% rename(x = Cost_Perc_Tot)
+      df %<>% dplyr::rename(x = Cost_Perc_Tot)
     } else if (input$x == "Percent Served") {
-      df %<>% rename(x = Perc_Svd)
+      df %<>% dplyr::rename(x = Perc_Svd)
     } else print(paste0("Error.  Unrecognized input."))
     
     if (input$y == "Total Cases") {
-      df %<>% rename(y = SumOfCases)
+      df %<>% dplyr::rename(y = SumOfCases)
     } else if (input$y == "Total Units") {
-      df %<>% rename(y = SumOfUnits)
+      df %<>% dplyr::rename(y = SumOfUnits)
     } else if (input$y == "Total Cost") {
-      df %<>% rename(y = SumOfCost)
+      df %<>% dplyr::rename(y = SumOfCost)
     } else if (input$y == "Cost Per Case") {
-      df %<>% rename(y = CostPerCase)
+      df %<>% dplyr::rename(y = CostPerCase)
     } else if (input$y == "Cost Per Unit") {
-      df %<>% rename(y = CostPerUnit)
+      df %<>% dplyr::rename(y = CostPerUnit)
     } else if (input$y == "Total Unit Per Case") {
-      df %<>% rename(y = UnitPerCase)
+      df %<>% dplyr::rename(y = UnitPerCase)
     } else if (input$y == "Cost per 1K Served") {
-      df %<>% rename(y = Cost1kSvd)
+      df %<>% dplyr::rename(y = Cost1kSvd)
     } else if (input$y == "Percent of Total $") {
-      df %<>% rename(y = Cost_Perc_Tot)
+      df %<>% dplyr::rename(y = Cost_Perc_Tot)
     } else if (input$y == "Percent Served") {
-      df %<>% rename(y = Perc_Svd)
+      df %<>% dplyr::rename(y = Perc_Svd)
     } else print(paste0("Error.  Unrecognized input."))
     
     if (input$z == "Total Cases") {
-      df %<>% rename(z = SumOfCases)
+      df %<>% dplyr::rename(z = SumOfCases)
     } else if (input$z == "Total Units") {
-      df %<>% rename(z = SumOfUnits)
+      df %<>% dplyr::rename(z = SumOfUnits)
     } else if (input$z == "Total Cost") {
-      df %<>% rename(z = SumOfCost)
+      df %<>% dplyr::rename(z = SumOfCost)
     } else if (input$z == "Cost Per Case") {
-      df %<>% rename(z = CostPerCase)
+      df %<>% dplyr::rename(z = CostPerCase)
     } else if (input$z == "Cost Per Unit") {
-      df %<>% rename(z = CostPerUnit)
+      df %<>% dplyr::rename(z = CostPerUnit)
     } else if (input$z == "Total Unit Per Case") {
-      df %<>% rename(z = UnitPerCase)
+      df %<>% dplyr::rename(z = UnitPerCase)
     } else if (input$z == "Cost per 1K Served") {
-      df %<>% rename(z = Cost1kSvd)
+      df %<>% dplyr::rename(z = Cost1kSvd)
     } else if (input$z == "Percent of Total $") {
-      df %<>% rename(z = Cost_Perc_Tot)
+      df %<>% dplyr::rename(z = Cost_Perc_Tot)
     } else if (input$z == "Percent Served") {
-      df %<>% rename(z = Perc_Svd)
+      df %<>% dplyr::rename(z = Perc_Svd)
     } else print(paste0("Error.  Unrecognized input."))
     
     df %<>% select(FY, org_grp, x, y, z)
@@ -158,20 +158,20 @@ shinyServer(function(input, output) {
     
     # Relabel selected grouping variable (PIHP/CMH)
       if (input$org_type2 == "PIHP") {
-        df <- data404 %>% rename(org_grp2 = PIHPname)
+        df <- data404 %>% dplyr::rename(org_grp2 = PIHPname)
       } else if (input$org_type2 == "CMH") {
-        df <- data404 %>% rename(org_grp2 = CMHSP)
+        df <- data404 %>% dplyr::rename(org_grp2 = CMHSP)
       } else print(paste0("Error.  Unrecognized input."))
       
       # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
       if (input$select_service == "Service Type") {
-        df <- df %>% rename(svs_grp = ServiceType)
+        df <- df %>% dplyr::rename(svs_grp = ServiceType)
       } else if (input$select_service == "Service") {
-        df <- df %>% rename(svs_grp = Service)
+        df <- df %>% dplyr::rename(svs_grp = Service)
       } else if (input$select_service == "HCPCS Code") {
-        df <- df %>% rename(svs_grp = Code_shortDesc)
+        df <- df %>% dplyr::rename(svs_grp = Code_shortDesc)
       } else if (input$select_service == "Code Modifier") {
-        df <- df %>% rename(svs_grp = CodeM_shortDesc)
+        df <- df %>% dplyr::rename(svs_grp = CodeM_shortDesc)
       } else print(paste0("Error.  Unrecognized input."))
       
       # Filter by Population
@@ -205,63 +205,63 @@ shinyServer(function(input, output) {
       
       # Relabel display variables
       if (input$a == "Total Cases") {
-        df %<>% rename(a = SumOfCases)
+        df %<>% dplyr::rename(a = SumOfCases)
       } else if (input$a == "Total Units") {
-        df %<>% rename(a = SumOfUnits)
+        df %<>% dplyr::rename(a = SumOfUnits)
       } else if (input$a == "Total Cost") {
-        df %<>% rename(a = SumOfCost)
+        df %<>% dplyr::rename(a = SumOfCost)
       } else if (input$a == "Cost Per Case") {
-        df %<>% rename(a = CostPerCase)
+        df %<>% dplyr::rename(a = CostPerCase)
       } else if (input$a == "Cost Per Unit") {
-        df %<>% rename(a = CostPerUnit)
+        df %<>% dplyr::rename(a = CostPerUnit)
       } else if (input$a == "Total Unit Per Case") {
-        df %<>% rename(a = UnitPerCase)
+        df %<>% dplyr::rename(a = UnitPerCase)
       } else if (input$a == "Cost per 1K Served") {
-        df %<>% rename(a = Cost1kSvd)
+        df %<>% dplyr::rename(a = Cost1kSvd)
       } else if (input$a == "Percent of Total $") {
-        df %<>% rename(a = Cost_Perc_Tot)
+        df %<>% dplyr::rename(a = Cost_Perc_Tot)
       } else if (input$a == "Percent Served") {
-        df %<>% rename(a = Perc_Svd)
+        df %<>% dplyr::rename(a = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
       
       if (input$b == "Total Cases") {
-        df %<>% rename(b = SumOfCases)
+        df %<>% dplyr::rename(b = SumOfCases)
       } else if (input$b == "Total Units") {
-        df %<>% rename(b = SumOfUnits)
+        df %<>% dplyr::rename(b = SumOfUnits)
       } else if (input$b == "Total Cost") {
-        df %<>% rename(b = SumOfCost)
+        df %<>% dplyr::rename(b = SumOfCost)
       } else if (input$b == "Cost Per Case") {
-        df %<>% rename(b = CostPerCase)
+        df %<>% dplyr::rename(b = CostPerCase)
       } else if (input$b == "Cost Per Unit") {
-        df %<>% rename(b = CostPerUnit)
+        df %<>% dplyr::rename(b = CostPerUnit)
       } else if (input$b == "Total Unit Per Case") {
-        df %<>% rename(b = UnitPerCase)
+        df %<>% dplyr::rename(b = UnitPerCase)
       } else if (input$b == "Cost per 1K Served") {
-        df %<>% rename(b = Cost1kSvd)
+        df %<>% dplyr::rename(b = Cost1kSvd)
       } else if (input$b == "Percent of Total $") {
-        df %<>% rename(b = Cost_Perc_Tot)
+        df %<>% dplyr::rename(b = Cost_Perc_Tot)
       } else if (input$b == "Percent Served") {
-        df %<>% rename(b = Perc_Svd)
+        df %<>% dplyr::rename(b = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
       
       if (input$c == "Total Cases") {
-        df %<>% rename(c = SumOfCases)
+        df %<>% dplyr::rename(c = SumOfCases)
       } else if (input$c == "Total Units") {
-        df %<>% rename(c = SumOfUnits)
+        df %<>% dplyr::rename(c = SumOfUnits)
       } else if (input$c == "Total Cost") {
-        df %<>% rename(c = SumOfCost)
+        df %<>% dplyr::rename(c = SumOfCost)
       } else if (input$c == "Cost Per Case") {
-        df %<>% rename(c = CostPerCase)
+        df %<>% dplyr::rename(c = CostPerCase)
       } else if (input$c == "Cost Per Unit") {
-        df %<>% rename(c = CostPerUnit)
+        df %<>% dplyr::rename(c = CostPerUnit)
       } else if (input$c == "Total Unit Per Case") {
-        df %<>% rename(c = UnitPerCase)
+        df %<>% dplyr::rename(c = UnitPerCase)
       } else if (input$c == "Cost per 1K Served") {
-        df %<>% rename(c = Cost1kSvd)
+        df %<>% dplyr::rename(c = Cost1kSvd)
       } else if (input$c == "Percent of Total $") {
-        df %<>% rename(c = Cost_Perc_Tot)
+        df %<>% dplyr::rename(c = Cost_Perc_Tot)
       } else if (input$c == "Percent Served") {
-        df %<>% rename(c = Perc_Svd)
+        df %<>% dplyr::rename(c = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
       
       df %<>% select(FY, org_grp2, svs_grp, a, b, c)
@@ -272,13 +272,13 @@ shinyServer(function(input, output) {
 
       # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
       if (input$select_service == "Service Type") {
-        df <- data404 %>% rename(svs_grp = ServiceType)
+        df <- data404 %>% dplyr::rename(svs_grp = ServiceType)
       } else if (input$select_service == "Service") {
-        df <- data404 %>% rename(svs_grp = Service)
+        df <- data404 %>% dplyr::rename(svs_grp = Service)
       } else if (input$select_service == "HCPCS Code") {
-        df <- data404 %>% rename(svs_grp = Code_shortDesc)
+        df <- data404 %>% dplyr::rename(svs_grp = Code_shortDesc)
       } else if (input$select_service == "Code Modifier") {
-        df <- data404 %>% rename(svs_grp = CodeM_shortDesc)
+        df <- data404 %>% dplyr::rename(svs_grp = CodeM_shortDesc)
       } else print(paste0("Error.  Unrecognized input."))
 
       # Filter by Population
@@ -311,63 +311,63 @@ shinyServer(function(input, output) {
 
       # Relabel display variables
       if (input$a == "Total Cases") {
-        df %<>% rename(a = SumOfCases)
+        df %<>% dplyr::rename(a = SumOfCases)
       } else if (input$a == "Total Units") {
-        df %<>% rename(a = SumOfUnits)
+        df %<>% dplyr::rename(a = SumOfUnits)
       } else if (input$a == "Total Cost") {
-        df %<>% rename(a = SumOfCost)
+        df %<>% dplyr::rename(a = SumOfCost)
       } else if (input$a == "Cost Per Case") {
-        df %<>% rename(a = CostPerCase)
+        df %<>% dplyr::rename(a = CostPerCase)
       } else if (input$a == "Cost Per Unit") {
-        df %<>% rename(a = CostPerUnit)
+        df %<>% dplyr::rename(a = CostPerUnit)
       } else if (input$a == "Total Unit Per Case") {
-        df %<>% rename(a = UnitPerCase)
+        df %<>% dplyr::rename(a = UnitPerCase)
       } else if (input$a == "Cost per 1K Served") {
-        df %<>% rename(a = Cost1kSvd)
+        df %<>% dplyr::rename(a = Cost1kSvd)
       } else if (input$a == "Percent of Total $") {
-        df %<>% rename(a = Cost_Perc_Tot)
+        df %<>% dplyr::rename(a = Cost_Perc_Tot)
       } else if (input$a == "Percent Served") {
-        df %<>% rename(a = Perc_Svd)
+        df %<>% dplyr::rename(a = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
 
       if (input$b == "Total Cases") {
-        df %<>% rename(b = SumOfCases)
+        df %<>% dplyr::rename(b = SumOfCases)
       } else if (input$b == "Total Units") {
-        df %<>% rename(b = SumOfUnits)
+        df %<>% dplyr::rename(b = SumOfUnits)
       } else if (input$b == "Total Cost") {
-        df %<>% rename(b = SumOfCost)
+        df %<>% dplyr::rename(b = SumOfCost)
       } else if (input$b == "Cost Per Case") {
-        df %<>% rename(b = CostPerCase)
+        df %<>% dplyr::rename(b = CostPerCase)
       } else if (input$b == "Cost Per Unit") {
-        df %<>% rename(b = CostPerUnit)
+        df %<>% dplyr::rename(b = CostPerUnit)
       } else if (input$b == "Total Unit Per Case") {
-        df %<>% rename(b = UnitPerCase)
+        df %<>% dplyr::rename(b = UnitPerCase)
       } else if (input$b == "Cost per 1K Served") {
-        df %<>% rename(b = Cost1kSvd)
+        df %<>% dplyr::rename(b = Cost1kSvd)
       } else if (input$b == "Percent of Total $") {
-        df %<>% rename(b = Cost_Perc_Tot)
+        df %<>% dplyr::rename(b = Cost_Perc_Tot)
       } else if (input$b == "Percent Served") {
-        df %<>% rename(b = Perc_Svd)
+        df %<>% dplyr::rename(b = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
 
       if (input$c == "Total Cases") {
-        df %<>% rename(c = SumOfCases)
+        df %<>% dplyr::rename(c = SumOfCases)
       } else if (input$c == "Total Units") {
-        df %<>% rename(c = SumOfUnits)
+        df %<>% dplyr::rename(c = SumOfUnits)
       } else if (input$c == "Total Cost") {
-        df %<>% rename(c = SumOfCost)
+        df %<>% dplyr::rename(c = SumOfCost)
       } else if (input$c == "Cost Per Case") {
-        df %<>% rename(c = CostPerCase)
+        df %<>% dplyr::rename(c = CostPerCase)
       } else if (input$c == "Cost Per Unit") {
-        df %<>% rename(c = CostPerUnit)
+        df %<>% dplyr::rename(c = CostPerUnit)
       } else if (input$c == "Total Unit Per Case") {
-        df %<>% rename(c = UnitPerCase)
+        df %<>% dplyr::rename(c = UnitPerCase)
       } else if (input$c == "Cost per 1K Served") {
-        df %<>% rename(c = Cost1kSvd)
+        df %<>% dplyr::rename(c = Cost1kSvd)
       } else if (input$c == "Percent of Total $") {
-        df %<>% rename(c = Cost_Perc_Tot)
+        df %<>% dplyr::rename(c = Cost_Perc_Tot)
       } else if (input$c == "Percent Served") {
-        df %<>% rename(c = Perc_Svd)
+        df %<>% dplyr::rename(c = Perc_Svd)
       } else print(paste0("Error.  Unrecognized input."))
 
       df %<>% select(FY, svs_grp, a, b, c)
@@ -777,7 +777,7 @@ shinyServer(function(input, output) {
   output$svs_groups <- renderDataTable({
     
     df <- service_groups %>%
-      rename(
+      dplyr::rename(
         "Service Type" = ServiceType,
         "Short Description" = short_description,
         "Long Description" = Description,
