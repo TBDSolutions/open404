@@ -2,69 +2,27 @@
 library(tidyverse)
 
 # Combine 404 datasets
-  source("404code/function_read404.R")
-  Master <- combine404("data/raw")
+source("404code/function_read404.R")
+df_404 <- combine404("data/raw") %>% clean404()
+  
+# Test if all codes are mapped. If not, open script, resolve
+source("404code/update_groups.R")
 
-# Clean CPT/HCPCS and apply groupings
-  source("404code/function_group404.R")
-  Master <- group404(Master)
-
-# Group for consistent factor levels, calc units and cost at Code_Mod level
-  
-  Master <-
-  Master %>%
-    group_by(
-      FY,PIHPname,PIHP,CMHSP,Population,
-      ServiceType,Service,short_description,Description,Code,Code_Mod
-    ) %>%
-    summarize(
-      Unit_Hours = max(UnitHours),
-      SumOfCases = sum(SumOfCases),
-      SumOfUnits = sum(SumOfUnits),
-      SumOfCost = sum(SumOfCost)
-    ) %>%
-    mutate(
-      CostPerCase = round(SumOfCost / SumOfCases, digits = 2),
-      CostPerUnit = round(SumOfCost / SumOfUnits, digits = 2),
-      UnitPerCase = round(SumOfUnits / SumOfCases, digits = 1)
-    ) %>%
-    ungroup()
-  
-  
-# Calculate units and costs for each row (Code_Mod) 
-# as a percentage of each CMHSP's annual service use
-# Note: May not add to 100 due to rounding
-  
-  Master <-
-  Master %>%
-    group_by(FY,CMHSP) %>%
-    mutate(
-      Unit_Perc_Tot = round(SumOfUnits/sum(SumOfUnits, na.rm = T) * 100, digits = 1), 
-      Cost_Perc_Tot = round(SumOfCost/sum(SumOfCost, na.rm = T) * 100, digits = 1)
-    ) %>%
-    ungroup()
+# Create groupings
+source("404code/function_group404.R")
+df_404 <- group404(df_404) %>% select(-n_row)
 
 # Add rates per 1,000 served
-  source("function_calc404rates.R")
-  Master <- calc404rates(df = Master)
+source("function_calc404rates.R")
+df_404 <- calc404rates(df_404) 
 
 # Add rates per 1,000 population (census)
 #   source("function_calcPop.R")
 #   tst <- calc404pop(census_key=census_key)
   
-# Output Master .csv file
-  write_csv(Master,"data/clean/Master.csv")
-# Output Master .feather file
-  feather::write_feather(Master,"data/clean/Master.feather")
+# Output .csv file
+write_csv(df_404,"data/clean/df_404.csv")
+# Output .feather file
+arrow::write_feather(df_404,"data/clean/df_404.feather")
 
-# Output Service Groups .csv file
-  service_groups <- 
-    Master %>% 
-    group_by(
-      ServiceType,Service,short_description,
-      Description,Code,Code_Mod,Unit_Hours
-    ) %>%
-    summarize(n = n())
-  
-  write_csv(service_groups,"data/clean/Service_Groups.csv")
 
