@@ -60,7 +60,7 @@ combine404 <- function(directory) {
   
   files <- list.files(directory, full.names = TRUE) # make list of full file names
   n <- length(files)
-  df <- data.frame() #create empty data frame
+  df <- tibble() #create empty data frame
   
   for (i in 1:n) {
     # loop through files, rbinding them together
@@ -83,3 +83,43 @@ combine404 <- function(directory) {
   
 }
 
+clean404 <- function(df) {
+  
+  df <- 
+    df %>%
+    rename_all(list(~str_to_lower(.))) %>%
+    rename_all(list(~str_replace(.,"firstof",""))) %>%
+    rename_all(list(~str_replace(.,"sumof",""))) %>%
+    rename_all(list(~str_replace(.,"\\.","_"))) %>%
+    rename_all(list(~str_replace(.,"per","_per_")))%>%
+    select(-unittype) %>%
+    # Must be used
+    filter(cases > 0 | units > 0 | cost > 0) %>%
+    mutate(
+      hcpcs_code = str_replace(hcpcs_code,"[[:punct:]].*",""),
+      hcpcs_code = case_when(
+        hcpcs_code == "00104" ~ "104", 
+        hcpcs_code == "ALL"   ~ "Jxxxx",
+        is.na(hcpcs_code) & str_detect(service_description,"^Peer") ~ "prxxx",
+        is.na(hcpcs_code) & str_detect(service_description,"^Pharmacy") ~ "phxxx",
+        is.na(hcpcs_code) & service_description == "Other" ~ "xxxxx",
+        TRUE ~ hcpcs_code
+      ),
+      revenue_code = str_replace(revenue_code,"[[:punct:]].*",""),
+      revenue_code = case_when(
+        # Make 4 digit revenue codes into 3 digits
+        str_length(revenue_code) == 4 & str_detect(revenue_code,"^0") ~ str_sub(revenue_code,2,4),
+        TRUE ~ revenue_code
+      ),
+      code = case_when(
+        !is.na(hcpcs_code)   ~ hcpcs_code,
+        !is.na(revenue_code) ~ revenue_code,
+        !is.na(modifier)     ~ modifier
+      ),
+      # Remove pesky carriage returns
+      code = str_replace_all(code,"\n|\r","")
+    )
+  
+  return(df)
+  
+}
