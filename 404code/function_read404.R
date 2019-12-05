@@ -105,6 +105,11 @@ clean404 <- function(df) {
         is.na(hcpcs_code) & service_description == "Other" ~ "xxxxx",
         TRUE ~ hcpcs_code
       ),
+      modifier = case_when(
+        # Make services with separate SUD reporting identifiable via modifier
+        str_detect(tolower(service_description), "^substance abuse") ~ "SUD",
+        TRUE ~ modifier
+      ),
       revenue_code = str_replace(revenue_code,"[[:punct:]].*",""),
       revenue_code = case_when(
         # Make 4 digit revenue codes into 3 digits
