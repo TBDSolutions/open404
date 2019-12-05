@@ -237,7 +237,7 @@ pip-log.txt
 *.RData
 
 # Data files
-*.csv
-*.feather
+
+
 *.zip
 
