@@ -2,7 +2,21 @@
 
 shinyServer(function(input, output) {
   
-  #### Make Reactive Datasets ####
+  #### Reactive Datasets ####
+  
+  summary_df <- reactive({
+    
+    data404 %>%
+      agg_404(
+        pop_filter = input$pop_filter,
+        code_filter = input$code_filter,
+        fy_filter = input$fy_filter, 
+        group_org = input$region_lvl,
+        group_svc = input$service_lvl,
+        group_pop = input$pop_lvl
+      )
+    
+  })
   
   df_bubble1 <- reactive({
     
@@ -548,7 +562,94 @@ shinyServer(function(input, output) {
     
   })
   
+  #### UI ####
+  
+  width_px <- "150px"
+  
+  output$service_use_ui <- renderUI(
+    
+    sidebarLayout(
+      sidebarPanel(
+        strong("Summarize measures"),
+        br(),
+        em("Group by..."),
+        selectInput(
+          inputId = "region_lvl",
+          label = "Region",
+          choices = c(
+            "State" = "state",
+            "PIHP" = "pihp_name",
+            "CMH" = "cmhsp"
+          ),
+          selected = "State",
+          width = width_px
+        ),
+        selectInput(
+          inputId = "service_lvl",
+          label = "Service grouping",
+          choices = c(
+            "Service Groups" = "svc_grp",
+            "HCPCS Code" = "code",
+            "Code & Modifier" = "code_mod"
+          ),
+          selected = "Service Groups",
+          width = width_px
+        ),
+        selectInput(
+          inputId = "pop_lvl",
+          label = "Population grouping",
+          choices = c(
+            "Combined" = "combined_pop",
+            "Separate" = "population"
+          ),
+          selected = "Combined",
+          width = width_px
+        ),
+        em("Filter by..."),
+        selectInput(
+          inputId = "pop_filter",
+          label = "Population",
+          choices = levels(data404$population),
+          selected = levels(data404$population),
+          multiple = T,
+          width = width_px
+        ),
+        sliderInput(
+          inputId = "fy_filter",
+          label = "Fiscal year",
+          min = min(as.numeric(as.character(data404$fy))),
+          max = max(as.numeric(as.character(data404$fy))),
+          value = c(
+            min(as.numeric(as.character(data404$fy))),
+            max(as.numeric(as.character(data404$fy)))
+          ),
+          sep = "", pre = "FY ", width = "200px"
+        ),
+        selectInput(
+          inputId = "code_filter",
+          label = "Service Code",
+          choices = levels(data404$code),
+          selected = levels(data404$code),
+          multiple = T, 
+          width = width_px
+        )
+      ),
+      mainPanel(
+        DT::dataTableOutput("service_use_df")
+      )
+    )
+  )
+    
+  
   #### Visualizations ####
+  
+  output$service_use_df <- DT::renderDataTable(
+    
+    summary_df() %>%
+      select(-ends_with("_var")) %>%
+      DT::datatable()
+    
+  )
   
   output$bubble1 <- renderPlotly({
     
