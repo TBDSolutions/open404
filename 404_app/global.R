@@ -9,23 +9,22 @@ library(tidyverse);library(magrittr);library(arrow)
 #### Read datasets ####
 
 data404 <- 
-  arrow::read_feather("..data/clean/df_404.feather") %>%
+  arrow::read_feather("../data/clean/df_404.feather") %>%
   mutate(
     pihp_name = as.factor(pihp_name),
-    cmhsp = as.factor(cmhsp)
+    cmhsp = as.factor(cmhsp),
+    code_mod = paste0(code,replace_na(modifier,replace = ""))
   )
 
-service_groups <- unique(data404[,c('ServiceType', 'Service', 'short_description', 'Description', 'code', 'code_Mod')])
+service_groups <- arrow::read_feather("../data/clean/svc_grps.feather")
 
 #### Formatting Variables ####
 
 data404 %<>%
   mutate(
     code = as.factor(data404$code),
-    code_shortDesc = as.factor(paste(data404$short_description," (",(data404$code),")")),
-    code_Desc = as.factor(paste(data404$Description," (",(data404$code),")")),
-    codeM_shortDesc = as.factor(paste(data404$short_description," (",(data404$code_Mod),")")),
-    codeM_Desc = as.factor(paste(data404$Description," (",(data404$code_Mod),")"))
+    code_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code),")")),
+    codeM_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code_mod),")"))
   )
 
 #### Defining variable inputs ####
@@ -54,11 +53,11 @@ inputs <-
     "Percent Served" = pct_cmh_served
   )
 
-
 inputs_sub <- 
-  data.frame(cost = integer(),
-             cost_pct_tot = integer(),
-             cost_1k_served = integer()
+  data.frame(
+    cost = integer(),
+    cost_pct_tot = integer(),
+    cost_1k_served = integer()
   ) %>%
   rename(
     "Total Cost" = cost,

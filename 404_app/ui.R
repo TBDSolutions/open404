@@ -187,14 +187,12 @@ shinyUI(
             tags$strong("Which service(s) would you like to learn about?"),
             br(),
             selectInput(
-              inputId = "select_ServiceType",
+              inputId = "select_svc_type",
               label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
-              choices = c("","All",levels(unique(data404$svc_type))),
+              choices = c("","All",levels(as.factor(data404$svc_type))),
               selected = ""
             ),
-            uiOutput(
-              "select_code"
-            ),
+            uiOutput("select_code"),
             br(),
             tags$strong("Which metrics would you like to view?"),
             br(),
