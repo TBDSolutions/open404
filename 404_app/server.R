@@ -9,13 +9,13 @@ shinyServer(function(input, output) {
     # Filter by PIHP
     pihp_filt <- if (input$filter_pihp == "All") {
       data404 <- data404
-    } else df <- data404 %<>% filter(PIHPname %in% input$filter_pihp)
+    } else df <- data404 %<>% filter(pihp_name %in% input$filter_pihp)
     
     # Relabel selected grouping variable
     if (input$org_type == "PIHP") {
-      df <- data404 %>% dplyr::rename(org_grp = PIHPname)
+      df <- data404 %>% dplyr::rename(org_grp = pihp_name)
     } else if (input$org_type == "CMH") {
-      df <- data404 %>% dplyr::rename(org_grp = CMHSP)
+      df <- data404 %>% dplyr::rename(org_grp = cmhsp)
     } else print(paste0("Error.  Unrecognized input."))
     
     # Filter by Service Type
@@ -158,9 +158,9 @@ shinyServer(function(input, output) {
     
     # Relabel selected grouping variable (PIHP/CMH)
       if (input$org_type2 == "PIHP") {
-        df <- data404 %>% dplyr::rename(org_grp2 = PIHPname)
+        df <- data404 %>% dplyr::rename(org_grp2 = pihp_name)
       } else if (input$org_type2 == "CMH") {
-        df <- data404 %>% dplyr::rename(org_grp2 = CMHSP)
+        df <- data404 %>% dplyr::rename(org_grp2 = cmhsp)
       } else print(paste0("Error.  Unrecognized input."))
       
       # Relabel selected grouping variable (Service Type, Service, HCPCS, Modifier)
@@ -522,9 +522,9 @@ shinyServer(function(input, output) {
     if (input$org_type2 %in% c("PIHP", "CMH")) {
     
     org_filt <- if (input$org_type2 == "PIHP") {
-      levels(unique(data404$PIHPname))
+      levels(unique(data404$pihp_name))
     } else if (input$org_type2 == "CMH") {
-      levels(unique(data404$CMHSP))
+      levels(unique(data404$cmhsp))
     } else print(paste0("Error.  Unrecognized input."))
 
     selectInput(

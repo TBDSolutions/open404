@@ -85,7 +85,7 @@ shinyUI(
               br(),
               tags$small(
                 tags$i(
-                  paste("Data Updated through",max(as.character(data404$FY)
+                  paste("Data Updated through",max(as.character(data404$fy)
                                                    )
                         )
                   )
@@ -175,7 +175,7 @@ shinyUI(
               inputId = "filter_pihp",
               label = tags$p("View a Specific PIHP:"
                              , style = "font-size: 115%;"),
-              choices = c("","All",levels(unique(data404$PIHPname))),
+              choices = c("","All",levels(unique(data404$pihp_name))),
               selected = ""
             ),
             checkboxInput(
@@ -189,7 +189,7 @@ shinyUI(
             selectInput(
               inputId = "select_ServiceType",
               label = tags$p("Specify a Service Type:", style = "font-size: 115%;"),
-              choices = c("","All",levels(unique(data404$ServiceType))),
+              choices = c("","All",levels(unique(data404$svc_type))),
               selected = ""
             ),
             uiOutput(
@@ -215,7 +215,7 @@ shinyUI(
               inputId = "select_Population",
               label = tags$strong("Are you interested in a specific population?"
                                   , style = "font-size: 125%;"),
-              choices = c("All", levels(unique(data404$Population))),
+              choices = c("All", levels(unique(data404$population))),
               selected = "All",
               inline = T
             ),
@@ -232,7 +232,7 @@ shinyUI(
           # content
           plotlyOutput("bubble1"),
           sliderInput(
-            inputId = "sliderFY",
+            inputId = "sliderfy",
             label = tags$strong("Press the play button below to see how the \ndata changes year over year"
                            , style = "font-size: 90%;"),
             min = 2006,
@@ -291,7 +291,7 @@ shinyUI(
             inputId = "select_Population2",
             label = tags$strong("Are you interested in a specific population?"
                                 , style = "font-size: 125%;"),
-            choices = c("All", levels(unique(data404$Population))),
+            choices = c("All", levels(unique(data404$population))),
             selected = "All",
             inline = T
           ),
@@ -308,7 +308,7 @@ shinyUI(
           # content
           plotlyOutput("bubble2"),
           sliderInput(
-            inputId = "sliderFY1",
+            inputId = "sliderfy1",
             label = tags$strong("Press the play button below to see how the \ndata changes year over year"
                                 , style = "font-size: 90%;"),
             min = 2006,

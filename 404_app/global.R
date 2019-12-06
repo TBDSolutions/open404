@@ -2,70 +2,68 @@
 
 #### Load packages ####
 
-library(shiny); library(shinythemes)
-library(plotly)
-library(tidyverse); library(magrittr)
-library(shinydashboard)
-library(shinythemes)
-library(feather)
-library(scales)
+library(shiny); library(shinythemes);library(shinydashboard)
+library(plotly);library(scales)
+library(tidyverse);library(magrittr);library(arrow)
 
 #### Read datasets ####
 
-data404 <- read_feather("data/clean/Master.feather") %>%
+data404 <- 
+  arrow::read_feather("..data/clean/df_404.feather") %>%
   mutate(
-    PIHPname = as.factor(PIHPname),
-    CMHSP = as.factor(CMHSP)
+    pihp_name = as.factor(pihp_name),
+    cmhsp = as.factor(cmhsp)
   )
 
-service_groups <- unique(data404[,c('ServiceType', 'Service', 'short_description', 'Description', 'Code', 'Code_Mod')])
+service_groups <- unique(data404[,c('ServiceType', 'Service', 'short_description', 'Description', 'code', 'code_Mod')])
 
 #### Formatting Variables ####
 
 data404 %<>%
   mutate(
-    Code = as.factor(data404$Code),
-    Code_shortDesc = as.factor(paste(data404$short_description," (",(data404$Code),")")),
-    Code_Desc = as.factor(paste(data404$Description," (",(data404$Code),")")),
-    CodeM_shortDesc = as.factor(paste(data404$short_description," (",(data404$Code_Mod),")")),
-    CodeM_Desc = as.factor(paste(data404$Description," (",(data404$Code_Mod),")"))
+    code = as.factor(data404$code),
+    code_shortDesc = as.factor(paste(data404$short_description," (",(data404$code),")")),
+    code_Desc = as.factor(paste(data404$Description," (",(data404$code),")")),
+    codeM_shortDesc = as.factor(paste(data404$short_description," (",(data404$code_Mod),")")),
+    codeM_Desc = as.factor(paste(data404$Description," (",(data404$code_Mod),")"))
   )
 
 #### Defining variable inputs ####
 
 inputs <- 
-  data.frame(SumOfCases = integer(),
-             SumOfUnits = integer(),
-             SumOfCost = integer(),
-             CostPerCase = integer(),
-             CostPerUnit = integer(),
-             UnitPerCase = integer(),
-             Cost_Perc_Tot = integer(),
-             Cost1kSvd = integer(),
-             Perc_Svd = integer()
+  data.frame(
+    cases = integer(),
+    units = integer(),
+    cost = integer(),
+    cost_per_case = integer(),
+    cost_per_unit = integer(),
+    unit_per_case = integer(),
+    cost_pct_tot = integer(),
+    cost_1k_served = integer(),
+    pct_cmh_served = integer()
   ) %>%
   rename(
-    "Total Cases" = SumOfCases,
-    "Total Units" = SumOfUnits,
-    "Total Cost" = SumOfCost,
-    "Cost Per Case" = CostPerCase,
-    "Cost Per Unit" = CostPerUnit,
-    "Total Unit Per Case" = UnitPerCase,
-    "Cost per 1K Served" = Cost1kSvd,
-    "Percent of Total $" = Cost_Perc_Tot,
-    "Percent Served" = Perc_Svd
+    "Total Cases" = cases,
+    "Total Units" = units,
+    "Total Cost" = cost,
+    "Cost Per Case" = cost_per_case,
+    "Cost Per Unit" = cost_per_unit,
+    "Total Unit Per Case" = unit_per_case,
+    "Cost per 1K Served" = cost_1k_served,
+    "Percent of Total $" = cost_pct_tot,
+    "Percent Served" = pct_cmh_served
   )
 
 
 inputs_sub <- 
-  data.frame(SumOfCost = integer(),
-             Cost_Perc_Tot = integer(),
-             Cost1kSvd = integer()
+  data.frame(cost = integer(),
+             cost_pct_tot = integer(),
+             cost_1k_served = integer()
   ) %>%
   rename(
-    "Total Cost" = SumOfCost,
-    "Cost per 1K Served" = Cost1kSvd,
-    "Percent of Total $" = Cost_Perc_Tot
+    "Total Cost" = cost,
+    "Cost per 1K Served" = cost_1k_served,
+    "Percent of Total $" = cost_pct_tot
   )
 
 # https://gist.githubusercontent.com/stla/9033053/raw/9c3ad4ce296397b923c88b40c2d43e4fbea8e4be/ShinyColumnsSelector.R
