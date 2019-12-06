@@ -4,19 +4,29 @@ shinyServer(function(input, output) {
   
   #### Reactive Datasets ####
   
-  summary_df <- reactive({
+  # Create module for consistent calling across pages
+  
+  summary_df_fun <- function(input, output, session) {
     
-    data404 %>%
-      agg_404(
-        pop_filter = input$pop_filter,
-        code_filter = input$code_filter,
-        fy_filter = input$fy_filter, 
-        group_org = input$region_lvl,
-        group_svc = input$service_lvl,
-        group_pop = input$pop_lvl
-      )
+    summary_df <- reactive({
+      data404 %>%
+        agg_404(
+          pop_filter = input$pop_filter,
+          code_filter = input$code_filter,
+          fy_filter = input$fy_filter, 
+          group_org = input$region_lvl,
+          group_svc = input$service_lvl,
+          group_pop = input$pop_lvl
+        )
+    })
     
-  })
+    # Return the reactive that yields the data frame
+    return(summary_df)
+  }
+  
+  summary_df <- callModule(summary_df_fun, "svc_use")
+  
+  bubble_df <- callModule(summary_df_fun, "bubbles")
   
   df_bubble1 <- reactive({
     
@@ -566,89 +576,96 @@ shinyServer(function(input, output) {
   
   width_px <- "150px"
   
-  output$service_use_ui <- renderUI(
+  summary_ui_Input <- function(id) {
+    # Create a namespace function using the provided id
+    ns <- NS(id)
     
-    sidebarLayout(
-      sidebarPanel(
-        strong("Summarize measures"),
-        br(),
-        em("Group by..."),
-        selectInput(
-          inputId = "region_lvl",
-          label = "Region",
-          choices = c(
-            "State" = "state",
-            "PIHP" = "pihp_name",
-            "CMH" = "cmhsp"
-          ),
-          selected = "State",
-          width = width_px
+    sidebarPanel(
+      strong("Summarize measures"),
+      br(),
+      em("Group by..."),
+      selectInput(
+        inputId = ns("region_lvl"),
+        label = "Region",
+        choices = c(
+          "State" = "state",
+          "PIHP" = "pihp_name",
+          "CMH" = "cmhsp"
         ),
-        selectInput(
-          inputId = "service_lvl",
-          label = "Service grouping",
-          choices = c(
-            "Service Groups" = "svc_grp",
-            "HCPCS Code" = "code",
-            "Code & Modifier" = "code_mod"
-          ),
-          selected = "Service Groups",
-          width = width_px
-        ),
-        selectInput(
-          inputId = "pop_lvl",
-          label = "Population grouping",
-          choices = c(
-            "Combined" = "combined_pop",
-            "Separate" = "population"
-          ),
-          selected = "Combined",
-          width = width_px
-        ),
-        em("Filter by..."),
-        selectInput(
-          inputId = "pop_filter",
-          label = "Population",
-          choices = levels(data404$population),
-          selected = levels(data404$population),
-          multiple = T,
-          width = width_px
-        ),
-        sliderInput(
-          inputId = "fy_filter",
-          label = "Fiscal year",
-          min = min(as.numeric(as.character(data404$fy))),
-          max = max(as.numeric(as.character(data404$fy))),
-          value = c(
-            min(as.numeric(as.character(data404$fy))),
-            max(as.numeric(as.character(data404$fy)))
-          ),
-          sep = "", pre = "FY ", width = "200px"
-        ),
-        selectInput(
-          inputId = "code_filter",
-          label = "Service Code",
-          choices = levels(data404$code),
-          selected = levels(data404$code),
-          multiple = T, 
-          width = width_px
-        )
+        selected = "State",
+        width = width_px
       ),
+      selectInput(
+        inputId = ns("service_lvl"),
+        label = "Service grouping",
+        choices = c(
+          "Service Groups" = "svc_grp",
+          "HCPCS Code" = "code",
+          "Code & Modifier" = "code_mod"
+        ),
+        selected = "Service Groups",
+        width = width_px
+      ),
+      selectInput(
+        inputId = ns("pop_lvl"),
+        label = "Population grouping",
+        choices = c(
+          "Combined" = "combined_pop",
+          "Separate" = "population"
+        ),
+        selected = "Combined",
+        width = width_px
+      ),
+      em("Filter by..."),
+      selectInput(
+        inputId = ns("pop_filter"),
+        label = "Population",
+        choices = levels(data404$population),
+        selected = levels(data404$population),
+        multiple = T,
+        width = width_px
+      ),
+      sliderInput(
+        inputId = ns("fy_filter"),
+        label = "Fiscal year",
+        min = min(as.numeric(as.character(data404$fy))),
+        max = max(as.numeric(as.character(data404$fy))),
+        value = c(
+          min(as.numeric(as.character(data404$fy))),
+          max(as.numeric(as.character(data404$fy)))
+        ),
+        sep = "", pre = "FY ", width = "200px"
+      ),
+      selectInput(
+        inputId = ns("code_filter"),
+        label = "Service Code",
+        choices = levels(data404$code),
+        selected = levels(data404$code),
+        multiple = T, 
+        width = width_px
+      )
+    )
+
+  }
+  
+  # Make UI sidebar from module
+  output$service_use_ui <- renderUI(
+    sidebarLayout(
+      summary_ui_Input("svc_use"),
       mainPanel(
         DT::dataTableOutput("service_use_df")
       )
     )
   )
-    
   
   #### Visualizations ####
   
   output$service_use_df <- DT::renderDataTable(
-    
+
     summary_df() %>%
       select(-ends_with("_var")) %>%
       DT::datatable()
-    
+
   )
   
   output$bubble1 <- renderPlotly({
