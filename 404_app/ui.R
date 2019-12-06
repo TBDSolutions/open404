@@ -57,28 +57,6 @@ shinyUI(
                 data elements and service groupings. The 'Motion Chart' menu 
                 includes data visualizations that can be used to explore the data."
               ),
-              tags$strong("motion chart", style = "font-size: 125%;"),
-              br(),
-              p(
-                tags$ul(
-                  tags$li(
-                    strong("Compare Organizations: "),
-                    "This chart compares a single Service Type or Service across 
-                    PIHPs or CMHs. This chart answers questions such as: 
-                    'How does total cost compare to units per case for all CMHs 
-                    within my PIHP?'", 
-                    style = "font-size: 100%;"
-                  ),
-                  tags$li(
-                    strong("Compare Services: "),
-                    "This chart compares multiple services within a single PIHP 
-                    or CMH. This chart answers questions such as: 
-                    'How does total cost compare to total units per case for 
-                    community living services within my PIHP?'", 
-                    style = "font-size: 100%;"
-                  )
-                )
-              ),
               br(),
               p("You can download the 404 data used in this application below:"),
               downloadButton('downloadData', 'Download'),
@@ -155,7 +133,39 @@ shinyUI(
       )
     ),
     navbarMenu(
+      "Service Use",
+      tabPanel(
+        "Comparing Service Use",
+        uiOutput("service_use_ui")
+      )
+    ),
+    navbarMenu(
       "Motion Chart",
+      tabPanel(
+        "About",
+        tags$strong("motion chart", style = "font-size: 125%;"),
+        br(),
+        p(
+          tags$ul(
+            tags$li(
+              strong("Compare Organizations: "),
+              "This chart compares a single Service Type or Service across 
+                    PIHPs or CMHs. This chart answers questions such as: 
+                    'How does total cost compare to units per case for all CMHs 
+                    within my PIHP?'", 
+              style = "font-size: 100%;"
+            ),
+            tags$li(
+              strong("Compare Services: "),
+              "This chart compares multiple services within a single PIHP 
+                    or CMH. This chart answers questions such as: 
+                    'How does total cost compare to total units per case for 
+                    community living services within my PIHP?'", 
+              style = "font-size: 100%;"
+            )
+          )
+        )
+      ),
       tabPanel(
         "Compare Organizations",
         sidebarLayout(
