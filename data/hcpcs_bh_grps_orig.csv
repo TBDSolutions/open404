@@ -1,0 +1,373 @@
+svc_type,svc_grp,Code,Unit_Hours,n_unit_types,Revised Unit_Hours,Unit_Type
+Hospital Based Services,Inpatient Psychiatric Hospital,100,24,2,,Per Diem
+Hospital Based Services,Ancillary Hospital Services,104,NA,2,0.01,Minutes
+Hospital Based Services,Inpatient Psychiatric Hospital,113,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,114,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,124,NA,2,24,Per Diem
+Hospital Based Services,Ancillary Hospital Services,144,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,250,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,270,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,300,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,370,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,410,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,430,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,450,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,460,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,636,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,710,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,730,NA,2,N/A,Encounter
+Crisis Services,Extended Observation Beds,762,NA,1,,Encounter
+Hospital Based Services,Ancillary Hospital Services,900,NA,2,N/A,Encounter
+Hospital Based Services,Ancillary Hospital Services,901,NA,2,N/A,Encounter
+Crisis Services,Partial Hospitalization,912,NA,1,24,Per Diem
+Crisis Services,Partial Hospitalization,913,NA,1,24,Per Diem
+Screening & Assessment,Drug/alcohol screen,80100,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,80101,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,80300,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,80305,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,80306,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,82075,NA,1,,Encounter
+Psychiatric and Medication Services,Medication Administration,90772,NA,2,,Encounter
+Psychiatric and Medication Services,Medication Administration,90782,NA,2,,Encounter
+Screening & Assessment,Diagnostic Assessment,90785,NA,1,,Add On
+Psychiatric and Medication Services,Medication Administration,90788,NA,2,,Encounter
+Screening & Assessment,Diagnostic Assessment,90791,NA,1,,Encounter
+Screening & Assessment,Diagnostic Assessment,90792,NA,1,,Encounter
+Screening & Assessment,Psychiatric evaluation,90801,NA,1,,Encounter
+Screening & Assessment,Psychiatric evaluation,90802,NA,1,,Encounter
+Outpatient Treatment,Individual Therapy,90804,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90805,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90806,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90807,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90808,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90809,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90810,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90811,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90812,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90813,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90814,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90815,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90816,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90817,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90818,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90819,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90821,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90822,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90823,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90824,0.5,4,,Encounter - 30 min
+Outpatient Treatment,Individual Therapy,90826,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90827,0.83,4,,Encounter - 49 min
+Outpatient Treatment,Individual Therapy,90828,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90829,1.33,4,,Encounter - 80 min
+Outpatient Treatment,Individual Therapy,90832,NA,3,0.5,Encounter - 30 min
+Psychiatric and Medication Services,Psychotherapy add-on to E/M service,90833,NA,3,0.5,Add On
+Outpatient Treatment,Individual Therapy,90834,NA,3,0.75,Encounter - 45 min
+Psychiatric and Medication Services,Psychotherapy add-on to E/M service,90836,0.5,3,0.75,Add on
+Outpatient Treatment,Individual Therapy,90837,0.5,3,1,Hour
+Psychiatric and Medication Services,Psychotherapy add-on to E/M service,90838,0.83,3,1,Add On
+Crisis Services,Psychotherapy for crisis,90839,0.83,1,1,Hour
+Crisis Services,Psychotherapy for crisis,90840,0.83,1,0.5,Encounter - 30 min
+Outpatient Treatment,Family Therapy,90846,1.33,3,N/A,Encounter
+Outpatient Treatment,Family Therapy,90847,1.33,3,N/A,Encounter
+Outpatient Treatment,Group Therapy,90849,0.5,2,N/A,Encounter
+Outpatient Treatment,Group Therapy,90853,0.5,2,N/A,Encounter
+Outpatient Treatment,Group Therapy,90857,NA,2,,Encounter
+Psychiatric and Medication Services,Medication Management,90862,NA,3,,Encounter
+Hospital Based Services,Ancillary Hospital Services,90870,0.83,2,N/A,Encounter
+Screening & Assessment,Psychological Testing,90887,1.33,4,N/A,Encounter 
+Health Services,Speech & Language Therapy,92506,1.33,4,N/A,Encounter
+Health Services,Speech & Language Therapy,92507,1.33,4,N/A,Encounter
+Health Services,Speech & Language Therapy,92508,1.33,4,N/A,Encounter
+Screening & Assessment,Speech evaluation,92521,0.5,2,N/A,Encounter
+Screening & Assessment,Speech evaluation,92522,0.5,2,N/A,Encounter
+Health Services,Speech & Language Therapy,92523,0.83,4,N/A,Encounter
+Health Services,Speech & Language Therapy,92524,NA,4,,Encounter
+Health Services,Speech & Language Therapy,92526,1.33,4,N/A,Encounter
+Health Services,Speech & Language Therapy,92607,1,4,,Hour
+Health Services,Speech & Language Therapy,92608,NA,4,0.5,Encounter - 30 min
+Health Services,Speech & Language Therapy,92609,NA,4,,Encounter
+Screening & Assessment,Speech evaluation,92610,1.33,2,N/A,Encounter
+Screening & Assessment,Psychological Testing,96100,1,4,,Hour
+Screening & Assessment,Psychological Testing,96101,0.83,4,1,Hour
+Screening & Assessment,Psychological Testing,96102,1,4,,Hour
+Screening & Assessment,Psychological Testing,96103,1,4,,Hour
+Screening & Assessment,Psychological Testing,96105,NA,4,,Encounter 
+Screening & Assessment,Developmental Screen,96110,NA,1,,Encounter
+Screening & Assessment,Developmental Screen,96111,NA,1,,Encounter
+Screening & Assessment,Psychological Testing,96115,1,4,,Hour
+Screening & Assessment,Psychological Testing,96116,1,4,,Hour
+Screening & Assessment,Psychological Testing,96117,1,4,,Hour
+Screening & Assessment,Psychological Testing,96118,1,4,,Hour
+Screening & Assessment,Psychological Testing,96119,1,4,,Hour
+Screening & Assessment,Psychological Testing,96120,1,4,,Hour
+Screening & Assessment,Psychological Testing,96121,NA,4,1,Hour
+Screening & Assessment,Psychological Testing,96130,NA,4,1,Hour
+Screening & Assessment,Psychological Testing,96131,NA,4,1,Hour
+Screening & Assessment,Psychological Testing,96132,NA,4,1,Hour
+Screening & Assessment,Psychological Testing,96133,NA,4,1,Hour
+Screening & Assessment,Psychological Testing,96136,NA,4,0.5,Hour
+Screening & Assessment,Psychological Testing,96137,NA,4,0.5,30 min
+Screening & Assessment,Psychological Testing,96138,NA,4,0.5,Hour
+Screening & Assessment,Psychological Testing,96139,NA,4,0.5,30 min
+Screening & Assessment,Psychological Testing,96146,NA,4,N/A,Encounter
+Psychiatric and Medication Services,Medication Administration,96372,NA,2,,Encounter
+Screening & Assessment,Physical therapy evaluation,97001,NA,2,,Encounter
+Screening & Assessment,Physical therapy evaluation,97002,NA,2,,Encounter
+Screening & Assessment,Occupational therapy evaluation,97003,NA,1,,Encounter
+Screening & Assessment,Occupational therapy evaluation,97004,NA,1,,Encounter
+Health Services,Occupational Therapy and Physical Therapy,97110,0.25,2,0.5,Encounter - 30 min
+Health Services,Occupational Therapy and Physical Therapy,97112,0.25,2,,Encounter - 15 min
+Health Services,Occupational Therapy and Physical Therapy,97113,0.25,2,,Encounter - 15 min
+Health Services,Occupational Therapy and Physical Therapy,97116,0.25,2,,Encounter - 15 min
+Health Services,Occupational Therapy and Physical Therapy,97124,0.25,2,,Encounter - 15 min
+Health Services,Occupational Therapy and Physical Therapy,97140,0.25,2,,Encounter - 15 min
+Health Services,Occupational Therapy and Physical Therapy,97150,NA,2,,Encounter
+Screening & Assessment,ABA Behavior Assessment,97151,NA,1,0.25,15 min
+Behavioral Treatment,ABA Individual Treatment,97153,NA,1,0.25,15 min
+Behavioral Treatment,ABA Group Treatment,97154,NA,1,0.25,15 min
+Behavioral Treatment,ABA Supervision,97155,NA,1,0.25,15 min
+Behavioral Treatment,ABA Family Behavior Treatment Guidance,97156,NA,1,0.25,15 min
+Behavioral Treatment,ABA Family Behavior Treatment Guidance,97157,NA,1,0.25,15 min
+Behavioral Treatment,ABA Group Treatment,97158,NA,1,0.25,15 min
+Health Services,Occupational Therapy and Physical Therapy,97161,NA,2,,Encounter
+Health Services,Occupational Therapy and Physical Therapy,97162,NA,2,0.5,Encounter - 30 min
+Health Services,Occupational Therapy and Physical Therapy,97163,NA,2,0.75,Encounter - 45 min
+Health Services,Occupational Therapy and Physical Therapy,97164,NA,2,0.33,Encounter - 20 min
+Health Services,Occupational Therapy and Physical Therapy,97165,NA,2,0.5,Encounter - 30 min
+Health Services,Occupational Therapy and Physical Therapy,97166,NA,2,0.75,Encounter - 45 min
+Health Services,Occupational Therapy and Physical Therapy,97167,NA,2,1,Hour
+Health Services,Occupational Therapy and Physical Therapy,97168,NA,2,0.5,Encounter - 30 min
+Health Services,Occupational Therapy and Physical Therapy,97504,0.25,2,N/A,Encounter
+Health Services,Occupational Therapy and Physical Therapy,97530,0.25,2,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97532,0.25,2,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97533,0.25,2,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97535,0.25,2,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97537,0.25,2,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97542,0.25,2,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97703,0.25,2,,15 min
+Screening & Assessment,Physical therapy evaluation,97750,0.25,2,,15 min
+Screening & Assessment,Physical therapy evaluation,97755,0.25,2,,16 min
+Health Services,Occupational Therapy and Physical Therapy,97760,0.25,2,,Encounter - 15 min
+Equipment/Supplies,Prosthetic training,97761,0.25,1,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97762,0.25,2,,15 min
+Health Services,Occupational Therapy and Physical Therapy,97763,NA,2,0.25,15 min
+Health Services,Nutrition Services,97802,0.25,1,N/A,Encounter
+Health Services,Nutrition Services,97803,0.25,1,N/A,Encounter
+Health Services,Nutrition Services,97804,0.25,1,N/A,Encounter
+Outpatient Treatment,Accupuncture,97810,NA,1,0.25,15 min
+Outpatient Treatment,Accupuncture,97811,NA,1,0.25,15 min
+Psychiatric and Medication Services,Psychiatric office visit,99201,1,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99202,1,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99203,1,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99204,NA,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99205,1,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99211,1,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99212,NA,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99213,NA,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99214,0.25,3,N/A,Add On
+Psychiatric and Medication Services,Psychiatric office visit,99215,0.25,3,N/A,Add On
+Hospital Based Services,Inpatient physician care,99221,0.25,3,24,Per Diem
+Hospital Based Services,Inpatient physician care,99222,0.25,3,24,Per Diem
+Hospital Based Services,Inpatient physician care,99223,1.17,3,24,Per Diem
+Hospital Based Services,Inpatient physician care,99224,0.25,3,24,Per Diem
+Hospital Based Services,Inpatient physician care,99225,0.42,3,24,Per Diem
+Hospital Based Services,Inpatient physician care,99231,0.25,3,24,Per Diem
+Hospital Based Services,Inpatient physician care,99232,0.25,3,24,Per Diem
+Hospital Based Services,Inpatient physician care,99233,0.25,3,24,Per Diem
+Hospital Based Services,Hospital discharge management,99238,0.5,2,0.5,Encounter - 30 min
+Hospital Based Services,Hospital discharge management,99239,NA,2,N/A,Encounter - > 30 min
+Psychiatric and Medication Services,Psychiatric office visit,99241,0.25,3,N/A, Encounter
+Psychiatric and Medication Services,Psychiatric office visit,99242,NA,3,N/A, Encounter
+Psychiatric and Medication Services,Psychiatric office visit,99243,NA,3,N/A, Encounter
+Psychiatric and Medication Services,Psychiatric office visit,99244,NA,3,N/A, Encounter
+Psychiatric and Medication Services,Psychiatric office visit,99245,NA,3,N/A, Encounter
+Hospital Based Services,Inpatient consultation,99251,NA,1,,Encounter
+Hospital Based Services,Inpatient consultation,99252,NA,1,0,Encounter
+Hospital Based Services,Inpatient consultation,99253,NA,1,,Encounter
+Hospital Based Services,Inpatient consultation,99254,NA,1,,Encounter
+Hospital Based Services,Inpatient consultation,99255,NA,1,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99261,NA,5,, Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99262,NA,5,, Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99263,NA,5,, Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99274,NA,5,, Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99304,0.42,5,N/A,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99305,0.58,5,N/A,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99306,NA,5,N/A,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99307,NA,5,N/A,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99308,0.25,5,N/A,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99309,0.42,5,N/A,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99310,0.58,5,N/A,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99324,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99325,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99326,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99327,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99328,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99334,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99335,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99336,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99337,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99341,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99342,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99345,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99347,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99348,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99349,NA,5,,Encounter
+Psychiatric and Medication Services,Psychiatric visit (out of office),99350,0.83,5,,Encounter
+Psychiatric and Medication Services,Medication Administration,99506,0.25,2,N/A,Encounter
+Psychiatric and Medication Services,Medication Management,99605,0.25,3,,15 min
+Hospital Based Services,Inpatient Psychiatric Hospital,0039PT73,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,0100PT22,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,0100PT65,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,0100PT68,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,0100PT73,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,0114PT68,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,0114PT73,NA,2,24,Per Diem
+Screening & Assessment,ABA Behavior Assessment,0359T,NA,1,,Encounter
+Screening & Assessment,ABA Behavior Assessment,0362T,NA,1,0.5,Encounter - 30 min
+Screening & Assessment,ABA Behavior Assessment,0363T,NA,1,0.5,Encounter - 30 min
+Behavioral Treatment,ABA Individual Treatment,0364T,NA,1,0.5,Encounter - 30 min
+Behavioral Treatment,ABA Individual Treatment,0365T,NA,1,0.5,Encounter - 30 min
+Behavioral Treatment,ABA Group Treatment,0366T,NA,1,0.5,Encounter - 30 min
+Behavioral Treatment,ABA Group Treatment,0367T,NA,1,0.5,Encounter - 30 min
+Behavioral Treatment,ABA Supervision,0368T,NA,1,0.5,Encounter - 30 min
+Behavioral Treatment,ABA Supervision,0369T,NA,1,0.5,Encounter - 30 min
+Behavioral Treatment,ABA Family Behavior Treatment Guidance,0370T,NA,1,,Encounter
+Behavioral Treatment,ABA Supervision,0371T,NA,1,,Encounter
+Behavioral Treatment,ABA Group Treatment,0372T,NA,1,,Encounter
+Behavioral Treatment,ABA Exposure Adaptive Behavior Treatment,0373T,NA,1,0.25,15 min
+Behavioral Treatment,ABA Exposure Adaptive Behavior Treatment,0374T,NA,1,0.5,Encounter - 30 min
+Hospital Based Services,Inpatient Psychiatric Hospital,040PT68,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,100PT65,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,100PT68,NA,2,24,Per Diem
+Hospital Based Services,Inpatient Psychiatric Hospital,100PT73,NA,2,24,Per Diem
+Transportation,Transportation mileage and fees,A0080,0.25,4,N/A,Mile
+Transportation,Transportation mileage and fees,A0090,NA,4, ,Mile
+Transportation,Transportation,A0100,0.58,4,N/A,Encounter
+Transportation,Transportation,A0110,NA,4,,Encounter
+Transportation,Transportation,A0120,NA,4,,Encounter
+Transportation,Transportation,A0130,NA,4,,Encounter
+Transportation,Transportation,A0140,NA,4,,Encounter
+Transportation,Transportation mileage and fees,A0160,NA,4,N/A,Mile
+Transportation,Transportation mileage and fees,A0170,NA,1,N/A,Mile
+Transportation,Transportation mileage and fees,A0425,NA,1,  ,Mile
+Transportation,Ambulance transport,A0427,NA,1,,Encounter
+Transportation,Ambulance transport,A0428,NA,1,,Encounter
+Health Services,Dental,D0150,NA,1,,Encounter
+Health Services,Dental,D0180,NA,1,,Encounter
+Health Services,Dental,D1110,NA,1,,Encounter
+Health Services,Dental,D2330,NA,1,,Encounter
+Health Services,Dental,D2332,NA,1,,Encounter
+Health Services,Dental,D2391,NA,1,,Encounter
+Equipment/Supplies,Durable medical equipment,E1399,NA,1,,Item
+Health Services,Occupational Therapy and Physical Therapy,G0176,NA,2,N/A,Encounter
+Family Education and Support,Family Psycho-Education,G0177,0.75,2,,Session - at least 45 min
+Psychiatric and Medication Services,Medication Administration,G0351,NA,2,,Encounter
+Outpatient Treatment,Individual Therapy,G0409,0.25,4,,15 min
+Health Services,Occupational Therapy and Physical Therapy,G0515,NA,2,0.25,15 min
+Screening & Assessment,Assessment,H0001,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,H0002,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,H0003,NA,1,,Encounter
+Outpatient Treatment,Alcohol/drug therapy,H0004,0.25,3,,15 min
+Outpatient Treatment,Group Therapy,H0005,NA,2,,Encounter
+Coordination and Planning,Case Management,H0006,NA,2,,Encounter
+Sub-acute Withdrawal Management,Residential Detox with Medical Monitoring,H0010,24,1,,Per Diem
+Sub-acute Withdrawal Management,Residential Detox without Medical Monitoring,H0012,24,1,,Per Diem
+Sub-acute Withdrawal Management,Ambulatory / Social Detox,H0014,24,1,,Per Diem
+Outpatient Treatment,Intensive Outpatient,H0015,24,1,,Per Diem
+Crisis Services,Short-Term Residential,H0018,24,1,,Per Diem
+Home & Community Based Services,Long-term Residential (SUD),H0019,24,1,,Per Diem
+Psychiatric and Medication Services,Medication Administration,H0020,NA,2,,Encounter
+Outpatient Treatment,Early Intervention,H0022,NA,1,,Encounter
+Peer Services,Drop-in Center,H0023,NA,1,,Encounter
+Outpatient Treatment,Prevention services,H0025,NA,2,,Encounter
+Crisis Services,Crisis Line,H0030,NA,1,,Encounter
+Screening & Assessment,Assessment,H0031,NA,1,,Encounter
+Coordination and Planning,Treatment Planning,H0032,NA,1,,Encounter
+Psychiatric and Medication Services,Medication Administration,H0033,NA,2,,Encounter
+Psychiatric and Medication Services,Medication Training,H0034,0.25,1,,15 min
+Intensive Community-Based Treatment,Home-based services,H0036,0.25,1,,15 min
+Peer Services,Peer Support,H0038,0.25,2,,15 min
+Intensive Community-Based Treatment,Assertive Community Treatment,H0039,0.25,1,,15 min
+Home & Community Based Services,Supported Independent Living,H0043,24,1,,Per Diem
+Respite,Respite stay (per diem),H0045,24,1,,Per Diem
+Peer Services,Peer Support,H0046,NA,2,,Encounter
+Screening & Assessment,Laboratory,H0048,NA,1,,Encounter
+Screening & Assessment,Drug/alcohol screen,H0049,NA,1,,Encounter
+Outpatient Treatment,Alcohol/drug therapy,H0050,0.25,3,,15 min
+Behavioral Treatment,Behavior Treatment Review,H2000,NA,1,,Encounter
+Psychiatric and Medication Services,Comprehensive Medication Services,H2010,0.25,1,,15 min
+Crisis Services,Crisis Intervention,H2011,0.25,2,,15 min
+Employment Services,Skill-Building/Non-Vocational,H2014,0.25,1,,15 min
+Home & Community Based Services,Community Living Supports 15 minutes,H2015,0.25,1,,15 min
+Home & Community Based Services,CLS per diem,H2016,0.25,1,24,Per Diem
+Outpatient Treatment,Behavioral Therapy,H2019,0.25,1,,15 min
+Crisis Services,Crisis Intervention (per diem),H2020,24,2,,Per Diem
+Intensive Community-Based Treatment,Wraparound services,H2021,0.25,2,,15 min
+Intensive Community-Based Treatment,Wraparound services,H2022,24,2,,Per Diem
+Employment Services,Supported Employment,H2023,0.25,1,,15 min
+Outpatient Treatment,Psychoeducation,H2027,0.25,1,,15 min
+Employment Services,Clubhouse Psychosocial Rehabilitation,H2030,0.25,1,,15 min
+Intensive Community-Based Treatment,Multi-systemic therapy,H2033,0.25,1,,15 min
+Home & Community Based Services,Recovery Housing,H2034,NA,1,24,Per Diem
+Outpatient Treatment,Alcohol/drug therapy,H2035,1,3,,Hour
+Outpatient Treatment,Alcohol/drug therapy,H2036,0.75,3,24,Per Diem
+Psychiatric and Medication Services,Medication Management,M0064,0.17,3,N/A,Encounter
+Telemedicine,Telehealth facility fee,Q3014,NA,1,,Encounter
+Transportation,Transportation mileage and fees,S0209,NA,1,,Mile
+Transportation,Transportation mileage and fees,S0215,NA,1,,Mile
+Family Education and Support,Homecare training (15 min),S5108,0.25,1,,15 min
+Family Education and Support,Homecare training (15 min),S5110,0.25,1,,15 min
+Family Education and Support,Homecare training sessions,S5111,24,1,N/A,Encounter
+Family Education and Support,Homecare training sessions,S5116,24,1,N/A,Encounter
+Home & Community Based Services,Chore services,S5120,0.25,1,,15 min
+Home & Community Based Services,Foster care,S5140,24,1,,Per Diem
+Home & Community Based Services,Foster care,S5145,24,1,,Per Diem
+Respite,Respite services (15 min),S5150,0.25,1,,15 min
+Respite,Respite stay (per diem),S5151,24,1,,Per Diem
+Equipment/Supplies,Emergency response system,S5160,NA,2,,Item
+Equipment/Supplies,Emergency response system,S5161,720,2,N/A,Monthly
+Equipment/Supplies,Home and vehicle modifications,S5165,NA,2,,Item
+Equipment/Supplies,Specialized supplies,S5199,NA,1,,Item
+Health Services,Occupational Therapy and Physical Therapy,S8990,NA,2,,Encounter
+Health Services,Private duty nursing (per hour),S9123,1,2,,Hour
+Health Services,Private duty nursing (per hour),S9124,0.25,2,1,Hour
+Respite,In-home respite (per diem),S9125,24,1,,Per Diem
+Health Services,Patient Education,S9445,0.25,1,N/A,Encounter
+Health Services,Patient Education,S9446,0.25,1,N/A,Encounter
+Health Services,Nutrition Services,S9470,0.25,1,N/A,Encounter
+Intensive Community-Based Treatment,Prevention services,S9482,0.25,2,,15 min
+Crisis Services,Intensive crisis stabilization,S9484,0.25,1,1,Hour
+Home & Community Based Services,Residential room and board,S9976,24,1,,Per Diem
+Health Services,Private duty nursing (15 min),T1000,0.25,1,,15 min
+Screening & Assessment,Nursing Assessment,T1001,NA,1,,Encounter
+Health Services,Nursing Services,T1002,0.25,1,,15 min
+Health Services,Nursing Services,T1003,0.25,1,,15 min
+Respite,Respite services (15 min),T1005,0.25,1,,15 min
+Coordination and Planning,Treatment Planning,T1007,NA,1,,Encounter
+Family Education and Support,Child sitting services,T1009,0.25,1,N/A,Encounter
+Peer Services,Peer Support,T1012,0.25,2,N/A,Encounter
+Family Education and Support,Family Psycho-Education,T1015,24,2,N/A,Encounter
+Coordination and Planning,Case Management,T1016,0.25,2,,15 min
+Coordination and Planning,Case Management,T1017,0.25,2,,15 min
+Home & Community Based Services,Personal Care per diem,T1020,0.25,1,24,Per Diem
+Screening & Assessment,Pre-admission screening,T1023,0.25,1,N/A,Encounter
+Outpatient Treatment,Prevention services,T1027,0.25,2,,15 min
+Psychiatric and Medication Services,Pharmaceuticals,T1999,24,1,N/A,Item
+Transportation,Transportation escort,T2001,0.25,1,N/A,Encounter
+Transportation,Transportation,T2002,0.25,4,24,Per Diem
+Transportation,Transportation,T2003,0.25,4,N/A,Encounter - Trip
+Transportation,Transportation,T2004,0.25,4,N/A`,Encounter
+Transportation,Transportation,T2005,0.17,4,N/A,Encounter
+Screening & Assessment,OBRA Assessment,T2011,NA,1,,Encounter
+Employment Services,Pre-vocational services,T2015,1,1,,Hour
+Coordination and Planning,Case Management (per month),T2023,720,1,N/A,Monthly
+Outpatient Treatment,Prevention services,T2024,0.25,2,N/A,Encounter
+Coordination and Planning,Fiscal Intermediary Services,T2025,0.25,1,720,Monthly
+Equipment/Supplies,Specialized supplies,T2028,NA,1,,Item
+Equipment/Supplies,Durable medical equipment,T2029,NA,1,,Item
+Crisis Services,Crisis Intervention (per diem),T2034,24,2,,Per Diem
+Respite,Therapeutic camping,T2036,8,1,N/A,Encounter
+Respite,Therapeutic camping,T2037,8,1,N/A,Encounter
+Home & Community Based Services,Housing Assistance,T2038,24,1,N/A,Encounter
+Equipment/Supplies,Home and vehicle modifications,T2039,0.25,2,N/A,Item
+Equipment/Supplies,Good and services,T5999,24,1,N/A,Item

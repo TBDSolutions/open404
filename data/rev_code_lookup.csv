@@ -1,0 +1,715 @@
+lcd_id,lcd_version,revenue_code_id,revenue_code_version,range,last_updated,description
+33256,21,99999,11,N,38:54.3,Not Applicable
+33257,7,636,9,N,06:35.7,Pharmacy - Drugs Requiring Detailed Coding
+33263,8,750,7,N,33:12.7,Gastro-Intestinal (GI) Services - General Classification
+33263,8,760,7,X,33:12.7,Specialty Services - General Classification
+33263,8,761,7,Y,33:12.7,Specialty Services - Treatment Room
+33263,8,762,7,Y,33:12.7,Specialty Services - Observation Hours
+33263,8,769,7,Z,33:12.7,Specialty Services - Other Specialty Services
+33263,8,920,7,X,33:12.7,Other Diagnostic Services - General Classification
+33263,8,921,7,Y,33:12.7,Other Diagnostic Services - Peripheral Vascular Lab
+33263,8,922,7,Y,33:12.7,Other Diagnostic Services - Electromyelgram
+33263,8,923,7,Y,33:12.7,Other Diagnostic Services - Pap Smear
+33263,8,924,7,Y,33:12.8,Other Diagnostic Services - Allergy Test
+33263,8,925,7,Y,33:12.8,Other Diagnostic Services - Pregnancy Test
+33263,8,929,7,Z,33:12.8,Other Diagnostic Services - Other Diagnostic Service
+33266,13,636,10,N,02:52.7,Pharmacy - Drugs Requiring Detailed Coding
+33268,34,99999,10,N,29:42.7,Not Applicable
+33272,10,341,10,N,10:41.7,Nuclear Medicine - Diagnostic
+33273,18,636,10,N,05:35.2,Pharmacy - Drugs Requiring Detailed Coding
+33275,18,636,10,N,38:05.1,Pharmacy - Drugs Requiring Detailed Coding
+33278,9,636,10,N,29:20.5,Pharmacy - Drugs Requiring Detailed Coding
+33284,7,350,6,X,12:42.0,CT Scan - General Classification
+33284,7,322,6,Y,12:42.0,Radiology - Diagnostic - Arthrography
+33284,7,323,6,Y,12:42.0,Radiology - Diagnostic - Arteriography
+33284,7,324,6,Y,12:42.0,Radiology - Diagnostic - Chest X-Ray
+33284,7,329,6,Z,12:42.0,Radiology - Diagnostic - Other Radiology - Diagnostic
+33284,7,351,6,Y,12:42.0,CT Scan - Head Scan
+33284,7,352,6,Y,12:42.0,CT Scan - Body Scan
+33284,7,359,6,Z,12:42.0,CT Scan - CT - Other
+33284,7,320,6,X,12:42.0,Radiology - Diagnostic - General Classification
+33284,7,321,6,Y,12:42.0,Radiology - Diagnostic - Angiocardiography
+33285,6,321,6,Y,13:37.8,Radiology - Diagnostic - Angiocardiography
+33285,6,320,6,X,13:37.8,Radiology - Diagnostic - General Classification
+33285,6,329,6,Z,13:37.8,Radiology - Diagnostic - Other Radiology - Diagnostic
+33285,6,350,6,N,13:37.8,CT Scan - General Classification
+33285,6,324,6,Y,13:37.8,Radiology - Diagnostic - Chest X-Ray
+33285,6,323,6,Y,13:37.8,Radiology - Diagnostic - Arteriography
+33285,6,322,6,Y,13:37.8,Radiology - Diagnostic - Arthrography
+33412,6,636,4,N,5/28/2014 15:49,Pharmacy - Drugs Requiring Detailed Coding
+33416,29,99999,10,N,04:40.9,Not Applicable
+33580,34,440,10,N,54:00.1,Speech-Language Pathology - General Classification
+33580,34,444,10,N,54:00.1,Speech-Language Pathology - Evaluation or Reevaluation
+33580,34,449,10,N,54:00.1,Speech-Language Pathology - Other Speech Therapy
+33595,8,510,9,X,57:34.3,Clinic - General Classification
+33595,8,511,9,Y,57:34.3,Clinic - Chronic Pain Center
+33595,8,512,9,Y,57:34.3,Clinic - Dental Clinic
+33595,8,513,9,Y,57:34.3,Clinic - Psychiatric Clinic
+33595,8,514,9,Y,57:34.3,Clinic - OB-GYN Clinic
+33595,8,515,9,Y,57:34.3,Clinic - Pediatric Clinic
+33595,8,516,9,Y,57:34.3,Clinic - Urgent Care Clinic
+33595,8,517,9,Y,57:34.3,Clinic - Family Practice Clinic
+33595,8,519,9,Z,57:34.3,Clinic - Other Clinic
+33595,8,360,9,X,57:34.2,Operating Room Services - General Classification
+33595,8,361,9,Y,57:34.2,Operating Room Services - Minor Surgery
+33595,8,362,9,Y,57:34.3,Operating Room Services - Organ Transplant - Other than Kidney
+33595,8,367,9,Y,57:34.3,Operating Room Services - Kidney Transplant
+33595,8,369,9,Z,57:34.3,Operating Room Services - Other OR Services
+33613,20,520,8,N,14:24.4,Freestanding Clinic - General Classification
+33613,20,510,8,N,14:24.4,Clinic - General Classification
+33613,20,960,8,N,14:24.4,Professional Fees - General Classification
+33631,43,439,11,N,42:27.4,Occupational Therapy - Other Occupational Therapy
+33631,43,434,11,N,42:27.4,Occupational Therapy - Evaluation or Reevaluation
+33631,43,431,11,N,42:27.4,Occupational Therapy - Visit
+33631,43,420,11,N,42:27.4,Physical Therapy - General Classification
+33631,43,421,11,N,42:27.4,Physical Therapy - Visit
+33631,43,424,11,N,42:27.4,Physical Therapy - Evaluation or Re-evaluation
+33631,43,429,11,N,42:27.4,Physical Therapy - Other Physical Therapy
+33631,43,430,11,N,42:27.4,Occupational Therapy - General Classification
+33636,46,510,11,X,47:39.1,Clinic - General Classification
+33636,46,511,11,Y,47:39.1,Clinic - Chronic Pain Center
+33636,46,512,11,Y,47:39.1,Clinic - Dental Clinic
+33636,46,516,11,Y,47:39.1,Clinic - Urgent Care Clinic
+33636,46,517,11,Y,47:39.1,Clinic - Family Practice Clinic
+33636,46,513,11,Y,47:39.1,Clinic - Psychiatric Clinic
+33636,46,514,11,Y,47:39.1,Clinic - OB-GYN Clinic
+33636,46,515,11,Y,47:39.1,Clinic - Pediatric Clinic
+33636,46,519,11,Z,47:39.1,Clinic - Other Clinic
+33636,46,940,11,N,47:39.1,Other Therapeutic Services - General Classification
+33671,29,99999,10,N,00:41.3,Not Applicable
+33684,44,99999,10,N,41:19.3,Not Applicable
+33721,8,359,6,N,15:25.3,CT Scan - CT - Other
+33721,8,351,6,N,15:25.3,CT Scan - Head Scan
+33721,8,352,6,N,15:25.3,CT Scan - Body Scan
+33721,8,322,6,Y,15:25.3,Radiology - Diagnostic - Arthrography
+33721,8,323,6,Y,15:25.3,Radiology - Diagnostic - Arteriography
+33721,8,324,6,Y,15:25.3,Radiology - Diagnostic - Chest X-Ray
+33721,8,329,6,Z,15:25.3,Radiology - Diagnostic - Other Radiology - Diagnostic
+33721,8,350,6,N,15:25.3,CT Scan - General Classification
+33721,8,320,6,X,15:25.3,Radiology - Diagnostic - General Classification
+33721,8,321,6,Y,15:25.3,Radiology - Diagnostic - Angiocardiography
+33722,12,636,9,N,32:44.2,Pharmacy - Drugs Requiring Detailed Coding
+33723,16,636,10,N,41:40.8,Pharmacy - Drugs Requiring Detailed Coding
+33726,18,636,9,N,02:08.6,Pharmacy - Drugs Requiring Detailed Coding
+33727,10,636,10,N,15:35.6,Pharmacy - Drugs Requiring Detailed Coding
+33729,10,636,10,N,16:32.4,Pharmacy - Drugs Requiring Detailed Coding
+33730,20,636,10,N,50:46.5,Pharmacy - Drugs Requiring Detailed Coding
+33746,21,636,10,N,17:35.0,Pharmacy - Drugs Requiring Detailed Coding
+33748,9,636,10,N,18:24.7,Pharmacy - Drugs Requiring Detailed Coding
+33752,11,636,10,N,19:22.0,Pharmacy - Drugs Requiring Detailed Coding
+33774,13,99999,10,N,50:47.7,Not Applicable
+33808,11,99999,10,N,24:02.5,Not Applicable
+33817,17,99999,10,N,08:28.8,Not Applicable
+33904,23,99999,10,N,22:43.6,Not Applicable
+33915,14,99999,10,N,01:39.4,Not Applicable
+33934,9,99999,10,N,25:54.3,Not Applicable
+33965,10,99999,10,N,35:21.5,Not Applicable
+33968,7,99999,10,N,33:48.5,Not Applicable
+33970,7,821,9,N,03:37.2,Hemodialysis - Outpatient or Home - Hemodialysis Composite or Other Rate
+33972,29,904,10,N,57:09.6,Behavioral Health Treatment/Services - Activity Therapy
+33972,29,914,10,N,57:09.6,Behavioral Health Treatment/Services - Individual Therapy
+33972,29,915,10,N,57:09.6,Behavioral Health Treatment/Services - Group Therapy
+33972,29,916,10,N,57:09.6,Behavioral Health Treatment/Services - Family Therapy
+33972,29,918,10,N,57:09.6,Behavioral Health Treatment/Services - Testing
+33972,29,942,10,N,57:09.6,Other Therapeutic Services - Education/Training
+33972,29,900,10,N,57:09.6,Behavioral Health Treatment/Services - General Classification
+33972,29,431,10,Y,57:09.6,Occupational Therapy - Visit
+33972,29,430,10,X,57:09.6,Occupational Therapy - General Classification
+33972,29,432,10,Y,57:09.6,Occupational Therapy - Hourly
+33972,29,433,10,Y,57:09.6,Occupational Therapy - Group
+33972,29,434,10,Y,57:09.6,Occupational Therapy - Evaluation or Reevaluation
+33972,29,439,10,Z,57:09.6,Occupational Therapy - Other Occupational Therapy
+33972,29,250,10,N,57:09.6,Pharmacy - General Classification
+33978,11,636,10,N,27:46.8,Pharmacy - Drugs Requiring Detailed Coding
+33989,13,636,10,N,48:31.5,Pharmacy - Drugs Requiring Detailed Coding
+33998,9,636,9,N,59:35.4,Pharmacy - Drugs Requiring Detailed Coding
+34009,25,99999,9,N,14:44.1,Not Applicable
+34215,45,300,10,N,34:35.4,Laboratory - General Classification
+34215,45,302,10,N,34:35.4,Laboratory - Immunology
+34215,45,309,10,N,34:35.4,Laboratory - Other Laboratory
+34242,25,99999,9,N,12:49.7,Not Applicable
+34373,4,99999,4,N,3/23/2014 15:32,Not Applicable
+34374,6,321,6,Y,22:03.4,Radiology - Diagnostic - Angiocardiography
+34374,6,320,6,X,22:03.4,Radiology - Diagnostic - General Classification
+34374,6,322,6,Y,22:03.4,Radiology - Diagnostic - Arthrography
+34374,6,329,6,Z,22:03.4,Radiology - Diagnostic - Other Radiology - Diagnostic
+34374,6,324,6,Y,22:03.4,Radiology - Diagnostic - Chest X-Ray
+34374,6,323,6,Y,22:03.4,Radiology - Diagnostic - Arteriography
+34374,6,611,6,N,22:03.4,Magnetic Resonance Technology (MRT) - MRI - Brain/Brainstem
+34375,6,611,6,Y,23:05.0,Magnetic Resonance Technology (MRT) - MRI - Brain/Brainstem
+34375,6,612,6,Y,23:05.0,Magnetic Resonance Technology (MRT) - MRI - Spinal Cord/Spine
+34375,6,610,6,X,23:05.0,Magnetic Resonance Technology (MRT) - General Classification
+34375,6,614,6,Y,23:05.0,Magnetic Resonance Technology (MRT) - MRI - Other
+34375,6,615,6,Y,23:05.0,Magnetic Resonance Technology (MRT) - MRA - Head and Neck
+34375,6,616,6,Y,23:05.0,Magnetic Resonance Technology (MRT) - MRA - Lower Extremities
+34375,6,618,6,Y,23:05.0,Magnetic Resonance Technology (MRT) - MRA - Other
+34375,6,619,6,Z,23:05.0,Magnetic Resonance Technology (MRT) - Other MRT
+34375,6,323,6,Y,23:05.0,Radiology - Diagnostic - Arteriography
+34375,6,324,6,Y,23:05.0,Radiology - Diagnostic - Chest X-Ray
+34375,6,329,6,Z,23:05.0,Radiology - Diagnostic - Other Radiology - Diagnostic
+34375,6,322,6,Y,23:05.0,Radiology - Diagnostic - Arthrography
+34375,6,321,6,Y,23:04.9,Radiology - Diagnostic - Angiocardiography
+34375,6,320,6,X,23:04.9,Radiology - Diagnostic - General Classification
+34376,6,320,6,X,24:48.5,Radiology - Diagnostic - General Classification
+34376,6,321,6,Y,24:48.5,Radiology - Diagnostic - Angiocardiography
+34376,6,322,6,Y,24:48.5,Radiology - Diagnostic - Arthrography
+34376,6,324,6,Y,24:48.5,Radiology - Diagnostic - Chest X-Ray
+34376,6,329,6,Z,24:48.5,Radiology - Diagnostic - Other Radiology - Diagnostic
+34376,6,323,6,Y,24:48.5,Radiology - Diagnostic - Arteriography
+34376,6,612,6,N,24:48.6,Magnetic Resonance Technology (MRT) - MRI - Spinal Cord/Spine
+34377,6,610,6,N,25:47.3,Magnetic Resonance Technology (MRT) - General Classification
+34377,6,619,6,N,25:47.3,Magnetic Resonance Technology (MRT) - Other MRT
+34377,6,323,6,Y,25:47.3,Radiology - Diagnostic - Arteriography
+34377,6,324,6,Y,25:47.3,Radiology - Diagnostic - Chest X-Ray
+34377,6,329,6,Z,25:47.3,Radiology - Diagnostic - Other Radiology - Diagnostic
+34377,6,322,6,Y,25:47.3,Radiology - Diagnostic - Arthrography
+34377,6,321,6,Y,25:47.3,Radiology - Diagnostic - Angiocardiography
+34377,6,320,6,X,25:47.3,Radiology - Diagnostic - General Classification
+34974,26,320,9,X,22:26.2,Radiology - Diagnostic - General Classification
+34974,26,321,9,Y,22:26.2,Radiology - Diagnostic - Angiocardiography
+34974,26,324,9,Y,22:26.2,Radiology - Diagnostic - Chest X-Ray
+34974,26,329,9,Z,22:26.2,Radiology - Diagnostic - Other Radiology - Diagnostic
+34974,26,323,9,Y,22:26.2,Radiology - Diagnostic - Arteriography
+34974,26,322,9,Y,22:26.2,Radiology - Diagnostic - Arthrography
+34974,26,360,9,X,22:26.2,Operating Room Services - General Classification
+34974,26,361,9,Y,22:26.2,Operating Room Services - Minor Surgery
+34974,26,369,9,Z,22:26.2,Operating Room Services - Other OR Services
+34974,26,362,9,Y,22:26.2,Operating Room Services - Organ Transplant - Other than Kidney
+34974,26,760,9,X,22:26.3,Specialty Services - General Classification
+34974,26,523,9,Y,22:26.3,Freestanding Clinic - Family Practice Clinic
+34974,26,524,9,Y,22:26.3,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF or Skilled Swing Bed in a Covered Part A Stay
+34974,26,525,9,Y,22:26.3,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF (not in a Covered Part A Stay) or NF or ICF MR or Other Residential Facility
+34974,26,526,9,Y,22:26.3,Freestanding Clinic - Urgent Care Clinic
+34974,26,527,9,Y,22:26.3,Freestanding Clinic - Visiting Nurse Service(s) to a Member's Home when in a Home Health Shortage Area
+34974,26,528,9,Y,22:26.3,Freestanding Clinic - Visit by RHC/FQHC Practitioner to Other non-RHC/FQHC site (e.g. Scene of Accident)
+34974,26,529,9,Z,22:26.3,Freestanding Clinic - Other Freestanding Clinic
+34974,26,516,9,Y,22:26.2,Clinic - Urgent Care Clinic
+34974,26,519,9,Z,22:26.2,Clinic - Other Clinic
+34974,26,517,9,Y,22:26.2,Clinic - Family Practice Clinic
+34974,26,520,9,X,22:26.2,Freestanding Clinic - General Classification
+34974,26,521,9,Y,22:26.2,Freestanding Clinic - Clinic Visit by Member to RHC/FQHC
+34974,26,522,9,Y,22:26.3,Freestanding Clinic - Home Visit by RHC/FQHC Practitioner
+34974,26,450,9,X,22:26.2,Emergency Room - General Classification
+34974,26,451,9,Y,22:26.2,Emergency Room - EMTALA Emergency Medical Screening Services
+34974,26,367,9,Y,22:26.2,Operating Room Services - Kidney Transplant
+34974,26,513,9,Y,22:26.2,Clinic - Psychiatric Clinic
+34974,26,515,9,Y,22:26.2,Clinic - Pediatric Clinic
+34974,26,514,9,Y,22:26.2,Clinic - OB-GYN Clinic
+34974,26,510,9,X,22:26.2,Clinic - General Classification
+34974,26,512,9,Y,22:26.2,Clinic - Dental Clinic
+34974,26,511,9,Y,22:26.2,Clinic - Chronic Pain Center
+34974,26,490,9,X,22:26.2,Ambulatory Surgical Care - General Classification
+34974,26,499,9,Z,22:26.2,Ambulatory Surgical Care - Other Ambulatory Surgical Care
+34974,26,452,9,Y,22:26.2,Emergency Room - ER Beyond EMTALA Screening
+34974,26,456,9,Y,22:26.2,Emergency Room - Urgent Care
+34974,26,459,9,Z,22:26.2,Emergency Room - Other Emergency Room
+34974,26,982,9,N,22:26.4,Professional Fees - Outpatient Services
+34974,26,964,9,Y,22:26.4,Professional Fees - Anesthesiologist (CRNA)
+34974,26,981,9,N,22:26.4,Professional Fees - Emergency Room Services
+34974,26,960,9,X,22:26.4,Professional Fees - General Classification
+34974,26,961,9,Y,22:26.4,Professional Fees - Psychiatric
+34974,26,962,9,Y,22:26.4,Professional Fees - Ophthalmology
+34974,26,963,9,Y,22:26.4,Professional Fees - Anesthesiologist (MD)
+34974,26,969,9,Z,22:26.4,Professional Fees - Other Professional Fee
+34974,26,983,9,N,22:26.4,Professional Fees - Clinic
+34974,26,761,9,Y,22:26.3,Specialty Services - Treatment Room
+34974,26,769,9,Z,22:26.4,Specialty Services - Other Specialty Services
+34974,26,762,9,Y,22:26.3,Specialty Services - Observation Hours
+35008,95,762,10,Y,38:50.6,Specialty Services - Observation Hours
+35008,95,769,10,Z,38:50.6,Specialty Services - Other Specialty Services
+35008,95,761,10,Y,38:50.6,Specialty Services - Treatment Room
+35008,95,740,10,N,38:50.6,EEG (Electroencephalogram) - General Classification
+35008,95,790,10,N,38:50.6,Extra-Corporeal Shock Wave Therapy (formerly Lithotripsy) - General Classification
+35008,95,900,10,N,38:50.6,Behavioral Health Treatment/Services - General Classification
+35008,95,921,10,Y,38:50.6,Other Diagnostic Services - Peripheral Vascular Lab
+35008,95,920,10,X,38:50.6,Other Diagnostic Services - General Classification
+35008,95,925,10,Y,38:50.6,Other Diagnostic Services - Pregnancy Test
+35008,95,924,10,Y,38:50.6,Other Diagnostic Services - Allergy Test
+35008,95,923,10,Y,38:50.6,Other Diagnostic Services - Pap Smear
+35008,95,922,10,Y,38:50.6,Other Diagnostic Services - Electromyelgram
+35008,95,943,10,Y,38:50.6,Other Therapeutic Services - Cardiac Rehabilitation
+35008,95,944,10,Y,38:50.6,Other Therapeutic Services - Drug Rehabilitation
+35008,95,945,10,Y,38:50.6,Other Therapeutic Services - Alcohol Rehabilitation
+35008,95,941,10,Y,38:50.6,Other Therapeutic Services - Recreational Therapy
+35008,95,929,10,Z,38:50.6,Other Diagnostic Services - Other Diagnostic Service
+35008,95,946,10,Y,38:50.6,Other Therapeutic Services - Complex Medical Equipment Routine
+35008,95,947,10,Y,38:50.6,Other Therapeutic Services - Complex Medical Equipment Ancillary
+35008,95,940,10,X,38:50.6,Other Therapeutic Services - General Classification
+35008,95,942,10,Y,38:50.6,Other Therapeutic Services - Education/Training
+35008,95,948,10,Y,38:50.6,Other Therapeutic Services - Pulmonary Rehabilitation
+35008,95,949,10,Z,38:50.6,Other Therapeutic Services - Other Therapeutic Service
+35008,95,459,10,Z,38:50.5,Emergency Room - Other Emergency Room
+35008,95,456,10,Y,38:50.5,Emergency Room - Urgent Care
+35008,95,452,10,Y,38:50.5,Emergency Room - ER Beyond EMTALA Screening
+35008,95,460,10,X,38:50.5,Pulmonary Function - General Classification
+35008,95,469,10,Z,38:50.5,Pulmonary Function - Other Pulmonary Function
+35008,95,480,10,X,38:50.5,Cardiology - General Classification
+35008,95,481,10,Y,38:50.5,Cardiology - Cardiac Cath Lab
+35008,95,490,10,X,38:50.5,Ambulatory Surgical Care - General Classification
+35008,95,499,10,Z,38:50.5,Ambulatory Surgical Care - Other Ambulatory Surgical Care
+35008,95,500,10,X,38:50.5,Outpatient Services - General Classification
+35008,95,489,10,Z,38:50.5,Cardiology - Other Cardiology
+35008,95,482,10,Y,38:50.5,Cardiology - Stress Test
+35008,95,483,10,Y,38:50.5,Cardiology - Echocardiology
+35008,95,511,10,Y,38:50.5,Clinic - Chronic Pain Center
+35008,95,512,10,Y,38:50.5,Clinic - Dental Clinic
+35008,95,509,10,Z,38:50.5,Outpatient Services - Other Outpatient Service
+35008,95,510,10,X,38:50.5,Clinic - General Classification
+35008,95,514,10,Y,38:50.5,Clinic - OB-GYN Clinic
+35008,95,515,10,Y,38:50.5,Clinic - Pediatric Clinic
+35008,95,513,10,Y,38:50.5,Clinic - Psychiatric Clinic
+35008,95,433,10,Y,38:50.5,Occupational Therapy - Group
+35008,95,443,10,Y,38:50.5,Speech-Language Pathology - Group
+35008,95,444,10,Y,38:50.5,Speech-Language Pathology - Evaluation or Reevaluation
+35008,95,441,10,Y,38:50.5,Speech-Language Pathology - Visit
+35008,95,442,10,Y,38:50.5,Speech-Language Pathology - Hourly
+35008,95,451,10,Y,38:50.5,Emergency Room - EMTALA Emergency Medical Screening Services
+35008,95,450,10,X,38:50.5,Emergency Room - General Classification
+35008,95,449,10,Z,38:50.5,Speech-Language Pathology - Other Speech Therapy
+35008,95,439,10,Z,38:50.5,Occupational Therapy - Other Occupational Therapy
+35008,95,440,10,X,38:50.5,Speech-Language Pathology - General Classification
+35008,95,434,10,Y,38:50.5,Occupational Therapy - Evaluation or Reevaluation
+35008,95,432,10,Y,38:50.5,Occupational Therapy - Hourly
+35008,95,430,10,X,38:50.5,Occupational Therapy - General Classification
+35008,95,431,10,Y,38:50.5,Occupational Therapy - Visit
+35008,95,429,10,Z,38:50.5,Physical Therapy - Other Physical Therapy
+35008,95,423,10,Y,38:50.5,Physical Therapy - Group
+35008,95,424,10,Y,38:50.5,Physical Therapy - Evaluation or Re-evaluation
+35008,95,422,10,Y,38:50.5,Physical Therapy - Hourly
+35008,95,421,10,Y,38:50.4,Physical Therapy - Visit
+35008,95,419,10,Z,38:50.4,Respiratory Services - Other Respiratory Services
+35008,95,420,10,X,38:50.4,Physical Therapy - General Classification
+35008,95,412,10,Y,38:50.4,Respiratory Services - Inhalation Services
+35008,95,413,10,Y,38:50.4,Respiratory Services - Hyperbaric Oxygen Therapy
+35008,95,403,10,Y,38:50.4,Other Imaging Services - Screening Mammography
+35008,95,404,10,Y,38:50.4,Other Imaging Services - Positron Emission Tomography
+35008,95,409,10,Z,38:50.4,Other Imaging Services - Other Imaging Services
+35008,95,410,10,X,38:50.4,Respiratory Services - General Classification
+35008,95,522,10,Y,38:50.5,Freestanding Clinic - Home Visit by RHC/FQHC Practitioner
+35008,95,521,10,Y,38:50.5,Freestanding Clinic - Clinic Visit by Member to RHC/FQHC
+35008,95,520,10,X,38:50.5,Freestanding Clinic - General Classification
+35008,95,517,10,Y,38:50.5,Clinic - Family Practice Clinic
+35008,95,519,10,Z,38:50.5,Clinic - Other Clinic
+35008,95,516,10,Y,38:50.5,Clinic - Urgent Care Clinic
+35008,95,529,10,Z,38:50.5,Freestanding Clinic - Other Freestanding Clinic
+35008,95,550,10,X,38:50.6,Skilled Nursing - General Classification
+35008,95,551,10,Y,38:50.6,Skilled Nursing - Visit Charge
+35008,95,528,10,Y,38:50.5,Freestanding Clinic - Visit by RHC/FQHC Practitioner to Other non-RHC/FQHC site (e.g. Scene of Accident)
+35008,95,527,10,Y,38:50.5,Freestanding Clinic - Visiting Nurse Service(s) to a Member's Home when in a Home Health Shortage Area
+35008,95,526,10,Y,38:50.5,Freestanding Clinic - Urgent Care Clinic
+35008,95,525,10,Y,38:50.5,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF (not in a Covered Part A Stay) or NF or ICF MR or Other Residential Facility
+35008,95,524,10,Y,38:50.5,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF or Skilled Swing Bed in a Covered Part A Stay
+35008,95,523,10,Y,38:50.5,Freestanding Clinic - Family Practice Clinic
+35008,95,760,10,X,38:50.6,Specialty Services - General Classification
+35008,95,750,10,N,38:50.6,Gastro-Intestinal (GI) Services - General Classification
+35008,95,730,10,X,38:50.6,EKG/ECG (Electrocardiogram) - General Classification
+35008,95,731,10,Y,38:50.6,EKG/ECG (Electrocardiogram) - Holter Monitor
+35008,95,732,10,Y,38:50.6,EKG/ECG (Electrocardiogram) - Telemetry
+35008,95,739,10,Z,38:50.6,EKG/ECG (Electrocardiogram) - Other EKG/ECG
+35008,95,636,10,N,38:50.6,Pharmacy - Drugs Requiring Detailed Coding
+35008,95,632,10,N,38:50.6,Pharmacy - Multiple Source Drug
+35008,95,633,10,N,38:50.6,Pharmacy - Restrictive Prescription
+35008,95,624,10,N,38:50.6,Medical/Surgical Supplies and Devices - FDA Investigational Devices
+35008,95,631,10,N,38:50.6,Pharmacy - Single Source Drug
+35008,95,619,10,N,38:50.6,Magnetic Resonance Technology (MRT) - Other MRT
+35008,95,621,10,N,38:50.6,Medical/Surgical Supplies and Devices - Supplies Incident to Radiology
+35008,95,622,10,N,38:50.6,Medical/Surgical Supplies and Devices - Supplies Incident to Other DX Services
+35008,95,623,10,N,38:50.6,Medical/Surgical Supplies and Devices - Surgical Dressings
+35008,95,552,10,Y,38:50.6,Skilled Nursing - Hourly Charge
+35008,95,559,10,Z,38:50.6,Skilled Nursing - Other Skilled Nursing
+35008,95,610,10,N,38:50.6,Magnetic Resonance Technology (MRT) - General Classification
+35008,95,362,10,Y,38:50.4,Operating Room Services - Organ Transplant - Other than Kidney
+35008,95,367,10,Y,38:50.4,Operating Room Services - Kidney Transplant
+35008,95,369,10,Z,38:50.4,Operating Room Services - Other OR Services
+35008,95,370,10,X,38:50.4,Anesthesia - General Classification
+35008,95,371,10,Y,38:50.4,Anesthesia - Anesthesia Incident to Radiology
+35008,95,372,10,Y,38:50.4,Anesthesia - Anesthesia Incident to Other Dx Services
+35008,95,374,10,Y,38:50.4,Anesthesia - Acupuncture
+35008,95,379,10,Z,38:50.4,Anesthesia - Other Anesthesia
+35008,95,400,10,X,38:50.4,Other Imaging Services - General Classification
+35008,95,401,10,Y,38:50.4,Other Imaging Services - Diagnostic Mammography
+35008,95,402,10,Y,38:50.4,Other Imaging Services - Ultrasound
+35008,95,361,10,Y,38:50.4,Operating Room Services - Minor Surgery
+35008,95,360,10,X,38:50.4,Operating Room Services - General Classification
+35008,95,352,10,Y,38:50.4,CT Scan - Body Scan
+35008,95,359,10,Z,38:50.4,CT Scan - CT - Other
+35008,95,351,10,Y,38:50.4,CT Scan - Head Scan
+35008,95,322,10,Y,38:50.4,Radiology - Diagnostic - Arthrography
+35008,95,323,10,Y,38:50.4,Radiology - Diagnostic - Arteriography
+35008,95,329,10,Z,38:50.4,Radiology - Diagnostic - Other Radiology - Diagnostic
+35008,95,324,10,Y,38:50.4,Radiology - Diagnostic - Chest X-Ray
+35008,95,350,10,X,38:50.4,CT Scan - General Classification
+35008,95,344,10,Y,38:50.4,Nuclear Medicine - Therapeutic Radiopharmaceuticals
+35008,95,349,10,Z,38:50.4,Nuclear Medicine - Other Nuclear Medicine
+35008,95,342,10,Y,38:50.4,Nuclear Medicine - Therapeutic
+35008,95,343,10,Y,38:50.4,Nuclear Medicine - Diagnostic Radiopharmaceuticals
+35008,95,330,10,X,38:50.4,Radiology - Therapeutic and/or Chemotherapy Administration - General Classification
+35008,95,331,10,Y,38:50.4,Radiology - Therapeutic and/or Chemotherapy Administration - Chemotherapy Admin - Injected
+35008,95,332,10,Y,38:50.4,Radiology - Therapeutic and/or Chemotherapy Administration - Chemotherapy Administration - Oral
+35008,95,333,10,Y,38:50.4,Radiology - Therapeutic and/or Chemotherapy Administration - Radiation Therapy
+35008,95,335,10,Y,38:50.4,Radiology - Therapeutic and/or Chemotherapy Administration - Chemotherapy Admin - IV
+35008,95,339,10,Z,38:50.4,Radiology - Therapeutic and/or Chemotherapy Administration - Other Radiology - Therapeutic
+35008,95,340,10,X,38:50.4,Nuclear Medicine - General Classification
+35008,95,341,10,Y,38:50.4,Nuclear Medicine - Diagnostic
+35008,95,321,10,Y,38:50.4,Radiology - Diagnostic - Angiocardiography
+35008,95,320,10,X,38:50.4,Radiology - Diagnostic - General Classification
+35008,95,312,10,Y,38:50.4,Laboratory Pathology - Histology
+35008,95,314,10,Y,38:50.4,Laboratory Pathology - Biopsy
+35008,95,319,10,Z,38:50.4,Laboratory Pathology - Other Laboratory Pathology
+35008,95,310,10,X,38:50.4,Laboratory Pathology - General Classification
+35008,95,311,10,Y,38:50.4,Laboratory Pathology - Cytology
+35008,95,306,10,Y,38:50.3,Laboratory - Bacteriology & Microbiology
+35008,95,307,10,Y,38:50.3,Laboratory - Urology
+35008,95,309,10,Z,38:50.4,Laboratory - Other Laboratory
+35008,95,303,10,Y,38:50.3,Laboratory - Renal Patient (Home)
+35008,95,304,10,Y,38:50.3,Laboratory - Non-Routine Dialysis
+35008,95,305,10,Y,38:50.3,Laboratory - Hematology
+35008,95,300,10,X,38:50.3,Laboratory - General Classification
+35008,95,302,10,Y,38:50.3,Laboratory - Immunology
+35008,95,301,10,Y,38:50.3,Laboratory - Chemistry
+35008,95,279,10,Z,38:50.3,Medical/Surgical Supplies and Devices - Other Supplies/Devices
+35008,95,275,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Pacemaker
+35008,95,276,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Intraocular Lens
+35008,95,277,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Oxygen - Take Home
+35008,95,278,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Other Implant
+35008,95,263,10,Y,38:50.3,IV Therapy - IV Therapy/Drug/Supply/ Delivery
+35008,95,264,10,Y,38:50.3,IV Therapy - IV Therapy/Supplies
+35008,95,269,10,Z,38:50.3,IV Therapy - Other IV Therapy
+35008,95,270,10,X,38:50.3,Medical/Surgical Supplies and Devices - General Classification
+35008,95,271,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Non-sterile Supply
+35008,95,272,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Sterile Supply
+35008,95,273,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Take Home Supplies
+35008,95,274,10,Y,38:50.3,Medical/Surgical Supplies and Devices - Prosthetic/Orthotic Devices
+35008,95,250,10,X,38:50.3,Pharmacy - General Classification
+35008,95,251,10,Y,38:50.3,Pharmacy - Generic Drugs
+35008,95,252,10,Y,38:50.3,Pharmacy - Non-Generic Drugs
+35008,95,253,10,Y,38:50.3,Pharmacy - Take Home Drugs
+35008,95,254,10,Y,38:50.3,Pharmacy - Drugs Incident to Other Diagnostic Services
+35008,95,255,10,Y,38:50.3,Pharmacy - Drugs Incident to Radiology
+35008,95,256,10,Y,38:50.3,Pharmacy - Experimental Drugs
+35008,95,257,10,Y,38:50.3,Pharmacy - Non-Prescription
+35008,95,258,10,Y,38:50.3,Pharmacy - IV Solutions
+35008,95,259,10,Z,38:50.3,Pharmacy - Other Pharmacy
+35008,95,260,10,X,38:50.3,IV Therapy - General Classification
+35008,95,261,10,Y,38:50.3,IV Therapy - Infusion Pump
+35008,95,262,10,Y,38:50.3,IV Therapy - IV Therapy/Pharmacy Svcs
+36094,42,300,10,N,25:09.8,Laboratory - General Classification
+36094,42,302,10,N,25:09.8,Laboratory - Immunology
+36094,42,309,10,N,25:09.8,Laboratory - Other Laboratory
+36219,83,309,10,Z,34:33.3,Laboratory - Other Laboratory
+36219,83,307,10,Y,34:33.3,Laboratory - Urology
+36219,83,311,10,Y,34:33.3,Laboratory Pathology - Cytology
+36219,83,302,10,Y,34:33.3,Laboratory - Immunology
+36219,83,259,10,Z,34:33.3,Pharmacy - Other Pharmacy
+36219,83,300,10,X,34:33.3,Laboratory - General Classification
+36219,83,303,10,Y,34:33.3,Laboratory - Renal Patient (Home)
+36219,83,304,10,Y,34:33.3,Laboratory - Non-Routine Dialysis
+36219,83,306,10,Y,34:33.3,Laboratory - Bacteriology & Microbiology
+36219,83,305,10,Y,34:33.3,Laboratory - Hematology
+36219,83,319,10,Z,34:33.3,Laboratory Pathology - Other Laboratory Pathology
+36219,83,310,10,X,34:33.3,Laboratory Pathology - General Classification
+36219,83,312,10,Y,34:33.3,Laboratory Pathology - Histology
+36219,83,314,10,Y,34:33.3,Laboratory Pathology - Biopsy
+36219,83,321,10,Y,34:33.3,Radiology - Diagnostic - Angiocardiography
+36219,83,320,10,X,34:33.3,Radiology - Diagnostic - General Classification
+36219,83,301,10,Y,34:33.3,Laboratory - Chemistry
+36219,83,278,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Other Implant
+36219,83,279,10,Z,34:33.3,Medical/Surgical Supplies and Devices - Other Supplies/Devices
+36219,83,276,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Intraocular Lens
+36219,83,277,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Oxygen - Take Home
+36219,83,274,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Prosthetic/Orthotic Devices
+36219,83,275,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Pacemaker
+36219,83,272,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Sterile Supply
+36219,83,273,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Take Home Supplies
+36219,83,270,10,X,34:33.3,Medical/Surgical Supplies and Devices - General Classification
+36219,83,271,10,Y,34:33.3,Medical/Surgical Supplies and Devices - Non-sterile Supply
+36219,83,264,10,Y,34:33.3,IV Therapy - IV Therapy/Supplies
+36219,83,269,10,Z,34:33.3,IV Therapy - Other IV Therapy
+36219,83,262,10,Y,34:33.3,IV Therapy - IV Therapy/Pharmacy Svcs
+36219,83,263,10,Y,34:33.3,IV Therapy - IV Therapy/Drug/Supply/ Delivery
+36219,83,260,10,X,34:33.3,IV Therapy - General Classification
+36219,83,261,10,Y,34:33.3,IV Therapy - Infusion Pump
+36219,83,258,10,Y,34:33.2,Pharmacy - IV Solutions
+36219,83,251,10,Y,34:33.2,Pharmacy - Generic Drugs
+36219,83,253,10,Y,34:33.2,Pharmacy - Take Home Drugs
+36219,83,255,10,Y,34:33.2,Pharmacy - Drugs Incident to Radiology
+36219,83,257,10,Y,34:33.2,Pharmacy - Non-Prescription
+36219,83,256,10,Y,34:33.2,Pharmacy - Experimental Drugs
+36219,83,254,10,Y,34:33.2,Pharmacy - Drugs Incident to Other Diagnostic Services
+36219,83,252,10,Y,34:33.2,Pharmacy - Non-Generic Drugs
+36219,83,250,10,X,34:33.2,Pharmacy - General Classification
+36219,83,329,10,Z,34:33.3,Radiology - Diagnostic - Other Radiology - Diagnostic
+36219,83,330,10,X,34:33.3,Radiology - Therapeutic and/or Chemotherapy Administration - General Classification
+36219,83,339,10,Z,34:33.3,Radiology - Therapeutic and/or Chemotherapy Administration - Other Radiology - Therapeutic
+36219,83,340,10,X,34:33.3,Nuclear Medicine - General Classification
+36219,83,333,10,Y,34:33.3,Radiology - Therapeutic and/or Chemotherapy Administration - Radiation Therapy
+36219,83,335,10,Y,34:33.3,Radiology - Therapeutic and/or Chemotherapy Administration - Chemotherapy Admin - IV
+36219,83,331,10,Y,34:33.3,Radiology - Therapeutic and/or Chemotherapy Administration - Chemotherapy Admin - Injected
+36219,83,332,10,Y,34:33.3,Radiology - Therapeutic and/or Chemotherapy Administration - Chemotherapy Administration - Oral
+36219,83,343,10,Y,34:33.3,Nuclear Medicine - Diagnostic Radiopharmaceuticals
+36219,83,344,10,Y,34:33.3,Nuclear Medicine - Therapeutic Radiopharmaceuticals
+36219,83,341,10,Y,34:33.3,Nuclear Medicine - Diagnostic
+36219,83,342,10,Y,34:33.3,Nuclear Medicine - Therapeutic
+36219,83,349,10,Z,34:33.3,Nuclear Medicine - Other Nuclear Medicine
+36219,83,324,10,Y,34:33.3,Radiology - Diagnostic - Chest X-Ray
+36219,83,323,10,Y,34:33.3,Radiology - Diagnostic - Arteriography
+36219,83,322,10,Y,34:33.3,Radiology - Diagnostic - Arthrography
+36219,83,351,10,Y,34:33.4,CT Scan - Head Scan
+36219,83,350,10,X,34:33.4,CT Scan - General Classification
+36219,83,359,10,Z,34:33.4,CT Scan - CT - Other
+36219,83,352,10,Y,34:33.4,CT Scan - Body Scan
+36219,83,360,10,X,34:33.4,Operating Room Services - General Classification
+36219,83,361,10,Y,34:33.4,Operating Room Services - Minor Surgery
+36219,83,402,10,Y,34:33.4,Other Imaging Services - Ultrasound
+36219,83,403,10,Y,34:33.4,Other Imaging Services - Screening Mammography
+36219,83,400,10,X,34:33.4,Other Imaging Services - General Classification
+36219,83,401,10,Y,34:33.4,Other Imaging Services - Diagnostic Mammography
+36219,83,374,10,Y,34:33.4,Anesthesia - Acupuncture
+36219,83,379,10,Z,34:33.4,Anesthesia - Other Anesthesia
+36219,83,371,10,Y,34:33.4,Anesthesia - Anesthesia Incident to Radiology
+36219,83,372,10,Y,34:33.4,Anesthesia - Anesthesia Incident to Other Dx Services
+36219,83,367,10,Y,34:33.4,Operating Room Services - Kidney Transplant
+36219,83,369,10,Z,34:33.4,Operating Room Services - Other OR Services
+36219,83,370,10,X,34:33.4,Anesthesia - General Classification
+36219,83,362,10,Y,34:33.4,Operating Room Services - Organ Transplant - Other than Kidney
+36219,83,610,10,N,34:33.5,Magnetic Resonance Technology (MRT) - General Classification
+36219,83,559,10,Z,34:33.5,Skilled Nursing - Other Skilled Nursing
+36219,83,623,10,N,34:33.5,Medical/Surgical Supplies and Devices - Surgical Dressings
+36219,83,624,10,N,34:33.5,Medical/Surgical Supplies and Devices - FDA Investigational Devices
+36219,83,621,10,N,34:33.5,Medical/Surgical Supplies and Devices - Supplies Incident to Radiology
+36219,83,622,10,N,34:33.5,Medical/Surgical Supplies and Devices - Supplies Incident to Other DX Services
+36219,83,631,10,N,34:33.5,Pharmacy - Single Source Drug
+36219,83,632,10,N,34:33.5,Pharmacy - Multiple Source Drug
+36219,83,633,10,N,34:33.5,Pharmacy - Restrictive Prescription
+36219,83,636,10,N,34:33.5,Pharmacy - Drugs Requiring Detailed Coding
+36219,83,619,10,N,34:33.5,Magnetic Resonance Technology (MRT) - Other MRT
+36219,83,739,10,Z,34:33.5,EKG/ECG (Electrocardiogram) - Other EKG/ECG
+36219,83,740,10,N,34:33.6,EEG (Electroencephalogram) - General Classification
+36219,83,731,10,Y,34:33.5,EKG/ECG (Electrocardiogram) - Holter Monitor
+36219,83,732,10,Y,34:33.5,EKG/ECG (Electrocardiogram) - Telemetry
+36219,83,750,10,N,34:33.6,Gastro-Intestinal (GI) Services - General Classification
+36219,83,524,10,Y,34:33.5,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF or Skilled Swing Bed in a Covered Part A Stay
+36219,83,521,10,Y,34:33.5,Freestanding Clinic - Clinic Visit by Member to RHC/FQHC
+36219,83,523,10,Y,34:33.5,Freestanding Clinic - Family Practice Clinic
+36219,83,526,10,Y,34:33.5,Freestanding Clinic - Urgent Care Clinic
+36219,83,525,10,Y,34:33.5,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF (not in a Covered Part A Stay) or NF or ICF MR or Other Residential Facility
+36219,83,527,10,Y,34:33.5,Freestanding Clinic - Visiting Nurse Service(s) to a Member's Home when in a Home Health Shortage Area
+36219,83,528,10,Y,34:33.5,Freestanding Clinic - Visit by RHC/FQHC Practitioner to Other non-RHC/FQHC site (e.g. Scene of Accident)
+36219,83,551,10,Y,34:33.5,Skilled Nursing - Visit Charge
+36219,83,552,10,Y,34:33.5,Skilled Nursing - Hourly Charge
+36219,83,529,10,Z,34:33.5,Freestanding Clinic - Other Freestanding Clinic
+36219,83,550,10,X,34:33.5,Skilled Nursing - General Classification
+36219,83,514,10,Y,34:33.5,Clinic - OB-GYN Clinic
+36219,83,517,10,Y,34:33.5,Clinic - Family Practice Clinic
+36219,83,520,10,X,34:33.5,Freestanding Clinic - General Classification
+36219,83,519,10,Z,34:33.5,Clinic - Other Clinic
+36219,83,516,10,Y,34:33.5,Clinic - Urgent Care Clinic
+36219,83,522,10,Y,34:33.5,Freestanding Clinic - Home Visit by RHC/FQHC Practitioner
+36219,83,410,10,X,34:33.4,Respiratory Services - General Classification
+36219,83,412,10,Y,34:33.4,Respiratory Services - Inhalation Services
+36219,83,404,10,Y,34:33.4,Other Imaging Services - Positron Emission Tomography
+36219,83,409,10,Z,34:33.4,Other Imaging Services - Other Imaging Services
+36219,83,413,10,Y,34:33.4,Respiratory Services - Hyperbaric Oxygen Therapy
+36219,83,419,10,Z,34:33.4,Respiratory Services - Other Respiratory Services
+36219,83,420,10,X,34:33.4,Physical Therapy - General Classification
+36219,83,421,10,Y,34:33.4,Physical Therapy - Visit
+36219,83,422,10,Y,34:33.4,Physical Therapy - Hourly
+36219,83,423,10,Y,34:33.4,Physical Therapy - Group
+36219,83,424,10,Y,34:33.4,Physical Therapy - Evaluation or Re-evaluation
+36219,83,429,10,Z,34:33.4,Physical Therapy - Other Physical Therapy
+36219,83,431,10,Y,34:33.4,Occupational Therapy - Visit
+36219,83,430,10,X,34:33.4,Occupational Therapy - General Classification
+36219,83,432,10,Y,34:33.4,Occupational Therapy - Hourly
+36219,83,433,10,Y,34:33.4,Occupational Therapy - Group
+36219,83,434,10,Y,34:33.4,Occupational Therapy - Evaluation or Reevaluation
+36219,83,440,10,X,34:33.4,Speech-Language Pathology - General Classification
+36219,83,441,10,Y,34:33.4,Speech-Language Pathology - Visit
+36219,83,439,10,Z,34:33.4,Occupational Therapy - Other Occupational Therapy
+36219,83,444,10,Y,34:33.4,Speech-Language Pathology - Evaluation or Reevaluation
+36219,83,449,10,Z,34:33.4,Speech-Language Pathology - Other Speech Therapy
+36219,83,450,10,X,34:33.4,Emergency Room - General Classification
+36219,83,451,10,Y,34:33.4,Emergency Room - EMTALA Emergency Medical Screening Services
+36219,83,442,10,Y,34:33.4,Speech-Language Pathology - Hourly
+36219,83,443,10,Y,34:33.4,Speech-Language Pathology - Group
+36219,83,513,10,Y,34:33.5,Clinic - Psychiatric Clinic
+36219,83,512,10,Y,34:33.5,Clinic - Dental Clinic
+36219,83,515,10,Y,34:33.5,Clinic - Pediatric Clinic
+36219,83,510,10,X,34:33.5,Clinic - General Classification
+36219,83,499,10,Z,34:33.5,Ambulatory Surgical Care - Other Ambulatory Surgical Care
+36219,83,511,10,Y,34:33.5,Clinic - Chronic Pain Center
+36219,83,483,10,Y,34:33.5,Cardiology - Echocardiology
+36219,83,489,10,Z,34:33.5,Cardiology - Other Cardiology
+36219,83,500,10,X,34:33.5,Outpatient Services - General Classification
+36219,83,509,10,Z,34:33.5,Outpatient Services - Other Outpatient Service
+36219,83,490,10,X,34:33.5,Ambulatory Surgical Care - General Classification
+36219,83,481,10,Y,34:33.4,Cardiology - Cardiac Cath Lab
+36219,83,482,10,Y,34:33.5,Cardiology - Stress Test
+36219,83,469,10,Z,34:33.4,Pulmonary Function - Other Pulmonary Function
+36219,83,480,10,X,34:33.4,Cardiology - General Classification
+36219,83,452,10,Y,34:33.4,Emergency Room - ER Beyond EMTALA Screening
+36219,83,456,10,Y,34:33.4,Emergency Room - Urgent Care
+36219,83,459,10,Z,34:33.4,Emergency Room - Other Emergency Room
+36219,83,460,10,X,34:33.4,Pulmonary Function - General Classification
+36219,83,949,10,Z,34:33.6,Other Therapeutic Services - Other Therapeutic Service
+36219,83,947,10,Y,34:33.6,Other Therapeutic Services - Complex Medical Equipment Ancillary
+36219,83,948,10,Y,34:33.6,Other Therapeutic Services - Pulmonary Rehabilitation
+36219,83,929,10,Z,34:33.6,Other Diagnostic Services - Other Diagnostic Service
+36219,83,940,10,X,34:33.6,Other Therapeutic Services - General Classification
+36219,83,941,10,Y,34:33.6,Other Therapeutic Services - Recreational Therapy
+36219,83,942,10,Y,34:33.6,Other Therapeutic Services - Education/Training
+36219,83,945,10,Y,34:33.6,Other Therapeutic Services - Alcohol Rehabilitation
+36219,83,946,10,Y,34:33.6,Other Therapeutic Services - Complex Medical Equipment Routine
+36219,83,943,10,Y,34:33.6,Other Therapeutic Services - Cardiac Rehabilitation
+36219,83,944,10,Y,34:33.6,Other Therapeutic Services - Drug Rehabilitation
+36219,83,922,10,Y,34:33.6,Other Diagnostic Services - Electromyelgram
+36219,83,923,10,Y,34:33.6,Other Diagnostic Services - Pap Smear
+36219,83,924,10,Y,34:33.6,Other Diagnostic Services - Allergy Test
+36219,83,925,10,Y,34:33.6,Other Diagnostic Services - Pregnancy Test
+36219,83,920,10,X,34:33.6,Other Diagnostic Services - General Classification
+36219,83,921,10,Y,34:33.6,Other Diagnostic Services - Peripheral Vascular Lab
+36219,83,900,10,N,34:33.6,Behavioral Health Treatment/Services - General Classification
+36219,83,760,10,X,34:33.6,Specialty Services - General Classification
+36219,83,730,10,X,34:33.5,EKG/ECG (Electrocardiogram) - General Classification
+36219,83,761,10,Y,34:33.6,Specialty Services - Treatment Room
+36219,83,769,10,Z,34:33.6,Specialty Services - Other Specialty Services
+36219,83,790,10,N,34:33.6,Extra-Corporeal Shock Wave Therapy (formerly Lithotripsy) - General Classification
+36219,83,762,10,Y,34:33.6,Specialty Services - Observation Hours
+36296,10,99999,10,N,26:58.7,Not Applicable
+36342,44,981,10,X,37:59.0,Professional Fees - Emergency Room Services
+36342,44,964,10,Y,37:58.9,Professional Fees - Anesthesiologist (CRNA)
+36342,44,982,10,Y,37:59.0,Professional Fees - Outpatient Services
+36342,44,963,10,Y,37:58.9,Professional Fees - Anesthesiologist (MD)
+36342,44,962,10,Y,37:58.9,Professional Fees - Ophthalmology
+36342,44,961,10,Y,37:58.9,Professional Fees - Psychiatric
+36342,44,960,10,X,37:58.9,Professional Fees - General Classification
+36342,44,983,10,Y,37:59.0,Professional Fees - Clinic
+36342,44,984,10,Y,37:59.0,Professional Fees - Medical Social Services
+36342,44,985,10,Y,37:59.0,Professional Fees - EKG
+36342,44,986,10,Y,37:59.0,Professional Fees - EEG
+36342,44,987,10,Y,37:59.0,Professional Fees - Hospital Visit
+36342,44,988,10,Y,37:59.0,Professional Fees - Consultation
+36342,44,989,10,Z,37:59.0,Professional Fees - Private Duty Nurse
+36342,44,969,10,Z,37:58.9,Professional Fees - Other Professional Fee
+36342,44,971,10,X,37:58.9,Professional Fees - Laboratory
+36342,44,972,10,Y,37:58.9,Professional Fees - Radiology - Diagnostic
+36342,44,973,10,Y,37:58.9,Professional Fees - Radiology - Therapeutic
+36342,44,974,10,Y,37:58.9,Professional Fees - Radiology - Nuclear
+36342,44,975,10,Y,37:59.0,Professional Fees - Operating Room
+36342,44,976,10,Y,37:59.0,Professional Fees - Respiratory Therapy
+36342,44,977,10,Y,37:59.0,Professional Fees - Physical Therapy
+36342,44,978,10,Y,37:59.0,Professional Fees - Occupational Therapy
+36342,44,979,10,Z,37:59.0,Professional Fees - Speech Pathology
+36342,44,521,10,N,37:58.9,Freestanding Clinic - Clinic Visit by Member to RHC/FQHC
+36342,44,520,10,N,37:58.9,Freestanding Clinic - General Classification
+36342,44,401,10,N,37:58.9,Other Imaging Services - Diagnostic Mammography
+36342,44,403,10,N,37:58.9,Other Imaging Services - Screening Mammography
+36376,4,300,6,N,06:07.3,Laboratory - General Classification
+36376,4,310,6,N,06:07.3,Laboratory Pathology - General Classification
+36773,18,99999,10,N,54:01.8,Not Applicable
+37143,7,900,7,N,00:56.0,Behavioral Health Treatment/Services - General Classification
+37474,6,881,9,N,59:38.8,Miscellaneous Dialysis - Ultrafiltration
+37474,6,821,9,N,59:38.8,Hemodialysis - Outpatient or Home - Hemodialysis Composite or Other Rate
+37536,3,821,9,N,58:12.9,Hemodialysis - Outpatient or Home - Hemodialysis Composite or Other Rate
+37536,3,881,9,N,58:12.9,Miscellaneous Dialysis - Ultrafiltration
+37562,22,821,9,N,24:24.6,Hemodialysis - Outpatient or Home - Hemodialysis Composite or Other Rate
+37562,22,881,9,N,24:24.6,Miscellaneous Dialysis - Ultrafiltration
+37563,4,821,9,N,38:39.8,Hemodialysis - Outpatient or Home - Hemodialysis Composite or Other Rate
+37563,4,881,9,N,38:39.8,Miscellaneous Dialysis - Ultrafiltration
+37791,5,99999,9,N,47:21.9,Not Applicable
+37795,26,761,9,N,14:37.7,Specialty Services - Treatment Room
+37795,26,367,9,Y,14:37.7,Operating Room Services - Kidney Transplant
+37795,26,369,9,Z,14:37.7,Operating Room Services - Other OR Services
+37795,26,362,9,Y,14:37.7,Operating Room Services - Organ Transplant - Other than Kidney
+37795,26,361,9,Y,14:37.7,Operating Room Services - Minor Surgery
+37795,26,360,9,X,14:37.7,Operating Room Services - General Classification
+37795,26,499,9,Z,14:37.7,Ambulatory Surgical Care - Other Ambulatory Surgical Care
+37795,26,490,9,X,14:37.7,Ambulatory Surgical Care - General Classification
+37795,26,510,9,N,14:37.7,Clinic - General Classification
+37797,3,99999,9,N,18:55.0,Not Applicable
+37809,10,310,10,N,03:20.0,Laboratory Pathology - General Classification
+37809,10,300,10,N,03:20.0,Laboratory - General Classification
+37850,16,300,10,X,42:36.0,Laboratory - General Classification
+37850,16,301,10,Y,42:36.0,Laboratory - Chemistry
+37850,16,302,10,Y,42:36.0,Laboratory - Immunology
+37850,16,310,10,X,42:36.0,Laboratory Pathology - General Classification
+37850,16,311,10,Y,42:36.1,Laboratory Pathology - Cytology
+37850,16,312,10,Y,42:36.1,Laboratory Pathology - Histology
+37850,16,307,10,Y,42:36.0,Laboratory - Urology
+37850,16,309,10,Z,42:36.0,Laboratory - Other Laboratory
+37850,16,305,10,Y,9/21/2018 8:42,Laboratory - Hematology
+37850,16,306,10,Y,42:36.0,Laboratory - Bacteriology & Microbiology
+37850,16,303,10,Y,42:36.0,Laboratory - Renal Patient (Home)
+37850,16,304,10,Y,42:36.0,Laboratory - Non-Routine Dialysis
+37850,16,314,10,Y,42:36.1,Laboratory Pathology - Biopsy
+37850,16,319,10,Z,42:36.1,Laboratory Pathology - Other Laboratory Pathology
+37892,12,320,10,N,37:40.6,Radiology - Diagnostic - General Classification
+37892,12,360,10,N,37:40.6,Operating Room Services - General Classification
+37892,12,361,10,N,37:40.6,Operating Room Services - Minor Surgery
+37892,12,359,10,Z,37:40.6,CT Scan - CT - Other
+37892,12,352,10,Y,37:40.6,CT Scan - Body Scan
+37892,12,351,10,Y,37:40.6,CT Scan - Head Scan
+37892,12,402,10,N,37:40.6,Other Imaging Services - Ultrasound
+37892,12,323,10,N,37:40.6,Radiology - Diagnostic - Arteriography
+37892,12,329,10,N,37:40.6,Radiology - Diagnostic - Other Radiology - Diagnostic
+37892,12,349,10,N,37:40.6,Nuclear Medicine - Other Nuclear Medicine
+37892,12,350,10,X,37:40.6,CT Scan - General Classification
+37892,12,342,10,N,37:40.6,Nuclear Medicine - Therapeutic
+37892,12,340,10,N,37:40.6,Nuclear Medicine - General Classification
+37892,12,409,10,N,37:40.6,Other Imaging Services - Other Imaging Services
+37892,12,404,10,N,37:40.6,Other Imaging Services - Positron Emission Tomography
+37892,12,619,10,N,37:40.6,Magnetic Resonance Technology (MRT) - Other MRT
+37892,12,610,10,N,37:40.6,Magnetic Resonance Technology (MRT) - General Classification
+37892,12,614,10,N,37:40.6,Magnetic Resonance Technology (MRT) - MRI - Other
+37892,12,618,10,N,37:40.6,Magnetic Resonance Technology (MRT) - MRA - Other
+37892,12,616,10,N,37:40.6,Magnetic Resonance Technology (MRT) - MRA - Lower Extremities
+37928,10,369,10,Z,06:48.4,Operating Room Services - Other OR Services
+37928,10,367,10,Y,06:48.4,Operating Room Services - Kidney Transplant
+37928,10,362,10,Y,06:48.4,Operating Room Services - Organ Transplant - Other than Kidney
+37928,10,361,10,Y,06:48.4,Operating Room Services - Minor Surgery
+37928,10,360,10,X,06:48.4,Operating Room Services - General Classification
+37932,14,360,10,N,59:52.4,Operating Room Services - General Classification
+37932,14,250,10,X,59:52.4,Pharmacy - General Classification
+37932,14,251,10,Y,59:52.4,Pharmacy - Generic Drugs
+37932,14,252,10,Y,59:52.4,Pharmacy - Non-Generic Drugs
+37932,14,253,10,Y,59:52.4,Pharmacy - Take Home Drugs
+37932,14,254,10,Y,59:52.4,Pharmacy - Drugs Incident to Other Diagnostic Services
+37932,14,255,10,Y,59:52.4,Pharmacy - Drugs Incident to Radiology
+37932,14,256,10,Y,59:52.4,Pharmacy - Experimental Drugs
+37932,14,257,10,Y,59:52.4,Pharmacy - Non-Prescription
+37932,14,258,10,Y,59:52.4,Pharmacy - IV Solutions
+37932,14,259,10,Z,59:52.4,Pharmacy - Other Pharmacy
+37932,14,636,10,N,59:52.4,Pharmacy - Drugs Requiring Detailed Coding
+37932,14,523,10,Y,59:52.4,Freestanding Clinic - Family Practice Clinic
+37932,14,524,10,Y,59:52.4,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF or Skilled Swing Bed in a Covered Part A Stay
+37932,14,526,10,Y,59:52.4,Freestanding Clinic - Urgent Care Clinic
+37932,14,525,10,Y,59:52.4,Freestanding Clinic - Visit by RHC/FQHC Practitioner to a Member in a SNF (not in a Covered Part A Stay) or NF or ICF MR or Other Residential Facility
+37932,14,529,10,Z,59:52.4,Freestanding Clinic - Other Freestanding Clinic
+37932,14,528,10,Y,59:52.4,Freestanding Clinic - Visit by RHC/FQHC Practitioner to Other non-RHC/FQHC site (e.g. Scene of Accident)
+37932,14,527,10,Y,59:52.4,Freestanding Clinic - Visiting Nurse Service(s) to a Member's Home when in a Home Health Shortage Area
+37932,14,521,10,Y,59:52.4,Freestanding Clinic - Clinic Visit by Member to RHC/FQHC
+37932,14,522,10,Y,59:52.4,Freestanding Clinic - Home Visit by RHC/FQHC Practitioner
+37932,14,520,10,X,59:52.4,Freestanding Clinic - General Classification
+37932,14,517,10,Y,59:52.4,Clinic - Family Practice Clinic
+37932,14,519,10,Z,59:52.4,Clinic - Other Clinic
+37932,14,516,10,Y,59:52.4,Clinic - Urgent Care Clinic
+37932,14,510,10,X,59:52.4,Clinic - General Classification
+37932,14,511,10,Y,59:52.4,Clinic - Chronic Pain Center
+37932,14,512,10,Y,59:52.4,Clinic - Dental Clinic
+37932,14,515,10,Y,59:52.4,Clinic - Pediatric Clinic
+37932,14,514,10,Y,59:52.4,Clinic - OB-GYN Clinic
+37932,14,513,10,Y,59:52.4,Clinic - Psychiatric Clinic
+37942,3,750,10,N,29:02.2,Gastro-Intestinal (GI) Services - General Classification
+37942,3,760,10,N,29:02.2,Specialty Services - General Classification
+37942,3,307,10,N,29:02.2,Laboratory - Urology
+37942,3,920,10,N,29:02.2,Other Diagnostic Services - General Classification
+37943,4,99999,10,N,58:08.4,Not Applicable
+38222,40,99999,10,N,31:16.4,Not Applicable
+38226,6,99999,10,N,49:00.4,Not Applicable
+38228,10,99999,10,N,53:52.4,Not Applicable
+38230,7,99999,10,N,15:12.0,Not Applicable
+38232,3,99999,10,N,58:11.7,Not Applicable
+38234,12,99999,10,N,58:30.5,Not Applicable
+38384,21,99999,11,N,47:18.6,Not Applicable
+38395,3,99999,11,N,44:23.8,Not Applicable
+38397,3,99999,11,N,04:37.1,Not Applicable
+38401,6,99999,11,N,17:48.8,Not Applicable
