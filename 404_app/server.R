@@ -1,3 +1,10 @@
+
+
+
+#source('modules.R')
+#source('helperfunctions.R')
+
+
 # server.R #
 
 shinyServer(function(input, output) {
@@ -11,6 +18,7 @@ shinyServer(function(input, output) {
     summary_df <- reactive({
       data404 %>%
         agg_404(
+          metric_filter = input$metric,
           pop_filter = input$pop_filter,
           code_filter = input$code_filter,
           fy_filter = input$fy_filter, 
@@ -22,9 +30,18 @@ shinyServer(function(input, output) {
     
     # Return the reactive that yields the data frame
     return(summary_df)
+    
+    
+   # select_at(ends_with('cases'))
+    
+    
+    
   }
   
   summary_df <- callModule(summary_df_fun, "svc_use")
+  
+##------------------------------------------------------
+  
   
   bubble_df <- callModule(summary_df_fun, "bubbles")
   
@@ -573,7 +590,9 @@ shinyServer(function(input, output) {
   })
   
   #### UI ####
-  
+  ######################################################################
+########################        Module UI  joe
+  ######################################################################
   width_px <- "150px"
   
   summary_ui_Input <- function(id) {
@@ -583,6 +602,20 @@ shinyServer(function(input, output) {
     sidebarPanel(
       strong("Summarize measures"),
       br(),
+#---------------------------------------------
+      em("Measure"),
+      selectInput(
+        inputId = ns("metric"),
+        label = "Metric",
+        choices = c(
+          "Cost" = "cost",
+          "PIHP" = "pihp_name",
+          "CMH" = "cmhsp"
+        ),
+        selected = "Cost",
+        width = width_px
+      ),
+#---------------------------------------------------------      
       em("Group by..."),
       selectInput(
         inputId = ns("region_lvl"),
@@ -594,7 +627,7 @@ shinyServer(function(input, output) {
         ),
         selected = "State",
         width = width_px
-      ),
+      ), tagList(
       selectInput(
         inputId = ns("service_lvl"),
         label = "Service grouping",
@@ -605,7 +638,7 @@ shinyServer(function(input, output) {
         ),
         selected = "Service Groups",
         width = width_px
-      ),
+      ) ),
       selectInput(
         inputId = ns("pop_lvl"),
         label = "Population grouping",
@@ -628,8 +661,8 @@ shinyServer(function(input, output) {
       sliderInput(
         inputId = ns("fy_filter"),
         label = "Fiscal year",
-        min = min(as.numeric(as.character(data404$fy))),
-        max = max(as.numeric(as.character(data404$fy))),
+         min = min(as.numeric(as.character(data404$fy))),
+         max = max(as.numeric(as.character(data404$fy))),
         value = c(
           min(as.numeric(as.character(data404$fy))),
           max(as.numeric(as.character(data404$fy)))
@@ -657,6 +690,12 @@ shinyServer(function(input, output) {
       )
     )
   )
+  
+  
+  #### UI ####
+  ######################################################################
+  ########################        Module UI  joe
+  ######################################################################
   
   #### Visualizations ####
   

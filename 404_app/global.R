@@ -1,5 +1,12 @@
 # global.R #
 
+
+
+
+
+
+
+
 #### Load packages ####
 
 library(shiny); library(shinythemes);library(shinydashboard)
@@ -7,6 +14,7 @@ library(plotly);library(scales)
 library(tidyverse);library(magrittr);library(arrow)
 
 #### Read datasets ####
+
 
 data404 <- 
   arrow::read_feather("../data/clean/df_404.feather") %>%
@@ -33,6 +41,7 @@ data404 %<>%
 agg_404 <- function(
   df,
   # Apply filters:
+  metric_filter ,
   pop_filter = levels(data404$population),
   code_filter = levels(data404$code),
   fy_filter = levels(data404$fy),
@@ -43,7 +52,13 @@ agg_404 <- function(
   
 ) {
   
-  df %>%
+  
+#  return(list(svc_grp1 = reactive({input$service_lvl})))
+
+  df1<-df %>%
+    select(fy,pihp,pihp_name,cmhsp,population,
+              svc_type,svc_grp,code,short_desc,modifier,
+              unit_type,unit_hrs,cases,cost,units)%>%
     filter(
       population %in% pop_filter,
       code %in% code_filter,
@@ -83,47 +98,73 @@ agg_404 <- function(
       svc_group_var = quo_name(group_svc),
       org_group_var = quo_name(group_org),
       pop_group_var = quo_name(group_pop)
-    ) 
+    )
+  
+  
+  # test<-reactive({group_svc})
+  # 
+  # 
+  # 
+  # 
+  # checkSel<-function(x){
+  #   if( inputs)
+  #     
+  #     if(test == svc_grp){ 
+  #       
+  #       colnames<-x%>%
+  #         select(-cases)%>%
+  #         names()
+  #     }else{
+  #       
+  #       colnames<-x%>%
+  #         names()
+  #     }
+  #   
+  # }    
+  # 
+  #  df<- df1%>%
+  #      select_(.dots = checkSel(df1))
+
   
 }
 
 #### Defining variable inputs ####
-
-inputs <- 
-  data.frame(
-    cases = integer(),
-    units = integer(),
-    cost = integer(),
-    cost_per_case = integer(),
-    cost_per_unit = integer(),
-    unit_per_case = integer(),
-    cost_pct_tot = integer(),
-    cost_1k_served = integer(),
-    pct_cmh_served = integer()
-  ) %>%
-  rename(
-    "Total Cases" = cases,
-    "Total Units" = units,
-    "Total Cost" = cost,
-    "Cost Per Case" = cost_per_case,
-    "Cost Per Unit" = cost_per_unit,
-    "Total Unit Per Case" = unit_per_case,
-    "Cost per 1K Served" = cost_1k_served,
-    "Percent of Total $" = cost_pct_tot,
-    "Percent Served" = pct_cmh_served
-  )
-
-inputs_sub <- 
-  data.frame(
-    cost = integer(),
-    cost_pct_tot = integer(),
-    cost_1k_served = integer()
-  ) %>%
-  rename(
-    "Total Cost" = cost,
-    "Cost per 1K Served" = cost_1k_served,
-    "Percent of Total $" = cost_pct_tot
-  )
+# 
+# inputs <- 
+#   data.frame(
+#     cases = integer(),
+#     units = integer(),
+#     cost = integer(),
+#     cost_per_case = integer(),
+#     cost_per_unit = integer(),
+#     unit_per_case = integer(),
+#     cost_pct_tot = integer(),
+#     cost_1k_served = integer(),
+#     pct_cmh_served = integer()
+#   ) %>%
+#   rename(
+#     "Total Cases" = cases,
+#     "Total Units" = units,
+#     "Total Cost" = cost,
+#     "Cost Per Case" = cost_per_case,
+#     "Cost Per Unit" = cost_per_unit,
+#     "Total Unit Per Case" = unit_per_case,
+#     "Cost per 1K Served" = cost_1k_served,
+#     "Percent of Total $" = cost_pct_tot,
+#     "Percent Served" = pct_cmh_served
+#   )
+# 
+# inputs_sub <- 
+#   data.frame(
+#     cost = integer(),
+#     cost_pct_tot = integer(),
+#     cost_1k_served = integer()
+#   ) %>%
+#   rename(
+#     "Total Cost" = cost,
+#     "Cost per 1K Served" = cost_1k_served,
+#     "Percent of Total $" = cost_pct_tot
+#   )
 
 # https://gist.githubusercontent.com/stla/9033053/raw/9c3ad4ce296397b923c88b40c2d43e4fbea8e4be/ShinyColumnsSelector.R
 # https://groups.google.com/forum/#!topic/shiny-discuss/0V4sR4LjAuc
