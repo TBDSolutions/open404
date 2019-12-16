@@ -16,11 +16,19 @@ ui <- function(requests){ navbarPage("Explore 404 Data",
                           downloadButton("downloadData", "Download"))),
           # Sidebar with a slider input for number of bins 
           fluidRow(
-            column(3,
-                   uiOutput("Org"),
-                   uiOutput("sidebarUI"),
+            column(3,wellPanel(
+                   uiOutput("org"),
+                   uiOutput('prov')
+                    ,style = 'background:#CCD6DD'),
+                   wellPanel(
+                   uiOutput("servType"),
+                   uiOutput('servGrp'),
                    uiOutput('code'),
-                   uiOutput('metric'),
+                    style = 'background:#CCD6DD'),
+                   wellPanel(
+                   uiOutput("sidebarUI"),
+                 #  uiOutput('code'),
+                   uiOutput('metric')),
                    br(),
                    # bookmarkButton(id = "bookmark1"),
                    #  downloadButton("downloadData", "Download")
@@ -75,8 +83,19 @@ server <- function(input, output) {
   serviceType<-reactive({input$serviceType})
   serviceGroup <-reactive({input$serviceGroup})
   popType<-reactive({input$popType})
+  codes<-reactive({input$codes})
   
   selectedDS<-reactive({
+    
+    code_filter<-if('All' %in% codes()){ as.character(unique(data404$code_shortDesc))}else{
+      
+      data404[which(data404$code_shortDesc %in% codes()),'code_shortDesc']%>%
+        mutate(code_shortDesc = as.character(code_shortDesc))%>%
+        distinct(code_shortDesc)%>%
+        pull(code_shortDesc)
+    }
+    
+    
     df<- data404%>%
       filter((!!as.symbol(org_type())) %in% input$provider,
              fy %in% fy_filter(),
@@ -84,6 +103,7 @@ server <- function(input, output) {
                                      TRUE ~ serviceGroup()),
              population %in%  case_when('All' %in% popType() ~ levels(as.factor(data404$population)),
                                         TRUE ~ popType()))%>%
+      filter(code_shortDesc %in% code_filter)%>%
       select(!!as.symbol(org_type()),
              cost,units,cases)%>%
       group_by( !!as.symbol(org_type()))%>%
@@ -98,44 +118,74 @@ server <- function(input, output) {
     
   })
   
-  lineDS<-reactive({
-    
-    df<- data404%>%
-      filter((!!as.symbol(org_type())) %in% input$provider)%>%
-      select(!!as.symbol(org_type()),
-             cost,units,cases,fy)%>%
-      group_by( !!as.symbol(org_type()),fy)%>%
-      summarise_at(
-        vars(cases,units,cost),
-        list(~sum(., na.rm = T))
-      )%>%
-      mutate(
-        cost_per_case = round(cost/cases,digits = 2),
-        cost_per_unit = round(cost/units,digits = 2),
-        unit_per_case = round(units/cases,digits = 1))
-    
-  })
+
   
   
   ######### UI OUTPUTS 
-  output$Org<-renderUI({
-    wellPanel(
-      
+  output$org<-renderUI({
       
       selectInput(
         inputId = "CMHorPIHP",
         label = "CMH or PIHP",
-        selected = "CMH",
         choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name'),
-        width = width_px
-      ),
+        selected = "pihp_name")})
+  
+  output$prov<-renderUI({
+      prov_options<- if(input$CMHorPIHP == "cmhsp"){
+      levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
+    
+      selectizeInput(
+        inputId = "provider",
+        label = "provider (CMH or PIHP)",
+        choices =  prov_options,
+        selected = levels(data404$pihp_name),
+        multiple = TRUE,
+        options =  list(maxItems = 12, 
+                        placeholder = 'Search or Select'))
+    
+    
+  })
+  
+  output$servType<-renderUI({
+    
+    selectInput(
+      inputId = 'serviceType',
+      label = 'Service Type',
+      choices = c("All",levels(as.factor(data404$svc_type))),
+      selected = "Coordination and Planning")
+
+  })
+  
+  output$servGrp<-renderUI({
+    
+    
+    svc_grp_options<-data404%>%
+      filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
+                                     TRUE ~ input$serviceType))%>%
+      #  filter(svc_type %in% input$serviceType)%>%
+      distinct(svc_grp)%>%
+      pull(svc_grp)
+    
       
       selectInput(
-        inputId = 'serviceType',
-        label = 'Service Type',
-        choices = c("All",levels(as.factor(data404$svc_type))),
-        selected = "All"),
-      
+        inputId = "serviceGroup",
+        label = "Service Group",
+        selected = "",
+        choices = c(levels(as.factor(svc_grp_options))),
+        width = '550px'
+        
+      )
+
+  })
+  
+  output$sidebarUI<-renderUI({
+    
+   # bar_options<- if(input$CMHorPIHP == "cmhsp"){
+     # levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
+    
+    
+    wellPanel(
+   
       selectInput(
         inputId = 'popType',
         label = 'Population',
@@ -147,56 +197,23 @@ server <- function(input, output) {
         label = 'Year',
         choices = c(levels(data404$fy)),
         selected = "2018")
+
       
-      
-    ) })
-  
-  output$sidebarUI<-renderUI({
-    
-    bar_options<- if(input$CMHorPIHP == "cmhsp"){
-      levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
-    
-    svc_grp_options<-data404%>%
-      filter(svc_type %in% input$serviceType)%>%
-      distinct(svc_grp)%>%
-      pull(svc_grp)
-    
-    wellPanel(
-      selectizeInput(
-        inputId = "provider",
-        label = "provider (CMH or PIHP)",
-        choices =  bar_options,
-        selected = "",
-        multiple = TRUE, 
-        #   selectize = TRUE,
-        size = 5,
-        options =  list(maxItems = 12, 
-                        placeholder = 'Search or Select')),
-      
-      selectInput(
-        inputId = "serviceGroup",
-        label = "Service Group",
-        selected = "All",
-        choices = c("All",levels(as.factor(svc_grp_options))),
-        width = '550px'
-        
-      ))})
+      )})
   
   output$code<-renderUI({
     
     svc_code_options<-data404%>%
       filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
                                      TRUE ~ input$serviceType),
-             
-             svc_grp %in%  case_when('All' %in% input$serviceGroup ~ levels(as.factor(data404$svc_grp)),
+             svc_grp %in%  case_when('' %in% input$serviceGroup ~ levels(as.factor(data404$svc_grp)),
                                      TRUE ~ input$serviceGroup))%>%
-      
       mutate(code_shortDesc = as.character(code_shortDesc))%>%
       distinct(code_shortDesc)%>%
       pull(code_shortDesc)
     
     selectizeInput(
-      inputId = "Codes",
+      inputId = "codes",
       label = "Codes Desc",
       choices =  c("All",levels(as.factor(svc_code_options))),
       selected = "All",
@@ -215,6 +232,9 @@ server <- function(input, output) {
     # svc_grp_options <-if(input$CMHorPIHP == "All"){
     #     levels(data404$svc_grp)
     # }else{ levels(data404$pihp_name)}
+    
+    
+    
     selectInput(
       inputId = 'metric',
       label = 'Metric',
@@ -247,13 +267,16 @@ server <- function(input, output) {
   
   output$barchart<-renderPlot({
     
+    xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+    else{'PIHP'}
+    
     data.frame(selectedDS())%>%
       ggplot(aes(x = as.factor(!!as.symbol(org_type())), y = !!as.symbol(metric()))) +
       geom_bar(stat="identity", position=position_dodge(), alpha = .6,
                color="black")+
       scale_y_continuous(label = number_format(accuracy = 1, scale = 1e-3,
                                                big.mark = ","))+
-      xlab(as.symbol(org_type()))+
+      xlab(xlabs)+
       ylab(str_replace_all(input$metric,pattern = "_"," "))+
       scale_fill_manual(values=c('#EA4335','#34A853'))+
       theme_minimal()+
@@ -326,19 +349,9 @@ server <- function(input, output) {
         label = 'X-Axis:Service',
         choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
         selected = c("Service Group")
-      ),
+      )
       
-      selectInput(
-        inputId = 'tab2popType',
-        label = 'Population',
-        choices = c("All",levels(as.factor(data404$population))),
-        selected = "All"),
-      
-      selectInput(
-        inputId = 'tab2fy_filter',
-        label = 'Year',
-        choices = c(levels(data404$fy)),
-        selected = "2018")
+
       
       
     ) })
@@ -381,9 +394,21 @@ server <- function(input, output) {
       #   selectize = TRUE,
       size = 5,
       options =  list(maxItems = 12, 
-                      placeholder = 'Search or Select')))
+                      placeholder = 'Search or Select')),
     
+    selectInput(
+      inputId = 'tab2popType',
+      label = 'Population',
+      choices = c("All",levels(as.factor(data404$population))),
+      selected = "All"),
     
+    selectInput(
+      inputId = 'tab2fy_filter',
+      label = 'Year',
+      choices = c(levels(data404$fy)),
+      selected = "2018")
+    
+    )
     
   })
   
@@ -437,12 +462,16 @@ heatmapDS<-reactive({
 
 output$heatmap<-renderPlot({
   
+  xlabs<-if(input$tab2CMHorPIHP == 'cmhsp'){'CMH'}
+        else{'PIHP'}
+  
   df<-heatmapDS()
   
   ggplot(df,aes( y = !!as.symbol(tab2Service()),x = as.factor(!!as.symbol(tab2org_type())))) + 
     geom_tile(aes(fill = !!as.symbol(tab2metric())), colour = "white") + 
     #   scale_fill_manual(values=c("#FB8604", "#DB4133", "#A3A7A8","#2B80A1"))+
-    ylab("Service Group") + xlab("CMHSP")+
+    xlab(xlabs)+
+    ylab(str_replace_all(input$tab2metric,pattern = "_"," "))+
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           axis.line = element_line(color = "black", 
                                    size = .5, linetype = "solid"))
