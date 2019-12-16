@@ -34,13 +34,15 @@ ui <- function(requests){ navbarPage("Explore 404 Data",
                      )),
                    column(8,dataTableOutput('dt')))
           )),
- tabPanel("Line Charts",
+ tabPanel("Heat Map",
           fluidRow(
             column(3,
-                   #  uiOutput("Org"),
-                   #  uiOutput("sidebarUI"),
-                   br()
-            )
+                     uiOutput("tab2axisOptions"),
+                     uiOutput("tab2varOptions"),
+                     uiOutput("tab2Metric")),
+            column(9,plotOutput('heatmap'),
+                     dataTableOutput("heatDT"))
+            
             
           ))
 )
@@ -57,7 +59,13 @@ ui <- function(requests){ navbarPage("Explore 404 Data",
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
+#############################################################################
   
+######################### TAB 1 SERVER #######################################
+  
+##############################################################################
+  
+    
   
   # Reactive inputs 
   org_type <- reactive({input$CMHorPIHP})
@@ -279,7 +287,179 @@ server <- function(input, output) {
     }
   )
   
-}  
+  #############################################################################
+  
+  ######################### TAB 2 SERVER #######################################
+  
+  ##############################################################################
+  
+  # Reactive inputs 
+ tab2org_type <- reactive({input$tab2CMHorPIHP})
+ tab2provider<-reactive({input$tab2provider})
+ tab2Service<-reactive({input$tab2Service})
+  
+  tab2fy_filter<-reactive({input$tab2fy_filter})
+  tab2metric <-reactive({input$tab2metric})
+  #serviceType<-reactive({input$serviceType})
+ tab2group <-reactive({input$tab2group})
+  #popType<-reactive({input$popType})
+  
+  
+  
+  
+  
+  
+  
+  output$tab2axisOptions<-renderUI({
+    wellPanel(
 
+      selectInput(
+        inputId = "tab2CMHorPIHP",
+        label = "Y-Axis:CMH or PIHP",
+        selected = "CMH",
+        choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name'),
+        width = width_px
+      ),
+      
+      selectInput(
+        inputId = 'tab2Service',
+        label = 'X-Axis:Service',
+        choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
+        selected = c("Service Group")
+      ),
+      
+      selectInput(
+        inputId = 'tab2popType',
+        label = 'Population',
+        choices = c("All",levels(as.factor(data404$population))),
+        selected = "All"),
+      
+      selectInput(
+        inputId = 'tab2fy_filter',
+        label = 'Year',
+        choices = c(levels(data404$fy)),
+        selected = "2018")
+      
+      
+    ) })
+  
+  
+  
+  output$tab2varOptions <-renderUI({
+  
+#updating available choices  
+    yAxis_options<- if(input$tab2CMHorPIHP == "cmhsp"){
+      levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
+    
+    xAxis_options<- if(input$tab2Service == "svc_grp"){
+      levels(as.factor(data404$svc_grp))}else{levels(data404$code_shortDesc)}
+    
+    
+    
+
+#Actual options     
+    wellPanel(
+      selectizeInput(
+        inputId = "tab2provider",
+        label = "provider (CMH or PIHP)",
+        choices =   yAxis_options,
+        selected = "",
+        multiple = TRUE, 
+        #   selectize = TRUE,
+        size = 5,
+        options =  list(maxItems = 12, 
+                        placeholder = 'Search or Select')),
+    
+    
+    selectizeInput(
+      inputId = "tab2group",
+      label = "Group or HCPCS",
+  #    choices = levels(as.factor(data404$svc_grp)),
+        xAxis_options,
+      selected = "",
+      multiple = TRUE, 
+      #   selectize = TRUE,
+      size = 5,
+      options =  list(maxItems = 12, 
+                      placeholder = 'Search or Select')))
+    
+    
+    
+  })
+  
+  output$tab2Metric <-renderUI({ 
+    
+    selectInput(
+      inputId = 'tab2metric',
+      label = 'Metric',
+      choices = c("Cost" = "cost",'Units' = 'units',
+                  'Cases' = "cases","Cost per Case" = 'cost_per_case',
+                  "Cost per Unit" = 'cost_per_unit',
+                  "Units per Case"),
+      selected = "units")
+  })
+
+  
+heatmapDS<-reactive({
+  
+  
+  df<- data404%>%
+    filter((!!as.symbol(tab2org_type())) %in% input$tab2provider,
+           (!!as.symbol(tab2Service())) %in% input$tab2group,
+            fy %in% tab2fy_filter()
+          #   svc_type %in% 'Behavioral Treatment'
+
+  )%>%
+    select(!!as.symbol(tab2org_type()), # Provider column 
+       #    !!as.symbol(tab2Service()),
+           !!as.symbol(tab2Service()), # Group column (code_shortDesc or svc_grp)
+            #  svc_grp,
+           cost,units,cases)%>%
+    group_by( !!as.symbol(tab2org_type()),
+              !!as.symbol(tab2Service())
+              #!!as.symbol(tab2Service())
+       #       svc_grp
+              )%>%
+    summarise_at(
+      vars(cases,units,cost),
+      list(~sum(., na.rm = T))
+    )%>%
+    mutate(
+      cost_per_case = round(cost/cases,digits = 2),
+      cost_per_unit = round(cost/units,digits = 2),
+      unit_per_case = round(units/cases,digits = 1))
+  
+  
+
+  
+}) 
+############## Render some visuals 
+
+output$heatmap<-renderPlot({
+  
+  df<-heatmapDS()
+  
+  ggplot(df,aes( y = !!as.symbol(tab2Service()),x = as.factor(!!as.symbol(tab2org_type())))) + 
+    geom_tile(aes(fill = !!as.symbol(tab2metric())), colour = "white") + 
+    #   scale_fill_manual(values=c("#FB8604", "#DB4133", "#A3A7A8","#2B80A1"))+
+    ylab("Service Group") + xlab("CMHSP")+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          axis.line = element_line(color = "black", 
+                                   size = .5, linetype = "solid"))
+  
+  
+  
+  
+})
+  
+  output$heatDT <-  DT::renderDataTable({
+    
+    foo<-data.frame(heatmapDS())
+    
+    DT::datatable(foo)
+  })
+  
+  
+}
 # Run the application 
 shinyApp(ui = ui, server = server,enableBookmarking = "url")
