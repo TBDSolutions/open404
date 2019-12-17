@@ -30,3 +30,11 @@ data404 %<>%
     code_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code),")")),
     codeM_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code_mod),")"))
   )
+
+
+pihpCMH_LU<-data404%>%
+  distinct(pihp_name,cmhsp)
+
+
+
+

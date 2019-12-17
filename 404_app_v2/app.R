@@ -8,15 +8,37 @@ library(shinythemes)
 
 # Define UI for application that draws a histogram
 ui <- function(requests){ navbarPage("Explore 404 Data",
+                                     
+                                     
+                                     
                                      theme = shinytheme("cerulean"),
+tabPanel("About the App",
+         fluidRow(column(5,offset = 5,tags$strong("open404", style = "font-size: 125%;"))),
+         br(),
+                  column(4,offset = 4,
+                         "The cost and utilization data is collected by the Michigan 
+                Department of Health and Human Services' (MDHHS) Behavioral 
+                Health and Developmental Disabilities Administration (BHDDA) 
+                and reported annually to the Michigan legislature. Given the 
+                ongoing changes to Michigan’s public health system, this data 
+                can be used to understand service use, cost trends and 
+                variation across the state for vulnerable populations.  This 
+                application has been developed by"),
+         br(),
+         br(),
+               column(10,offset = 4, "TBD Solutions")),
  
  # Application title
  tabPanel("Bar Charts",
-          fluidRow(column(12,bookmarkButton(),
+          fluidRow(column(3,bookmarkButton(),
                           downloadButton("downloadData", "Download"))),
           # Sidebar with a slider input for number of bins 
           fluidRow(
-            column(3,wellPanel(
+            column(3,
+                   wellPanel(
+                   uiOutput('metric')
+                   ,style = 'background:#E1E8ED'),
+                   wellPanel(
                    uiOutput("org"),
                    uiOutput('prov')
                     ,style = 'background:#CCD6DD'),
@@ -24,12 +46,10 @@ ui <- function(requests){ navbarPage("Explore 404 Data",
                    uiOutput("servType"),
                    uiOutput('servGrp'),
                    uiOutput('code'),
-                    style = 'background:#CCD6DD'),
-                   wellPanel(
-                   uiOutput("sidebarUI"),
+                    style = 'background:#CCD6DD')
                  #  uiOutput('code'),
-                   uiOutput('metric')),
-                   br(),
+                #   uiOutput('metric')),
+                #   br(),
                    # bookmarkButton(id = "bookmark1"),
                    #  downloadButton("downloadData", "Download")
             ),
@@ -39,16 +59,40 @@ ui <- function(requests){ navbarPage("Explore 404 Data",
                               # Show a plot of the generated distribution
                               #     textOutput("text"),
                               plotOutput("barchart"),
-                     )),
-                   column(8,dataTableOutput('dt')))
-          )),
+                     ),
+                     tabPanel("Adv. Barchart",
+                              fluidRow(column(9,
+                                             dataTableOutput('dt'),
+                                              plotOutput('heatmap')),
+                                       column(3,uiOutput("tab2varOptions"))
+                              )
+                                
+                                
+                              )),
+                     
+                     ),
+                column(3,offset = 6,
+                         wellPanel(
+                         uiOutput("addOptions")
+                        # style = 'background:#CCD6DD')
+                       )),
+                column(4,offset = 1, 
+                       wellPanel(
+                         uiOutput("addOptions2")
+                       ))
+              
+               #    column(8,dataTableOutput('dt'))
+            
+            )
+          ),
  tabPanel("Heat Map",
           fluidRow(
-            column(3,
+            column(9,
                      uiOutput("tab2axisOptions"),
-                     uiOutput("tab2varOptions"),
+                   #  uiOutput("tab2varOptions"),
                      uiOutput("tab2Metric")),
-            column(9,plotOutput('heatmap'),
+            column(9, 
+                 #  plotOutput('heatmap'),
                      dataTableOutput("heatDT"))
             
             
@@ -87,6 +131,9 @@ server <- function(input, output) {
   
   selectedDS<-reactive({
     
+    req(input$provider)
+    
+    # Pre-made code filter to be DPLYR complient 
     code_filter<-if('All' %in% codes()){ as.character(unique(data404$code_shortDesc))}else{
       
       data404[which(data404$code_shortDesc %in% codes()),'code_shortDesc']%>%
@@ -94,18 +141,38 @@ server <- function(input, output) {
         distinct(code_shortDesc)%>%
         pull(code_shortDesc)
     }
+    # Pre-made population filter to be DPLYR complient 
+    pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
+      
+      data404[which(data404$population %in% popType()),'population']%>%
+        mutate(population = as.character(population))%>%
+        distinct(population)%>%
+        pull(population)
+    }
+    
+    
+    
+    
     
     
     df<- data404%>%
       filter((!!as.symbol(org_type())) %in% input$provider,
              fy %in% fy_filter(),
              svc_grp %in%  case_when('All' %in% serviceGroup() ~ levels(as.factor(data404$svc_grp)),
-                                     TRUE ~ serviceGroup()),
-             population %in%  case_when('All' %in% popType() ~ levels(as.factor(data404$population)),
-                                        TRUE ~ popType()))%>%
-      filter(code_shortDesc %in% code_filter)%>%
-      select(!!as.symbol(org_type()),
-             cost,units,cases)%>%
+                                     TRUE ~ serviceGroup())
+           #  population %in%  case_when('All' %in% popType() ~ levels(as.factor(data404$population)),
+            #                            TRUE ~ popType())
+             
+             )%>%
+      filter(
+            code_shortDesc %in% code_filter,
+            population %in% pop_filter
+             
+             )%>%
+      select(
+            !!as.symbol(org_type()),
+             cost,units,cases
+            )%>%
       group_by( !!as.symbol(org_type()))%>%
       summarise_at(
         vars(cases,units,cost),
@@ -122,27 +189,45 @@ server <- function(input, output) {
   
   
   ######### UI OUTPUTS 
+  
+  
+  output$metric<-renderUI({
+   
+    selectInput(
+      inputId = 'metric',
+      label = 'Benchmark Measure',
+      choices = c("Cost" = "cost",'Units' = 'units',
+                  'Cases' = "cases","Cost per Case" = 'cost_per_case',
+                  "Cost per Unit" = 'cost_per_unit',
+                  "Units per Case"),
+      selected = "units")
+    
+    
+  })
+  
+
+  
   output$org<-renderUI({
       
       selectInput(
         inputId = "CMHorPIHP",
-        label = "CMH or PIHP",
+        label = "I would like to compare accross..",
         choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name'),
         selected = "pihp_name")})
   
   output$prov<-renderUI({
+    
       prov_options<- if(input$CMHorPIHP == "cmhsp"){
       levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
     
       selectizeInput(
         inputId = "provider",
-        label = "provider (CMH or PIHP)",
+        label = "Specifically, I would like to compare..",
         choices =  prov_options,
         selected = levels(data404$pihp_name),
         multiple = TRUE,
         options =  list(maxItems = 12, 
                         placeholder = 'Search or Select'))
-    
     
   })
   
@@ -150,7 +235,7 @@ server <- function(input, output) {
     
     selectInput(
       inputId = 'serviceType',
-      label = 'Service Type',
+      label = 'Focusing on this service type',
       choices = c("All",levels(as.factor(data404$svc_type))),
       selected = "Coordination and Planning")
 
@@ -169,7 +254,7 @@ server <- function(input, output) {
       
       selectInput(
         inputId = "serviceGroup",
-        label = "Service Group",
+        label = "For this service group",
         selected = "",
         choices = c(levels(as.factor(svc_grp_options))),
         width = '550px'
@@ -177,29 +262,6 @@ server <- function(input, output) {
       )
 
   })
-  
-  output$sidebarUI<-renderUI({
-    
-   # bar_options<- if(input$CMHorPIHP == "cmhsp"){
-     # levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
-    
-    
-    wellPanel(
-   
-      selectInput(
-        inputId = 'popType',
-        label = 'Population',
-        choices = c("All",levels(as.factor(data404$population))),
-        selected = "All"),
-      
-      selectInput(
-        inputId = 'fy_filter',
-        label = 'Year',
-        choices = c(levels(data404$fy)),
-        selected = "2018")
-
-      
-      )})
   
   output$code<-renderUI({
     
@@ -214,7 +276,7 @@ server <- function(input, output) {
     
     selectizeInput(
       inputId = "codes",
-      label = "Codes Desc",
+      label = "Using all or a subset of the HCPC codes associated with this group",
       choices =  c("All",levels(as.factor(svc_code_options))),
       selected = "All",
       multiple = TRUE, 
@@ -223,29 +285,52 @@ server <- function(input, output) {
       options =  list(maxItems = 12, 
                       placeholder = 'Search or Select'))
     
-  })
+  }) 
+  
+  
+
+  
+  
+  output$addOptions<-renderUI({
+    tagList(
+      selectInput(
+        inputId = 'popType',
+        label = 'Population',
+        multiple = T,
+        choices = c("",levels(as.factor(data404$population))),
+        selected = levels(as.factor(data404$population))),
+      
+      selectInput(
+        inputId = 'fy_filter',
+        label = 'Year',
+        choices = c(levels(data404$fy)),
+        selected = "2018")
+      
+                   
+)
+      })
+  
+  output$addOptions2<-renderUI({
+    
+    tagList(
+      
+      radioButtons(inputId = 'shadeByPihp',
+                   label = 'Shade by PIHP',
+                   choices = c("Yes",'No'),
+                   selected = "No"),
+      radioButtons(inputId = 'includeMean',
+                   label = "Include Mean Line",
+                   choices = c("Yes",'No'),
+                   selected = "No")
+      
+    )
+  })   
+    
+  
+
   
   ### Different service groups based on types 
   
-  output$metric<-renderUI({
-    
-    # svc_grp_options <-if(input$CMHorPIHP == "All"){
-    #     levels(data404$svc_grp)
-    # }else{ levels(data404$pihp_name)}
-    
-    
-    
-    selectInput(
-      inputId = 'metric',
-      label = 'Metric',
-      choices = c("Cost" = "cost",'Units' = 'units',
-                  'Cases' = "cases","Cost per Case" = 'cost_per_case',
-                  "Cost per Unit" = 'cost_per_unit',
-                  "Units per Case"),
-      selected = "units")
-    
-    
-  })
   
   ###### PLOT OUTPUTS     
   
@@ -260,8 +345,8 @@ server <- function(input, output) {
     foo<-data.frame(selectedDS())%>%
       select(!!as.symbol(org_type()),
              !!as.symbol(metric()))
+       DT::datatable(foo)
     
-    DT::datatable(foo)
   })
   
   
@@ -270,26 +355,65 @@ server <- function(input, output) {
     xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
     else{'PIHP'}
     
-    data.frame(selectedDS())%>%
-      ggplot(aes(x = as.factor(!!as.symbol(org_type())), y = !!as.symbol(metric()))) +
+    
+    # Do I need to attach PIHP names to the mapping dataset
+    df<-if(input$CMHorPIHP == 'cmhsp'){
+           data.frame(selectedDS())%>%
+           left_join(pihpCMH_LU, by = "cmhsp")}
+        else{ selectedDS() }
+    
+    average<-df%>%
+             select(!!as.symbol(metric()))%>%
+             summarise(mean = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
+             pull(mean)
+    
+   # anythingSelected<-input$
+
+    
+   barplot<- if(input$shadeByPihp == 'Yes'){
+         
+        
+      df%>%
+      ggplot(aes(x = as.factor(!!as.symbol(org_type())), y = !!as.symbol(metric()),
+             fill = pihp_name)) +
       geom_bar(stat="identity", position=position_dodge(), alpha = .6,
                color="black")+
       scale_y_continuous(label = number_format(accuracy = 1, scale = 1e-3,
                                                big.mark = ","))+
       xlab(xlabs)+
       ylab(str_replace_all(input$metric,pattern = "_"," "))+
-      scale_fill_manual(values=c('#EA4335','#34A853'))+
+     # scale_fill_manual(values=c('#EA4335','#34A853'))+
       theme_minimal()+
       title()
+      
+      
+    }else{
+      df%>%
+        ggplot(aes(x = as.factor(!!as.symbol(org_type())), y = !!as.symbol(metric()))) +
+        geom_bar(stat="identity", position=position_dodge(), alpha = .6,
+                 color="black")+
+        scale_y_continuous(label = number_format(accuracy = 1, scale = 1e-3,
+                                                 big.mark = ","))+
+        xlab(xlabs)+
+        ylab(str_replace_all(input$metric,pattern = "_"," "))+
+    #    scale_fill_manual(values=c('#EA4335','#34A853'))+
+        theme_minimal()+
+        title()
+    } 
+   
+   if(input$includeMean == 'Yes'){
+     barplot +  geom_hline(yintercept = average,linetype = "dashed")
+      
+   }else{ barplot}
+   
+    
+    
+      
+      
+      
   })
   
-  ######### Line Chart 
-  output$lineChart<- renderPlot({
-    
-    data.frame(lineDS())
-    ggplot(foo,aes(x = fy, y = !!as.symbol(metric()), group = 1))+ geom_line()
-    
-  })
+
   
   ### bookmarks 
   
@@ -358,72 +482,26 @@ server <- function(input, output) {
   
   
   
-  output$tab2varOptions <-renderUI({
+output$tab2varOptions <-renderUI({
   
-#updating available choices  
-    yAxis_options<- if(input$tab2CMHorPIHP == "cmhsp"){
-      levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
-    
-    xAxis_options<- if(input$tab2Service == "svc_grp"){
-      levels(as.factor(data404$svc_grp))}else{levels(data404$code_shortDesc)}
-    
-    
-    
-
 #Actual options     
     wellPanel(
-      selectizeInput(
-        inputId = "tab2provider",
-        label = "provider (CMH or PIHP)",
-        choices =   yAxis_options,
-        selected = "",
-        multiple = TRUE, 
-        #   selectize = TRUE,
-        size = 5,
-        options =  list(maxItems = 12, 
-                        placeholder = 'Search or Select')),
     
+    radioButtons(
+      inputId = "groupOrHcpcs",
+      label = "Service Group or HCPCS",
+      choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
+      selected = c("Service Group")))
     
-    selectizeInput(
-      inputId = "tab2group",
-      label = "Group or HCPCS",
-  #    choices = levels(as.factor(data404$svc_grp)),
-        xAxis_options,
-      selected = "",
-      multiple = TRUE, 
-      #   selectize = TRUE,
-      size = 5,
-      options =  list(maxItems = 12, 
-                      placeholder = 'Search or Select')),
-    
-    selectInput(
-      inputId = 'tab2popType',
-      label = 'Population',
-      choices = c("All",levels(as.factor(data404$population))),
-      selected = "All"),
-    
-    selectInput(
-      inputId = 'tab2fy_filter',
-      label = 'Year',
-      choices = c(levels(data404$fy)),
-      selected = "2018")
-    
-    )
-    
-  })
-  
-  output$tab2Metric <-renderUI({ 
-    
-    selectInput(
-      inputId = 'tab2metric',
-      label = 'Metric',
-      choices = c("Cost" = "cost",'Units' = 'units',
-                  'Cases' = "cases","Cost per Case" = 'cost_per_case',
-                  "Cost per Unit" = 'cost_per_unit',
-                  "Units per Case"),
-      selected = "units")
   })
 
+
+# START HERE TO POPULATE WITH HCPCS or SERVICE GROUP OPTIONS for HEATMAP
+
+
+
+
+ 
   
 heatmapDS<-reactive({
   
