@@ -2,7 +2,7 @@
 
 width_px = "150px"
 
-
+scale_fun <- function(x) as.vector(scale(x))
 #### Load packages ####
 
 library(shiny); library(shinythemes);library(shinydashboard)
