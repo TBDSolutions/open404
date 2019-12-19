@@ -11,7 +11,7 @@ library(shiny)
 # Define UI for application that draws a histogram
 ui <- function(requests){ navbarPage("Explore 404 Data",
                                      
-   theme = shinytheme("cerulean"),
+  theme = shinytheme("cerulean"),
    navbarMenu(
      "About",
    tabPanel(
@@ -158,7 +158,7 @@ includes data visualizations that can be used to explore the data."
                    uiOutput("addOptions")
                  ,style = 'background:#CCD6DD')
             ),
-            column(9,fluidRow(column(2, uiOutput("shade")),column(4,uiOutput("mean"))),
+            column(9,fluidRow(column(3, uiOutput("shade")),column(3,uiOutput("mean"))),
                    tabsetPanel(
                      tabPanel("Barchart",
                               # Show a plot of the generated distribution
@@ -166,23 +166,18 @@ includes data visualizations that can be used to explore the data."
                               plotOutput("barchart"),
                      ),
                      tabPanel("HeatMap",
-                              fluidRow(column(9,
-                                             plotOutput('heatmap'),
-                                             DT::dataTableOutput('dt')),
-                                       column(3,downloadButton("heatData", "Download Heat Map Table"),
-                                                wellPanel(uiOutput("yAxisType"),
-                                                uiOutput("yAxisSel")))
-               )
-                                
-                                
-                              )),
-                     
-                     ),
-              
-               #    column(8,dataTableOutput('dt'))
-            
-            )
-          )
+                      fluidRow(column(9,
+                                     plotOutput('heatmap'),
+                                     DT::dataTableOutput('dt')),
+                               
+                               column(3,downloadButton("heatData", "Download Heat Map Table"),
+                                        wellPanel(uiOutput("yAxisType"),
+                                        uiOutput("yAxisSel"))))
+                    )
+                ), # Tabsets for bar
+            ),
+        )
+    ) # Tabpannel for barchart 
  
  
 ) # analysis navbar menu
@@ -200,15 +195,14 @@ includes data visualizations that can be used to explore the data."
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-#############################################################################
+####################################
+# Bar Chart tabset and main choices  
+####################################
+
   
-######################### TAB 1 SERVER #######################################
-  
-##############################################################################
-  
+############# REACTIVITY  
     
-  
-  # Reactive inputs 
+# Define Reactive inputs 
   org_type <- reactive({input$CMHorPIHP})
   provider<-reactive({input$provider})
   fy_filter<-reactive({input$fy_filter})
@@ -218,19 +212,23 @@ server <- function(input, output) {
   popType<-reactive({input$popType})
   codes<-reactive({input$codes})
   
+
+# Define Reactive dataset for barchart 
+
   selectedDS<-reactive({
     
     req(input$provider)
     
-    # Pre-made code filter to be DPLYR complient 
+    # Pre-made filter for below DPLYR manipulations for formatting multiple HCPC
+    # code options. Makes it easier to use when pre-defined
     code_filter<-if('All' %in% codes()){ as.character(unique(data404$code_shortDesc))}else{
       
-      data404[which(data404$code_shortDesc %in% codes()),'code_shortDesc']%>%
-        mutate(code_shortDesc = as.character(code_shortDesc))%>%
-        distinct(code_shortDesc)%>%
-        pull(code_shortDesc)
+                data404[which(data404$code_shortDesc %in% codes()),'code_shortDesc']%>%
+                mutate(code_shortDesc = as.character(code_shortDesc))%>%
+                distinct(code_shortDesc)%>%
+                pull(code_shortDesc)
     }
-    # Pre-made population filter to be DPLYR complient 
+    # Pre-made population filter for same reasons as code_filter. Simply usidin
     pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
       
       data404[which(data404$population %in% popType()),'population']%>%
@@ -238,70 +236,81 @@ server <- function(input, output) {
         distinct(population)%>%
         pull(population)
     }
-
     
-    df<- data404%>%
-      filter((!!as.symbol(org_type())) %in% input$provider,
-             fy %in% fy_filter(),
-             svc_grp %in%  case_when('All' %in% serviceGroup() ~ levels(as.factor(data404$svc_grp)),
-                                     TRUE ~ serviceGroup())
-           #  population %in%  case_when('All' %in% popType() ~ levels(as.factor(data404$population)),
-            #                            TRUE ~ popType())
-             
-             )%>%
-      filter(
-            code_shortDesc %in% code_filter,
+    # If the selection is by PIHP, I need to aggregate the data before joining 
+    # This table will be used below to calulate cost per 1K ect. 
+    stateAggData<-state_data%>%
+      group_by(!!as.symbol(org_type()),fy)%>%
+      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+    
+
+ 
+df<- data404%>%
+    filter(
+              !!as.symbol(org_type()) %in% input$provider,
+              fy %in% fy_filter(),
+              svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+    filter(
+            code_shortDesc %in% code_filter, #using code filters defined above
             population %in% pop_filter
-             
-             )%>%
-      select(
-            !!as.symbol(org_type()),
-             cost,units,cases
-            )%>%
-      group_by( !!as.symbol(org_type()))%>%
-      summarise_at(
-        vars(cases,units,cost),
-        list(~sum(., na.rm = T))
-      )%>%
-      mutate(
-        cost_per_case = round(cost/cases,digits = 2)*100,
-        cost_per_unit = round(cost/units,digits = 2)*100,
-        unit_per_case = round(units/cases,digits = 1)*100)
+           )%>%
+    select(
+            !!as.symbol(org_type()),fy,svc_grp,
+            cost,units,cases
+           )%>%
+    group_by(
+              !!as.symbol(org_type()),fy,svc_grp
+           )%>%
+    summarise_at(
+      
+            vars(cases,units,cost),
+            list(~sum(., na.rm = T))
+          )%>%
+    mutate(
+      
+          cost_per_case = round(cost/cases,digits = 2)*100,
+          cost_per_unit = round(cost/units,digits = 2)*100,
+          unit_per_case = round(units/cases,digits = 1)*100
+         )%>%
+    left_join(
+      
+          stateAggData,by = c(org_type() ,"fy")
+          )%>%
+    mutate(
+      
+        cost_per_1K_served = round(((cost/TotalServed)*1000)),
+        percent_served = round(((cases/TotalServed)*100),3)
+        )
+    
+   
     
   })
   
 
-  
-  
-  ######### UI OUTPUTS 
-  
+######### UI OUTPUTS FOR BARCHART  
   
   output$metric<-renderUI({
-   
     selectInput(
       inputId = 'metric',
       label = 'Benchmark Measure',
       choices = c("Cost" = "cost",'Units' = 'units',
-                  'Cases' = "cases","Cost per Case" = 'cost_per_case',
-                  "Cost per Unit" = 'cost_per_unit',
-                  "Units per Case" = "unit_per_case"),
+                  'Cases' = "cases","Cost Per Case" = 'cost_per_case',
+                  "Cost Per Unit" = 'cost_per_unit',
+                  "Units Per Case" = "unit_per_case",
+                  "Cost Per 1K Served" = "cost_per_1K_served"),
       selected = "units")
-    
-    
   })
   
-
-  
   output$org<-renderUI({
-      
-      selectInput(
-        inputId = "CMHorPIHP",
-        label = "I would like to compare accross..",
-        choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name'),
-        selected = "pihp_name")})
+        selectInput(
+          inputId = "CMHorPIHP",
+          label = "I would like to compare accross..",
+          choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name'),
+          selected = "pihp_name")
+    })
   
   output$prov<-renderUI({
-    
+      # Conditinal statements to populate the list
       prov_options<- if(input$CMHorPIHP == "cmhsp"){
       levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
     
@@ -312,51 +321,47 @@ server <- function(input, output) {
         selected = levels(data404$pihp_name),
         multiple = TRUE,
         options =  list( placeholder = 'Search or Select'))
-    
   })
   
   output$servType<-renderUI({
-    
+    req(org_type())
     selectInput(
       inputId = 'serviceType',
       label = 'Focusing on this service type',
       choices = c("All",levels(as.factor(data404$svc_type))),
       selected = "Coordination and Planning")
-
   })
   
   output$servGrp<-renderUI({
-    
-    
-    svc_grp_options<-data404%>%
+    req(org_type())
+      # Conditional for service group options 
+      svc_grp_options<-data404%>%
       filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
                                      TRUE ~ input$serviceType))%>%
-      #  filter(svc_type %in% input$serviceType)%>%
       distinct(svc_grp)%>%
       pull(svc_grp)
-    
-      
+     
       selectInput(
         inputId = "serviceGroup",
         label = "For this service group",
         selected = "",
-        choices = c(levels(as.factor(svc_grp_options))),
-        width = '550px'
-        
-      )
+        choices = c(levels(as.factor(svc_grp_options)))
+        )
 
   })
   
   output$code<-renderUI({
-    
-    svc_code_options<-data404%>%
-      filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
-                                     TRUE ~ input$serviceType),
-             svc_grp %in%  case_when('' %in% input$serviceGroup ~ levels(as.factor(data404$svc_grp)),
-                                     TRUE ~ input$serviceGroup))%>%
-      mutate(code_shortDesc = as.character(code_shortDesc))%>%
-      distinct(code_shortDesc)%>%
-      pull(code_shortDesc)
+  # More contionals for HCPC codes because it depends on both service type and group 
+  # chosen
+    req(org_type())
+  svc_code_options<-data404%>%
+    filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
+                                   TRUE ~ input$serviceType),
+           svc_grp %in%  case_when('' %in% input$serviceGroup ~ levels(as.factor(data404$svc_grp)),
+                                   TRUE ~ input$serviceGroup))%>%
+    mutate(code_shortDesc = as.character(code_shortDesc))%>%
+    distinct(code_shortDesc)%>%
+    pull(code_shortDesc)
     
     selectizeInput(
       inputId = "codes",
@@ -364,13 +369,13 @@ server <- function(input, output) {
       choices =  c("All",levels(as.factor(svc_code_options))),
       selected = "All",
       multiple = TRUE, 
-      #   selectize = TRUE,
       size = 5,
       options =  list(placeholder = 'Search or Select'))
     
   }) 
 
   output$addOptions<-renderUI({
+    # Tag list groups the two widgets together
     tagList(
       selectInput(
         inputId = 'popType',
@@ -384,8 +389,6 @@ server <- function(input, output) {
         label = 'Fiscal Year',
         choices = c(levels(data404$fy)),
         selected = "2018")
-      
-                   
 )
       })
   
@@ -407,18 +410,14 @@ server <- function(input, output) {
                  inline = TRUE)
     
   })
-    
   
 
+    
   
-  ### Different service groups based on types 
-  
-  
-  ###### PLOT OUTPUTS     
+######## PLOT & TABLE OUTPUTS     
   
   # Reactive for tab to include datatable 
   
-
   output$dt<-DT::renderDataTable({
     
        col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
@@ -427,11 +426,9 @@ server <- function(input, output) {
        col2<-as.name(if(input$groupOrHcpcs == "svc_grp"){'Service Group'}else{"HCPCS"})
        
        metric_lab = str_replace_all(input$metric,pattern = "_"," ")
-    
-    
+
        foo<-data.frame(heatmapDS())
-    
-    
+  
        DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
                      colnames = c(col1,col2,metric_lab,'Score'))
     
@@ -439,51 +436,64 @@ server <- function(input, output) {
   
 
   output$barchart<-renderPlot({
-    
-    xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
-    else{'PIHP'}
-    
-    
-    # Do I need to attach PIHP names to the mapping dataset
-    df<-if(input$CMHorPIHP == 'cmhsp'){
-           data.frame(selectedDS())%>%
-           left_join(pihpCMH_LU, by = "cmhsp")
-         #  rename(PIHP = pihp_name)
-           
-           }
-        else{ selectedDS()}
-    
-    average<-df%>%
-             select(!!as.symbol(metric()))%>%
-             summarise(mean = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
-             pull(mean)
-    
-    
-    
-    group<-if('All' %in% codes()){ serviceGroup() }else{list(codes())}
-
-   # group<-if(type(a))  
-  
-    #group<-unlist(group)
-   # anythingSelected<-input$
-
-    
-   barplot<- if(input$shadeByPihp == 'Yes'){
-         
+       req(codes())
+       req(popType())
+      #Define which dataset to use based on CMH or PIHP
+      #Primarily for the left join that will attache nessesary 
+      # Grouping and shading columns for the graph
+      df<-if(input$CMHorPIHP == 'cmhsp'){
         
+          data.frame(selectedDS())%>%
+          left_join(pihpCMH_LU, by = "cmhsp")
+        
+      }else{ 
+        
+        p<-pihpCMH_LU%>%distinct(pihp,pihp_name)
+        
+        data.frame(selectedDS())%>%
+        left_join(p, by = "pihp_name")
+        
+        }
+      
+      # Format X-Axis labels 
+      xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+      else{'PIHP'}
+    
+      # Defning average line, if chosen
+      average<-df%>%
+      select(!!as.symbol(metric()))%>%
+      summarise(mean = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
+      pull(mean)
+      
+      
+      group<-if('All' %in% codes()){ serviceGroup() }else{as.data.frame(list(codes()))%>%
+          mutate(code = as.character(.[[1]]))%>%
+          pull(code)}
+      
+      populations<-as.data.frame(list(popType()))%>%
+          mutate(popType = as.character(.[[1]]))%>%
+          pull(popType)
+      
+      
+      
+      
+
+   barplot<- if(input$shadeByPihp == 'Yes' ){
+         
      df%>%
-       ggplot(aes(x = as.factor(!!as.symbol(org_type())), y = !!as.symbol(metric()))) +
-       geom_bar(aes(fill = pihp_name), stat="identity", position=position_dodge(), alpha = .6,
+       ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),pihp),
+                  y = !!as.symbol(metric()),
+                  fill = pihp_name)) +
+       geom_bar(stat="identity", position=position_dodge(), alpha = .6,
                 color="black")+
-       scale_y_continuous(label = number_format(accuracy = 1, scale = 1e-3,
-                                                big.mark = ","))+
+       scale_y_continuous(label = number_format(big.mark = ","))+
        xlab(xlabs)+
        ylab(str_replace_all(input$metric,pattern = "_"," "))+
        # scale_fill_manual(values=c('#EA4335','#34A853'))+
        theme_minimal()+
        ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
-                                                   xlabs," for ",group,sep = ""),
-               subtitle =  paste("For fiscal year ",input$fy_filter,sep = ""))+
+                     xlabs," for ",paste(group,collapse = ","),sep = ""),
+               subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
        labs(fill='PIHP') 
       
       
@@ -492,15 +502,20 @@ server <- function(input, output) {
         ggplot(aes(x = as.factor(!!as.symbol(org_type())), y = !!as.symbol(metric()))) +
         geom_bar(stat="identity", position=position_dodge(), alpha = .6,
                  color="black")+
-        scale_y_continuous(label = number_format(accuracy = 1, scale = 1e-3,
-                                                 big.mark = ","))+
+        scale_y_continuous(label = number_format(big.mark = ","))+
         xlab(xlabs)+
-        ylab(str_replace_all(input$metric,pattern = "_"," "))+
+        ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
     #    scale_fill_manual(values=c('#EA4335','#34A853'))+
         theme_minimal()+
-        ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
-                      xlabs," for ",group,sep = ""),
-                subtitle =  paste("For fiscal year ",input$fy_filter,sep = ""))
+        ggtitle(paste("Comparing ",stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," "))," by ",
+                      xlabs," for ",paste(group,collapse = ","),sep = ""),
+                subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
+        labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+        theme_ipsum(grid = 'Y',
+                    plot_title_size = 15,
+                    axis_text_size = 11,
+                    axis_title_size = 13
+                    )
     } 
    
    if(input$includeMean == 'Yes'){
@@ -512,12 +527,64 @@ server <- function(input, output) {
  
   })
   
-# Heatmap tab
+################## 
+# Heatmap tabset
+################## 
+  
+  
+################ REACTIVITY
   
  yType<-reactive({input$groupOrHcpcs})
  ySel<-reactive({input$yAxisSel})
+ 
+ 
+ heatmapDS<-reactive({
+   
+   pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
+     
+     data404[which(data404$population %in% popType()),'population']%>%
+       mutate(population = as.character(population))%>%
+       distinct(population)%>%
+       pull(population)
+   }
+   
+   df<-data404%>%
+     filter((!!as.symbol(org_type())) %in% input$provider,
+            fy %in% fy_filter(),
+            population %in% pop_filter,
+            (!!as.symbol(yType())) %in% input$yAxisSel
+     )%>%
+     select(!!as.symbol(org_type()), # Provider column 
+            (!!as.symbol(yType())),
+            cost,units,cases
+     )%>%
+     group_by(!!as.symbol(org_type()), # Provider column 
+              (!!as.symbol(yType()))
+     )%>%
+     summarise_at(
+       vars(cases,units,cost),
+       list(~sum(., na.rm = T))
+     )%>%
+     mutate(
+       cost_per_case = round(cost/cases,digits = 2),
+       cost_per_unit = round(cost/units,digits = 2),
+       unit_per_case = round(units/cases,digits = 1))
+   
+   
+   df<-df%>%
+     select(!!as.symbol(org_type()),(!!as.symbol(yType())),!!as.symbol(metric()))%>%
+     group_by((!!as.symbol(yType())))%>%
+     mutate(metric = round((pnorm(scale_fun(!!as.symbol(metric())))*100),2))
+   
+ }) 
+ 
+ 
+ 
+ 
   
-
+############### UI OUPUTS FOR HEATMAP TABSET
+ 
+ 
 output$yAxisType <-renderUI({
   
 #Actual options     
@@ -561,54 +628,7 @@ output$yAxisSel<-renderUI({
 })
 
 
- 
-  
-heatmapDS<-reactive({
-  
-  pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
-    
-    data404[which(data404$population %in% popType()),'population']%>%
-      mutate(population = as.character(population))%>%
-      distinct(population)%>%
-      pull(population)
-  }
-  
-  
-  
-  df<-data404%>%
-    filter((!!as.symbol(org_type())) %in% input$provider,
-             fy %in% fy_filter(),
-             population %in% pop_filter,
-          (!!as.symbol(yType())) %in% input$yAxisSel
-     )%>%
-     select(!!as.symbol(org_type()), # Provider column 
-            (!!as.symbol(yType())),
-             cost,units,cases
-     )%>%
-     group_by(!!as.symbol(org_type()), # Provider column 
-              (!!as.symbol(yType()))
-              )%>%
-     summarise_at(
-       vars(cases,units,cost),
-      list(~sum(., na.rm = T))
-     )%>%
-     mutate(
-       cost_per_case = round(cost/cases,digits = 2),
-       cost_per_unit = round(cost/units,digits = 2),
-       unit_per_case = round(units/cases,digits = 1))
-  
-  
-  df<-df%>%
-    select(!!as.symbol(org_type()),(!!as.symbol(yType())),!!as.symbol(metric()))%>%
-    group_by((!!as.symbol(yType())))%>%
-    mutate(metric = round((pnorm(scale_fun(!!as.symbol(metric())))*100),2))
-   
-  
-
-}) 
-
-
-############## Render some visuals 
+############## VISUALS AND TABLES FOR HEATMAP 
 
 
 output$heatmap<-renderPlot({

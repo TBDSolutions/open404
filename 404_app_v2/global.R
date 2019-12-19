@@ -8,6 +8,10 @@ scale_fun <- function(x) as.vector(scale(x))
 library(shiny); library(shinythemes);library(shinydashboard)
 library(plotly);library(scales)
 library(tidyverse);library(magrittr);library(arrow)
+library(hrbrthemes)
+library(gcookbook)
+library(stringi)
+#hrbrthemes::import_roboto_condensed()
 
 #### Read datasets ####
 
@@ -33,8 +37,15 @@ data404 %<>%
 
 
 pihpCMH_LU<-data404%>%
-  distinct(pihp_name,cmhsp)
+  distinct(pihp,pihp_name,cmhsp)
 
+
+state_data<-read.csv("../data/TotalServedAnnual.csv")%>%
+                     rename(cmhsp = CMHSP, fy = FY)%>%
+                     left_join(pihpCMH_LU, by = "cmhsp")%>%
+                     mutate(fy = as.factor(fy))%>%
+                     select(-pihp)
+  
 
 
 
