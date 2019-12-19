@@ -33,7 +33,8 @@ data404 %<>%
   mutate(
     code_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code),")")),
     codeM_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code_mod),")"))
-  )
+  )%>%
+  mutate(state = 'MI')
 
 
 pihpCMH_LU<-data404%>%

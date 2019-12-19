@@ -5,7 +5,6 @@ library(rlang)
 library(DT)
 library(ggiraph)
 library(shinythemes)
-
 library(shiny)
 
 # Define UI for application that draws a histogram
@@ -152,6 +151,8 @@ includes data visualizations that can be used to explore the data."
                    uiOutput('metric'),
                    uiOutput("org"),
                    uiOutput('prov'),
+                   uiOutput("yAxisType"),
+                    uiOutput("yAxisSel"),
                    uiOutput("servType"),
                    uiOutput('servGrp'),
                    uiOutput('code'),
@@ -170,9 +171,10 @@ includes data visualizations that can be used to explore the data."
                                      plotOutput('heatmap'),
                                      DT::dataTableOutput('dt')),
                                
-                               column(3,downloadButton("heatData", "Download Heat Map Table"),
-                                        wellPanel(uiOutput("yAxisType"),
-                                        uiOutput("yAxisSel"))))
+                               column(3,downloadButton("heatData", "Download Heat Map Table"))
+                                       # wellPanel(uiOutput("yAxisType"),
+                                       # uiOutput("yAxisSel")))
+                      )
                     )
                 ), # Tabsets for bar
             ),
@@ -214,6 +216,43 @@ server <- function(input, output) {
   
 
 # Define Reactive dataset for barchart 
+  
+  stateAvg<-reactive({
+    
+    group<-if('All' %in% codes()){ serviceGroup() }else{as.data.frame(list(codes()))%>%
+        mutate(code = as.character(.[[1]]))%>%
+        pull(code)}
+    
+
+    df<-data404%>%
+      filter(
+        fy %in% fy_filter(),
+        svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+      select(
+         fy,svc_grp,
+         !!as.symbol(org_type()),
+         cost,units,cases
+      )%>%
+      group_by(
+          fy,svc_grp,
+         (!!as.symbol(org_type()))
+      )%>%
+      summarise_at(
+        
+        vars(cases,units,cost),
+        list(~sum(., na.rm = T))
+      )%>%
+      mutate(
+        cost_per_case = round(cost/cases,digits = 2)*100,
+        cost_per_unit = round(cost/units,digits = 2)*100,
+        unit_per_case = round(units/cases,digits = 1)*100
+      )%>%
+      group_by(fy,svc_grp)%>%
+      summarise(avg = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
+      pull(avg)
+  
+    
+  })
 
   selectedDS<-reactive({
     
@@ -243,7 +282,13 @@ server <- function(input, output) {
       group_by(!!as.symbol(org_type()),fy)%>%
       summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
     
+    # Michigan only 
+    michTtl<-state_data%>%
+      mutate(state = 'MI')%>%
+      group_by(state,fy)%>%
+      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
 
+df<-if(!input$CMHorPIHP == 'MI'){
  
 df<- data404%>%
     filter(
@@ -281,8 +326,29 @@ df<- data404%>%
         cost_per_1K_served = round(((cost/TotalServed)*1000)),
         percent_served = round(((cases/TotalServed)*100),3)
         )
-    
-   
+}
+else{
+
+  df<- data404%>%
+    filter(state %in% "MI",
+           fy %in% fy_filter(),
+           svc_grp %in%  serviceGroup())%>%
+    select(state,svc_grp,fy,
+           cost,units,cases)%>%
+    group_by(state,svc_grp,fy)%>%
+    summarise_at(
+      vars(cases,units,cost),
+      list(~sum(., na.rm = T))
+    )%>%
+    mutate(
+      cost_per_case = round(cost/cases,digits = 2),
+      cost_per_unit = round(cost/units,digits = 2),
+      unit_per_case = round(units/cases,digits = 1))%>%
+    left_join(michTtl,by = c("state","fy"))%>%
+    mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
+           percent_served = round(((cases/TotalServed)*100),3))
+  
+}
     
   })
   
@@ -305,14 +371,17 @@ df<- data404%>%
         selectInput(
           inputId = "CMHorPIHP",
           label = "I would like to compare accross..",
-          choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name'),
+          choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name',
+                      "State" = "state"),
           selected = "pihp_name")
     })
   
   output$prov<-renderUI({
       # Conditinal statements to populate the list
       prov_options<- if(input$CMHorPIHP == "cmhsp"){
-      levels(data404$cmhsp)}else{ levels(data404$pihp_name)}
+                         levels(data404$cmhsp)}
+                      else if(input$CMHorPIHP == "pihp_name"){levels(data404$pihp_name)}
+                      else{"MI"}
     
       selectizeInput(
         inputId = "provider",
@@ -404,7 +473,7 @@ df<- data404%>%
   
   output$mean<-renderUI({
     radioButtons(inputId = 'includeMean',
-                 label = "Include Mean in Barchart",
+                 label = "State Svc.Group Average?",
                  choices = c("Yes",'No'),
                  selected = "No",
                  inline = TRUE)
@@ -412,8 +481,6 @@ df<- data404%>%
   })
   
 
-    
-  
 ######## PLOT & TABLE OUTPUTS     
   
   # Reactive for tab to include datatable 
@@ -430,7 +497,7 @@ df<- data404%>%
        foo<-data.frame(heatmapDS())
   
        DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
-                     colnames = c(col1,col2,metric_lab,'Score'))
+                     colnames = c(col1,col2,metric_lab,'Pctl.'))
     
   })
   
@@ -446,14 +513,14 @@ df<- data404%>%
           data.frame(selectedDS())%>%
           left_join(pihpCMH_LU, by = "cmhsp")
         
-      }else{ 
+      }else if(input$CMHorPIHP == 'pihp_name'){ 
         
         p<-pihpCMH_LU%>%distinct(pihp,pihp_name)
         
         data.frame(selectedDS())%>%
         left_join(p, by = "pihp_name")
         
-        }
+        } else {data.frame(selectedDS())}
       
       # Format X-Axis labels 
       xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
@@ -464,8 +531,7 @@ df<- data404%>%
       select(!!as.symbol(metric()))%>%
       summarise(mean = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
       pull(mean)
-      
-      
+
       group<-if('All' %in% codes()){ serviceGroup() }else{as.data.frame(list(codes()))%>%
           mutate(code = as.character(.[[1]]))%>%
           pull(code)}
@@ -473,9 +539,6 @@ df<- data404%>%
       populations<-as.data.frame(list(popType()))%>%
           mutate(popType = as.character(.[[1]]))%>%
           pull(popType)
-      
-      
-      
       
 
    barplot<- if(input$shadeByPihp == 'Yes' ){
@@ -519,8 +582,7 @@ df<- data404%>%
     } 
    
    if(input$includeMean == 'Yes'){
-     barplot +  geom_hline(yintercept = average,linetype = "dashed",size = 1)
-      
+     barplot +  geom_hline(yintercept = c(stateAvg()),linetype = "dashed",size = 1)
    }else{ barplot}
    
     
@@ -548,6 +610,12 @@ df<- data404%>%
        pull(population)
    }
    
+   stateAggData<-state_data%>%
+     group_by(!!as.symbol(org_type()),fy)%>%
+     summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+   
+   
+   
    df<-data404%>%
      filter((!!as.symbol(org_type())) %in% input$provider,
             fy %in% fy_filter(),
@@ -556,10 +624,14 @@ df<- data404%>%
      )%>%
      select(!!as.symbol(org_type()), # Provider column 
             (!!as.symbol(yType())),
+             fy,
             cost,units,cases
      )%>%
-     group_by(!!as.symbol(org_type()), # Provider column 
-              (!!as.symbol(yType()))
+     group_by(
+       
+         !!as.symbol(org_type()), # Provider column 
+        (!!as.symbol(yType())),
+         fy
      )%>%
      summarise_at(
        vars(cases,units,cost),
@@ -568,9 +640,22 @@ df<- data404%>%
      mutate(
        cost_per_case = round(cost/cases,digits = 2),
        cost_per_unit = round(cost/units,digits = 2),
-       unit_per_case = round(units/cases,digits = 1))
+       unit_per_case = round(units/cases,digits = 1)
+    )%>%
+    left_join(
+    
+        stateAggData,by = c(org_type() ,"fy")
+    )%>%
+    mutate(
+    
+        cost_per_1K_served = round(((cost/TotalServed)*1000)),
+        percent_served = round(((cases/TotalServed)*100),3)
+    )
    
    
+   
+   
+   # Transform into Z scores then turn Z scores into percentiles
    df<-df%>%
      select(!!as.symbol(org_type()),(!!as.symbol(yType())),!!as.symbol(metric()))%>%
      group_by((!!as.symbol(yType())))%>%
@@ -649,18 +734,13 @@ output$heatmap<-renderPlot({
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           axis.line = element_line(color = "black", 
                                    size = .5, linetype = "solid"))+
-    labs(fill=paste(type," usage Pctl.",sep = "")) 
+    labs(fill=paste(type," Pctl.",sep = "")) 
   
  
 })
 
-
-
-
 ################## Download handlers and bookmarks 
 ### bookmarks 
-
-
 
 # Downloadable csv of selected dataset ----
 
@@ -683,7 +763,6 @@ output$ServiceGroups <- downloadHandler(
     write.csv(service_groups, file, row.names = FALSE)
   }
 )
-
 
 # Barchart DS
 
@@ -722,10 +801,6 @@ output$heatData <- downloadHandler(
 )
 
 
-
-
-  
-  
 }
 # Run the application 
 shinyApp(ui = ui, server = server,enableBookmarking = "url")
