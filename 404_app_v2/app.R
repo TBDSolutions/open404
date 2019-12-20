@@ -151,8 +151,6 @@ includes data visualizations that can be used to explore the data."
                    uiOutput('metric'),
                    uiOutput("org"),
                    uiOutput('prov'),
-                   uiOutput("yAxisType"),
-                    uiOutput("yAxisSel"),
                    uiOutput("servType"),
                    uiOutput('servGrp'),
                    uiOutput('code'),
@@ -171,10 +169,9 @@ includes data visualizations that can be used to explore the data."
                                      plotOutput('heatmap'),
                                      DT::dataTableOutput('dt')),
                                
-                               column(3,downloadButton("heatData", "Download Heat Map Table"))
-                                       # wellPanel(uiOutput("yAxisType"),
-                                       # uiOutput("yAxisSel")))
-                      )
+                               column(3,downloadButton("heatData", "Download Heat Map Table"),
+                                        wellPanel(uiOutput("yAxisType"),
+                                        uiOutput("yAxisSel"))))
                     )
                 ), # Tabsets for bar
             ),
@@ -219,10 +216,11 @@ server <- function(input, output) {
   
   stateAvg<-reactive({
     
-    group<-if('All' %in% codes()){ serviceGroup() }else{as.data.frame(list(codes()))%>%
-        mutate(code = as.character(.[[1]]))%>%
-        pull(code)}
-    
+    # Michigan only 
+    michTtl<-state_data%>%
+      #  mutate(state = 'MI')%>%
+      group_by(fy)%>%
+      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
 
     df<-data404%>%
       filter(
@@ -247,6 +245,10 @@ server <- function(input, output) {
         cost_per_unit = round(cost/units,digits = 2)*100,
         unit_per_case = round(units/cases,digits = 1)*100
       )%>%
+      left_join(michTtl,by = "fy")%>%
+      mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
+             percent_served = round(((cases/TotalServed)*100),3))%>%
+      
       group_by(fy,svc_grp)%>%
       summarise(avg = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
       pull(avg)
@@ -283,13 +285,12 @@ server <- function(input, output) {
       summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
     
     # Michigan only 
-    michTtl<-state_data%>%
-      mutate(state = 'MI')%>%
-      group_by(state,fy)%>%
-      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+    # michTtl<-state_data%>%
+    # #  mutate(state = 'MI')%>%
+    #   group_by(fy)%>%
+    #   summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
 
-df<-if(!input$CMHorPIHP == 'MI'){
- 
+
 df<- data404%>%
     filter(
               !!as.symbol(org_type()) %in% input$provider,
@@ -326,29 +327,29 @@ df<- data404%>%
         cost_per_1K_served = round(((cost/TotalServed)*1000)),
         percent_served = round(((cases/TotalServed)*100),3)
         )
-}
-else{
-
-  df<- data404%>%
-    filter(state %in% "MI",
-           fy %in% fy_filter(),
-           svc_grp %in%  serviceGroup())%>%
-    select(state,svc_grp,fy,
-           cost,units,cases)%>%
-    group_by(state,svc_grp,fy)%>%
-    summarise_at(
-      vars(cases,units,cost),
-      list(~sum(., na.rm = T))
-    )%>%
-    mutate(
-      cost_per_case = round(cost/cases,digits = 2),
-      cost_per_unit = round(cost/units,digits = 2),
-      unit_per_case = round(units/cases,digits = 1))%>%
-    left_join(michTtl,by = c("state","fy"))%>%
-    mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
-           percent_served = round(((cases/TotalServed)*100),3))
-  
-}
+# }
+# else{
+# 
+#   df<- data404%>%
+#     filter(state %in% "MI",
+#            fy %in% fy_filter(),
+#            svc_grp %in%  serviceGroup())%>%
+#     select(state,svc_grp,fy,
+#            cost,units,cases)%>%
+#     group_by(state,svc_grp,fy)%>%
+#     summarise_at(
+#       vars(cases,units,cost),
+#       list(~sum(., na.rm = T))
+#     )%>%
+#     mutate(
+#       cost_per_case = round(cost/cases,digits = 2),
+#       cost_per_unit = round(cost/units,digits = 2),
+#       unit_per_case = round(units/cases,digits = 1))%>%
+#     left_join(michTtl,by = c("state","fy"))%>%
+#     mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
+#            percent_served = round(((cases/TotalServed)*100),3))
+#   
+# }
     
   })
   
@@ -409,6 +410,7 @@ else{
                                      TRUE ~ input$serviceType))%>%
       distinct(svc_grp)%>%
       pull(svc_grp)
+      
      
       selectInput(
         inputId = "serviceGroup",
@@ -473,7 +475,7 @@ else{
   
   output$mean<-renderUI({
     radioButtons(inputId = 'includeMean',
-                 label = "State Svc.Group Average?",
+                 label = "State Svc. Group Average?",
                  choices = c("Yes",'No'),
                  selected = "No",
                  inline = TRUE)
