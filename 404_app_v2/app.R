@@ -165,6 +165,7 @@ includes data visualizations that can be used to explore the data."
                               # Show a plot of the generated distribution
                               #     textOutput("text"),
                               plotOutput("barchart"),
+                              DT::dataTableOutput("barTable")
                      ),
                      tabPanel("HeatMap",
                       fluidRow(column(9,
@@ -237,7 +238,7 @@ server <- function(input, output) {
       select(
          fy,
          !!as.symbol(org_type()),
-         cost,units,cases
+          cost,units,cases
       )%>%
       group_by(
           fy,
@@ -254,7 +255,7 @@ server <- function(input, output) {
         unit_per_case = round(units/cases,digits = 1)
       )%>%
       left_join(michTtl,by = "fy")%>%
-      mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
+      mutate(cost_per_1K_served = (cost/TotalServed)*1000,
              pct._served = round(((cases/TotalServed)*100),3))%>%
       
       group_by(fy)%>%
@@ -335,33 +336,11 @@ df<- data404%>%
           )%>%
     mutate(
       
-        cost_per_1K_served = round(((cost/TotalServed)*1000)),
+        cost_per_1K_served = round((cost/TotalServed)*1000,0),
         pct._served = round(((cases/TotalServed)*100),3)
         )
-# }
-# else{
-# 
-#   df<- data404%>%
-#     filter(state %in% "MI",
-#            fy %in% fy_filter(),
-#            svc_grp %in%  serviceGroup())%>%
-#     select(state,svc_grp,fy,
-#            cost,units,cases)%>%
-#     group_by(state,svc_grp,fy)%>%
-#     summarise_at(
-#       vars(cases,units,cost),
-#       list(~sum(., na.rm = T))
-#     )%>%
-#     mutate(
-#       cost_per_case = round(cost/cases,digits = 2),
-#       cost_per_unit = round(cost/units,digits = 2),
-#       unit_per_case = round(units/cases,digits = 1))%>%
-#     left_join(michTtl,by = c("state","fy"))%>%
-#     mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
-#            percent_served = round(((cases/TotalServed)*100),3))
-#   
-# }
-    
+
+
   })
   
 
@@ -385,14 +364,14 @@ df<- data404%>%
                          levels(data404$cmhsp)}
                       else if(input$CMHorPIHP == "pihp_name"){levels(data404$pihp_name)}
                       else{"MI"}
-      
+     
       
     
       selectizeInput(
         inputId = "provider",
         label =   paste("Which ",org,"are you interested in viewing?"),
         choices =  prov_options,
-        selected = levels(data404$pihp_name),
+        selected = prov_options,
         multiple = TRUE,
         options =  list( placeholder = 'Search or Select'))
   })
@@ -547,6 +526,30 @@ df<- data404%>%
     
   })
   
+  
+  output$barTable<-DT::renderDataTable({
+    
+    col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+    else{'PIHP'}
+    
+    col2<-"Fiscal Year"
+    
+    metric_lab = str_replace_all(input$metric,pattern = "_"," ")
+    
+    foo<-as.data.frame( selectedDS())
+    
+    foo<-foo%>%
+         select(input$CMHorPIHP,
+                input$metric,
+                fy)
+
+    DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
+                  colnames = c(col1,metric_lab,col2))
+                  #colnames = c(col1,col2,metric_lab))
+    
+  })
+  
+  
 
   output$barchart<-renderPlot({
        req(ySel2())
@@ -566,7 +569,9 @@ df<- data404%>%
         data.frame(selectedDS())%>%
         left_join(p, by = "pihp_name")
         
-        } else {data.frame(selectedDS())}
+      } else {data.frame(selectedDS())}
+      
+      
       
       # Format X-Axis labels 
       xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
@@ -580,10 +585,15 @@ df<- data404%>%
       
       text_avg<-format(round(stateAvg(),0),big.mark=",", scientific=FALSE)
 
-      group<-if(input$groupOrHcpcs2 == "svc_grp"){ySel2()}else{as.data.frame(list(ySel2()))%>%
-          mutate(code = as.character(.[[1]]))%>%
-          pull(code)}
-      
+      group<-if(input$groupOrHcpcs2 == "svc_grp"){
+        
+        paste(ySel2()," Service Group")
+                                                        
+               }
+              else{as.data.frame(list(ySel2()))%>%
+              mutate(code = as.character(.[[1]]))%>%
+              pull(code)}
+
       populations<-as.data.frame(list(popType()))%>%
           mutate(popType = as.character(.[[1]]))%>%
           pull(popType)
@@ -592,7 +602,8 @@ df<- data404%>%
    barplot<- if(input$shadeByPihp == 'Yes' ){
          
      df%>%
-       ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),pihp),
+       ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),!!as.symbol(metric()),
+                                  .desc = TRUE),
                   y = !!as.symbol(metric()),
                   fill = pihp_name)) +
        geom_bar(stat="identity", position=position_dodge(), alpha = .6,
@@ -606,16 +617,21 @@ df<- data404%>%
                      xlabs," for ",paste(group,collapse = ","),sep = ""),
                subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
        labs(fill='PIHP')+
+       labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+       labs(caption =paste("dsafsdf ",paste(populations,collapse = ","),sep = ""))+
        theme_ipsum(grid = 'Y',
                    plot_title_size = 15,
                    axis_text_size = 11,
                    axis_title_size = 13
-       )
+       )+
+       theme(axis.text.x=element_text(angle=45, hjust=1))
       
       
     }else{
       df%>%
-        ggplot(aes(x = as.factor(!!as.symbol(org_type())), y = !!as.symbol(metric()))) +
+        ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),!!as.symbol(metric()),
+                                   .desc = TRUE),
+                   y = !!as.symbol(metric()))) +
         geom_bar(stat="identity", position=position_dodge(), alpha = .6,
                  color="black")+
         scale_y_continuous(label = number_format(big.mark = ","))+
@@ -632,7 +648,8 @@ df<- data404%>%
                     plot_title_size = 15,
                     axis_text_size = 11,
                     axis_title_size = 13
-                    )
+                    )+
+        theme(axis.text.x=element_text(angle=45, hjust=1))
     } 
    
    if(input$includeMean == 'Yes'){
@@ -779,6 +796,10 @@ output$heatmap<-renderPlot({
   
   type<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'svc grp'}else{"HCPCs"})
   
+  populations<-as.data.frame(list(popType()))%>%
+    mutate(popType = as.character(.[[1]]))%>%
+    pull(popType)
+  
   
   df<-heatmapDS()
   
@@ -787,12 +808,17 @@ output$heatmap<-renderPlot({
     #   scale_fill_manual(values=c("#FB8604", "#DB4133", "#A3A7A8","#2B80A1"))+
     xlab(xlabs)+
     ylab(str_replace_all(input$metric,pattern = "_"," "))+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1),
-          axis.line = element_line(color = "black", 
-                                   size = .5, linetype = "solid"))+
-    labs(fill=paste(type," Pctl.",sep = "")) 
-  
- 
+    labs(fill=paste(type," Pctl.",sep = "")) +
+    theme_minimal()+
+    theme_ipsum(grid = 'Y',
+                plot_title_size = 15,
+                axis_text_size = 11,
+                axis_title_size = 13)+    
+    theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.line = element_line(color = "black", 
+                                 size = .5, linetype = "solid"))+
+    labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))
+
 })
 
 ################## Download handlers and bookmarks 
