@@ -148,10 +148,12 @@ includes data visualizations that can be used to explore the data."
             column(3,
                    
                    wellPanel(
-                   uiOutput('metric'),
                    uiOutput("org"),
                    uiOutput('prov'),
                    uiOutput("servType"),
+                   uiOutput("yAxisType2"),
+                   uiOutput("yAxisSel2"),
+                   uiOutput('metric'),
                    uiOutput('servGrp'),
                    uiOutput('code'),
                    uiOutput("addOptions")
@@ -170,7 +172,8 @@ includes data visualizations that can be used to explore the data."
                                      DT::dataTableOutput('dt')),
                                
                                column(3,downloadButton("heatData", "Download Heat Map Table"),
-                                        wellPanel(uiOutput("yAxisType"),
+                                        wellPanel(
+                                       #   uiOutput("yAxisType"),
                                         uiOutput("yAxisSel"))))
                     )
                 ), # Tabsets for bar
@@ -211,6 +214,9 @@ server <- function(input, output) {
   popType<-reactive({input$popType})
   codes<-reactive({input$codes})
   
+  
+  yType2<-reactive({input$groupOrHcpcs2})
+  ySel2<-reactive({input$yAxisSel2})
 
 # Define Reactive dataset for barchart 
   
@@ -225,14 +231,16 @@ server <- function(input, output) {
     df<-data404%>%
       filter(
         fy %in% fy_filter(),
-        svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+     #   svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+         (!!as.symbol(yType2())) %in% input$yAxisSel2
+      )%>%
       select(
-         fy,svc_grp,
+         fy,
          !!as.symbol(org_type()),
          cost,units,cases
       )%>%
       group_by(
-          fy,svc_grp,
+          fy,
          (!!as.symbol(org_type()))
       )%>%
       summarise_at(
@@ -249,7 +257,7 @@ server <- function(input, output) {
       mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
              percent_served = round(((cases/TotalServed)*100),3))%>%
       
-      group_by(fy,svc_grp)%>%
+      group_by(fy)%>%
       summarise(avg = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
       pull(avg)
   
@@ -295,17 +303,20 @@ df<- data404%>%
     filter(
               !!as.symbol(org_type()) %in% input$provider,
               fy %in% fy_filter(),
-              svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+              (!!as.symbol(yType2())) %in% input$yAxisSel2
+              # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+    )%>%
+             
     filter(
-            code_shortDesc %in% code_filter, #using code filters defined above
+    #        code_shortDesc %in% code_filter, #using code filters defined above
             population %in% pop_filter
            )%>%
     select(
-            !!as.symbol(org_type()),fy,svc_grp,
+            !!as.symbol(org_type()),fy,
             cost,units,cases
            )%>%
     group_by(
-              !!as.symbol(org_type()),fy,svc_grp
+              !!as.symbol(org_type()),fy
            )%>%
     summarise_at(
       
@@ -355,38 +366,32 @@ df<- data404%>%
   
 
 ######### UI OUTPUTS FOR BARCHART  
-  
-  output$metric<-renderUI({
-    selectInput(
-      inputId = 'metric',
-      label = 'Benchmark Measure',
-      choices = c("Cost" = "cost",'Units' = 'units',
-                  'Cases' = "cases","Cost Per Case" = 'cost_per_case',
-                  "Cost Per Unit" = 'cost_per_unit',
-                  "Units Per Case" = "unit_per_case",
-                  "Cost Per 1K Served" = "cost_per_1K_served"),
-      selected = "units")
-  })
-  
+
   output$org<-renderUI({
         selectInput(
           inputId = "CMHorPIHP",
-          label = "I would like to compare accross..",
+          label = "What would you like to group the analysis by?",
           choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name',
                       "State" = "state"),
           selected = "pihp_name")
     })
   
   output$prov<-renderUI({
+    
+      org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
+    
+    
       # Conditinal statements to populate the list
       prov_options<- if(input$CMHorPIHP == "cmhsp"){
                          levels(data404$cmhsp)}
                       else if(input$CMHorPIHP == "pihp_name"){levels(data404$pihp_name)}
                       else{"MI"}
+      
+      
     
       selectizeInput(
         inputId = "provider",
-        label = "Specifically, I would like to compare..",
+        label =   paste("Which ",org,"are you interested in viewing?"),
         choices =  prov_options,
         selected = levels(data404$pihp_name),
         multiple = TRUE,
@@ -397,10 +402,95 @@ df<- data404%>%
     req(org_type())
     selectInput(
       inputId = 'serviceType',
-      label = 'Focusing on this service type',
+      label = 'Any particular area of focus',
       choices = c("All",levels(as.factor(data404$svc_type))),
       selected = "Coordination and Planning")
   })
+  
+  
+  output$yAxisType2 <-renderUI({
+    
+    #Actual options     
+    
+    radioButtons(
+      inputId = "groupOrHcpcs2",
+      label = "Would you like to look at Service Group or HCPCS",
+      choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
+      selected = c("svc_grp"),
+      inline = TRUE)
+    
+  })
+  
+  
+  output$yAxisSel2<-renderUI({
+    
+    type<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'svc_grp'}else{"code_shortDesc"})
+    
+    org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
+    
+    grps<-if(input$groupOrHcpcs2 == 'svc_grp'){"Service Group"}else{"HCPC Codes"}
+    
+    
+    options<-data404%>%
+      filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
+                                     TRUE ~ input$serviceType))%>%
+      distinct(!!type)%>%
+      pull(!!type)
+    
+    
+    if(input$groupOrHcpcs2 == "svc_grp"){
+    
+    selectizeInput(
+      inputId = 'yAxisSel2',
+      label = paste('Compare ',org," across this ",grps,sep = ""),
+      choices = options,
+      multiple = FALSE,
+      selected = "Case Management")
+      
+    } else {
+      
+      selectizeInput(
+        inputId = 'yAxisSel2',
+        label = paste('Compare ',org," across these ",grps,sep = ""),
+        choices = options,
+        multiple = TRUE,
+        selected = "")
+    } 
+      
+
+  })
+  
+
+  output$metric<-renderUI({
+    
+    org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
+    
+    choices<-if(input$groupOrHcpcs2 == 'svc_grp'){
+      c("Cost" = "cost",'Units' = 'units',
+     #   'Cases' = "cases","Cost Per Case" = 'cost_per_case',
+        "Cost Per Unit" = 'cost_per_unit',
+    #    "Units Per Case" = "unit_per_case",
+        "Cost Per 1K Served" = "cost_per_1K_served")
+         }else{
+                c("Cost" = "cost",'Units' = 'units',
+                  'Cases' = "cases","Cost Per Case" = 'cost_per_case',
+                  "Cost Per Unit" = 'cost_per_unit',
+                  "Units Per Case" = "unit_per_case",
+                  "Cost Per 1K Served" = "cost_per_1K_served")
+           }
+   
+    selectInput(
+      inputId = 'metric',
+      label =  paste("Benchmarking",org,"on which metric?"),
+      choices = choices,
+      selected = "units")
+  })
+  
+  
+  
+  
+  
+  
   
   output$servGrp<-renderUI({
     req(org_type())
@@ -475,7 +565,7 @@ df<- data404%>%
   
   output$mean<-renderUI({
     radioButtons(inputId = 'includeMean',
-                 label = "State Svc. Group Average?",
+                 label = "State Avg. Line",
                  choices = c("Yes",'No'),
                  selected = "No",
                  inline = TRUE)
@@ -492,7 +582,7 @@ df<- data404%>%
        col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
        else{'PIHP'}
        
-       col2<-as.name(if(input$groupOrHcpcs == "svc_grp"){'Service Group'}else{"HCPCS"})
+       col2<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'Service Group'}else{"HCPCS"})
        
        metric_lab = str_replace_all(input$metric,pattern = "_"," ")
 
@@ -505,7 +595,7 @@ df<- data404%>%
   
 
   output$barchart<-renderPlot({
-       req(codes())
+       req(ySel2())
        req(popType())
       #Define which dataset to use based on CMH or PIHP
       #Primarily for the left join that will attache nessesary 
@@ -534,7 +624,11 @@ df<- data404%>%
       summarise(mean = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
       pull(mean)
 
-      group<-if('All' %in% codes()){ serviceGroup() }else{as.data.frame(list(codes()))%>%
+      # group<-if('All' %in% codes()){ serviceGroup() }else{as.data.frame(list(codes()))%>%
+      #     mutate(code = as.character(.[[1]]))%>%
+      #     pull(code)}
+      
+      group<-if(input$groupOrHcpcs2 == "svc_grp"){ySel2()}else{as.data.frame(list(ySel2()))%>%
           mutate(code = as.character(.[[1]]))%>%
           pull(code)}
       
@@ -559,7 +653,12 @@ df<- data404%>%
        ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
                      xlabs," for ",paste(group,collapse = ","),sep = ""),
                subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
-       labs(fill='PIHP') 
+       labs(fill='PIHP')+
+       theme_ipsum(grid = 'Y',
+                   plot_title_size = 15,
+                   axis_text_size = 11,
+                   axis_title_size = 13
+       )
       
       
     }else{
@@ -622,17 +721,17 @@ df<- data404%>%
      filter((!!as.symbol(org_type())) %in% input$provider,
             fy %in% fy_filter(),
             population %in% pop_filter,
-            (!!as.symbol(yType())) %in% input$yAxisSel
+            (!!as.symbol(yType2())) %in% input$yAxisSel
      )%>%
      select(!!as.symbol(org_type()), # Provider column 
-            (!!as.symbol(yType())),
+            (!!as.symbol(yType2())),
              fy,
             cost,units,cases
      )%>%
      group_by(
        
          !!as.symbol(org_type()), # Provider column 
-        (!!as.symbol(yType())),
+        (!!as.symbol(yType2())),
          fy
      )%>%
      summarise_at(
@@ -659,8 +758,8 @@ df<- data404%>%
    
    # Transform into Z scores then turn Z scores into percentiles
    df<-df%>%
-     select(!!as.symbol(org_type()),(!!as.symbol(yType())),!!as.symbol(metric()))%>%
-     group_by((!!as.symbol(yType())))%>%
+     select(!!as.symbol(org_type()),(!!as.symbol(yType2())),!!as.symbol(metric()))%>%
+     group_by((!!as.symbol(yType2())))%>%
      mutate(metric = round((pnorm(scale_fun(!!as.symbol(metric())))*100),2))
    
  }) 
@@ -688,11 +787,11 @@ output$yAxisType <-renderUI({
 
 output$yAxisSel<-renderUI({
   
-  type<-as.name(if(input$groupOrHcpcs == "svc_grp"){'svc_grp'}else{"code_shortDesc"})
+  type<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'svc_grp'}else{"code_shortDesc"})
   
   org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
   
-  grps<-if(input$groupOrHcpcs == 'svc_grp'){"Service Groups"}else{"HCPC Codes"}
+  grps<-if(input$groupOrHcpcs2 == 'svc_grp'){"Service Groups"}else{"HCPC Codes"}
   
   
   options<-data404%>%
@@ -723,12 +822,12 @@ output$heatmap<-renderPlot({
   xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
         else{'PIHP'}
   
-  type<-as.name(if(input$groupOrHcpcs == "svc_grp"){'svc grp'}else{"HCPCs"})
+  type<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'svc grp'}else{"HCPCs"})
   
   
   df<-heatmapDS()
   
-  ggplot(df,aes( y = (!!as.symbol(yType())),x = as.factor(!!as.symbol(org_type())))) + 
+  ggplot(df,aes( y = (!!as.symbol(yType2())),x = as.factor(!!as.symbol(org_type())))) + 
     geom_tile(aes(fill = metric), colour = "white") + 
     #   scale_fill_manual(values=c("#FB8604", "#DB4133", "#A3A7A8","#2B80A1"))+
     xlab(xlabs)+
