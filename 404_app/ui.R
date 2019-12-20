@@ -131,7 +131,7 @@ shinyUI(
           dataTableOutput("svs_groups")
         )
       )
-    ),
+    
     navbarMenu(
       "Service Use",
       tabPanel(

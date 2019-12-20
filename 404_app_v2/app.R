@@ -154,8 +154,8 @@ includes data visualizations that can be used to explore the data."
                    uiOutput("yAxisType2"),
                    uiOutput("yAxisSel2"),
                    uiOutput('metric'),
-                   uiOutput('servGrp'),
-                   uiOutput('code'),
+                #   uiOutput('servGrp'),
+                #   uiOutput('code'),
                    uiOutput("addOptions")
                  ,style = 'background:#CCD6DD')
             ),
@@ -249,13 +249,13 @@ server <- function(input, output) {
         list(~sum(., na.rm = T))
       )%>%
       mutate(
-        cost_per_case = round(cost/cases,digits = 2)*100,
-        cost_per_unit = round(cost/units,digits = 2)*100,
-        unit_per_case = round(units/cases,digits = 1)*100
+        cost_per_case = round(cost/cases,digits = 2),
+        cost_per_unit = round(cost/units,digits = 2),
+        unit_per_case = round(units/cases,digits = 1)
       )%>%
       left_join(michTtl,by = "fy")%>%
       mutate(cost_per_1K_served = round(((cost/TotalServed)*1000)),
-             percent_served = round(((cases/TotalServed)*100),3))%>%
+             pct._served = round(((cases/TotalServed)*100),3))%>%
       
       group_by(fy)%>%
       summarise(avg = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
@@ -325,9 +325,9 @@ df<- data404%>%
           )%>%
     mutate(
       
-          cost_per_case = round(cost/cases,digits = 2)*100,
-          cost_per_unit = round(cost/units,digits = 2)*100,
-          unit_per_case = round(units/cases,digits = 1)*100
+          cost_per_case = round(cost/cases,digits = 2),
+          cost_per_unit = round(cost/units,digits = 2),
+          unit_per_case = round(units/cases,digits = 1)
          )%>%
     left_join(
       
@@ -336,7 +336,7 @@ df<- data404%>%
     mutate(
       
         cost_per_1K_served = round(((cost/TotalServed)*1000)),
-        percent_served = round(((cases/TotalServed)*100),3)
+        pct._served = round(((cases/TotalServed)*100),3)
         )
 # }
 # else{
@@ -371,8 +371,7 @@ df<- data404%>%
         selectInput(
           inputId = "CMHorPIHP",
           label = "What would you like to group the analysis by?",
-          choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name',
-                      "State" = "state"),
+          choices = c("CMH" = 'cmhsp', "PIHP" = 'pihp_name'),
           selected = "pihp_name")
     })
   
@@ -414,7 +413,7 @@ df<- data404%>%
     
     radioButtons(
       inputId = "groupOrHcpcs2",
-      label = "Would you like to look at Service Group or HCPCS",
+      label = "Service Group or HCPCS",
       choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
       selected = c("svc_grp"),
       inline = TRUE)
@@ -476,6 +475,7 @@ df<- data404%>%
                   'Cases' = "cases","Cost Per Case" = 'cost_per_case',
                   "Cost Per Unit" = 'cost_per_unit',
                   "Units Per Case" = "unit_per_case",
+                  "Pct. Served" = "pct._served",
                   "Cost Per 1K Served" = "cost_per_1K_served")
            }
    
@@ -487,53 +487,7 @@ df<- data404%>%
   })
   
   
-  
-  
-  
-  
-  
-  output$servGrp<-renderUI({
-    req(org_type())
-      # Conditional for service group options 
-      svc_grp_options<-data404%>%
-      filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
-                                     TRUE ~ input$serviceType))%>%
-      distinct(svc_grp)%>%
-      pull(svc_grp)
-      
-     
-      selectInput(
-        inputId = "serviceGroup",
-        label = "For this service group",
-        selected = "",
-        choices = c(levels(as.factor(svc_grp_options)))
-        )
 
-  })
-  
-  output$code<-renderUI({
-  # More contionals for HCPC codes because it depends on both service type and group 
-  # chosen
-    req(org_type())
-  svc_code_options<-data404%>%
-    filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
-                                   TRUE ~ input$serviceType),
-           svc_grp %in%  case_when('' %in% input$serviceGroup ~ levels(as.factor(data404$svc_grp)),
-                                   TRUE ~ input$serviceGroup))%>%
-    mutate(code_shortDesc = as.character(code_shortDesc))%>%
-    distinct(code_shortDesc)%>%
-    pull(code_shortDesc)
-    
-    selectizeInput(
-      inputId = "codes",
-      label = "Using all or a subset of the HCPC codes associated with this group",
-      choices =  c("All",levels(as.factor(svc_code_options))),
-      selected = "All",
-      multiple = TRUE, 
-      size = 5,
-      options =  list(placeholder = 'Search or Select'))
-    
-  }) 
 
   output$addOptions<-renderUI({
     # Tag list groups the two widgets together
@@ -623,11 +577,9 @@ df<- data404%>%
       select(!!as.symbol(metric()))%>%
       summarise(mean = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
       pull(mean)
-
-      # group<-if('All' %in% codes()){ serviceGroup() }else{as.data.frame(list(codes()))%>%
-      #     mutate(code = as.character(.[[1]]))%>%
-      #     pull(code)}
       
+      text_avg<-format(round(stateAvg(),0),big.mark=",", scientific=FALSE)
+
       group<-if(input$groupOrHcpcs2 == "svc_grp"){ySel2()}else{as.data.frame(list(ySel2()))%>%
           mutate(code = as.character(.[[1]]))%>%
           pull(code)}
@@ -671,6 +623,7 @@ df<- data404%>%
         ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
     #    scale_fill_manual(values=c('#EA4335','#34A853'))+
         theme_minimal()+
+        theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
         ggtitle(paste("Comparing ",stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," "))," by ",
                       xlabs," for ",paste(group,collapse = ","),sep = ""),
                 subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
@@ -683,7 +636,9 @@ df<- data404%>%
     } 
    
    if(input$includeMean == 'Yes'){
-     barplot +  geom_hline(yintercept = c(stateAvg()),linetype = "dashed",size = 1)
+     barplot +  geom_hline(yintercept = c(stateAvg()),linetype = "dashed",size = 1)+
+                 annotate("Text",  x=Inf, y = Inf, label = paste("State Avg. ",text_avg),
+                          vjust=1, hjust=1)
    }else{ barplot}
    
     
@@ -750,7 +705,7 @@ df<- data404%>%
     mutate(
     
         cost_per_1K_served = round(((cost/TotalServed)*1000)),
-        percent_served = round(((cases/TotalServed)*100),3)
+        pct._served = round(((cases/TotalServed)*100),3)
     )
    
    

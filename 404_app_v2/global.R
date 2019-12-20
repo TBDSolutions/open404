@@ -11,6 +11,8 @@ library(tidyverse);library(magrittr);library(arrow)
 library(hrbrthemes)
 library(gcookbook)
 library(stringi)
+library(extrafont)
+
 #hrbrthemes::import_roboto_condensed()
 
 #### Read datasets ####
