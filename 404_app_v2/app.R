@@ -218,22 +218,44 @@ server <- function(input, output) {
   
   yType2<-reactive({input$groupOrHcpcs2})
   ySel2<-reactive({input$yAxisSel2})
+  
+  
+  stateAggData<-reactive({
+    
+      stateAggData<-state_data%>%
+      group_by(!!as.symbol(org_type()),fy)%>%
+      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+
+  })
+  
+  # Pre-made population filter for same reasons as code_filter.
+  pop_filter<-reactive({
+    
+    if('' %in% popType()){ as.character(unique(data404$population))}else{
+    
+    data404[which(data404$population %in% popType()),'population']%>%
+      mutate(population = as.character(population))%>%
+      distinct(population)%>%
+      pull(population)}
+  })
+  
+  
+  
 
 # Define Reactive dataset for barchart 
   
   stateAvg<-reactive({
     
-    # Michigan only 
-    michTtl<-state_data%>%
-      #  mutate(state = 'MI')%>%
-      group_by(fy)%>%
-      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
-
+   #Aggregated Michigan Data
+   stateAggData<-as.data.frame(stateAggData())
+    
+    
     df<-data404%>%
       filter(
         fy %in% fy_filter(),
      #   svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
-         (!!as.symbol(yType2())) %in% input$yAxisSel2
+         (!!as.symbol(yType2())) %in% input$yAxisSel2,
+         population %in% pop_filter()
       )%>%
       select(
          fy,
@@ -254,7 +276,7 @@ server <- function(input, output) {
         cost_per_unit = round(cost/units,digits = 2),
         unit_per_case = round(units/cases,digits = 1)
       )%>%
-      left_join(michTtl,by = "fy")%>%
+      left_join(stateAggData,by = c(org_type() ,"fy"))%>%
       mutate(cost_per_1K_served = (cost/TotalServed)*1000,
              pct._served = round(((cases/TotalServed)*100),3))%>%
       
@@ -278,40 +300,22 @@ server <- function(input, output) {
                 distinct(code_shortDesc)%>%
                 pull(code_shortDesc)
     }
-    # Pre-made population filter for same reasons as code_filter. Simply usidin
-    pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
-      
-      data404[which(data404$population %in% popType()),'population']%>%
-        mutate(population = as.character(population))%>%
-        distinct(population)%>%
-        pull(population)
-    }
-    
+   
+
     # If the selection is by PIHP, I need to aggregate the data before joining 
     # This table will be used below to calulate cost per 1K ect. 
-    stateAggData<-state_data%>%
-      group_by(!!as.symbol(org_type()),fy)%>%
-      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+    #Aggregated Michigan Data
+    stateAggData<-as.data.frame(stateAggData())
     
-    # Michigan only 
-    # michTtl<-state_data%>%
-    # #  mutate(state = 'MI')%>%
-    #   group_by(fy)%>%
-    #   summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
-
 
 df<- data404%>%
     filter(
               !!as.symbol(org_type()) %in% input$provider,
               fy %in% fy_filter(),
-              (!!as.symbol(yType2())) %in% input$yAxisSel2
+              (!!as.symbol(yType2())) %in% input$yAxisSel2,
+              population %in% pop_filter()
               # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
-    )%>%
-             
-    filter(
-    #        code_shortDesc %in% code_filter, #using code filters defined above
-            population %in% pop_filter
-           )%>%
+        )%>%
     select(
             !!as.symbol(org_type()),fy,
             cost,units,cases
@@ -814,7 +818,7 @@ output$heatmap<-renderPlot({
                 plot_title_size = 15,
                 axis_text_size = 11,
                 axis_title_size = 13)+    
-    theme(axis.text.x = element_text(angle = 90, hjust = 1),
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.line = element_line(color = "black", 
                                  size = .5, linetype = "solid"))+
     labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))
