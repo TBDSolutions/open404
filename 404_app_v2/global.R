@@ -3,23 +3,34 @@
 width_px = "150px"
 
 scale_fun <- function(x) as.vector(scale(x))
+
+#font_import()
+library(shiny)
+#library(rlang)
+library(DT)
+#library(ggiraph)
+library(shinythemes)
+library(shiny)
+
 #### Load packages ####
 
-library(shiny); library(shinythemes);library(shinydashboard)
-library(plotly);library(scales)
-library(tidyverse);library(magrittr);library(arrow)
+#library(scales)
+library(tidyverse)
+#library(dplyr)
+library(arrow)
 library(hrbrthemes)
-library(gcookbook)
-library(stringi)
-library(extrafont)
-#font_import()
+#library(gcookbook)
+#library(stringi)
+#library(extrafont)
+library(rsconnect)
+
 
 #hrbrthemes::import_roboto_condensed()
 
 #### Read datasets ####
 
 data404 <- 
-  arrow::read_feather('C:/Users/joet/Documents/GitHub/open404/data/clean/df_404.feather') %>%
+  arrow::read_feather('datafiles/df_404.feather') %>%
   mutate(
     code_mod = paste0(code,replace_na(modifier,replace = ""))
   ) %>%
@@ -28,7 +39,7 @@ data404 <-
     list(~as.factor(.))
   )
 
-service_groups <- arrow::read_feather("C:/Users/joet/Documents/GitHub/open404/data/clean//svc_grps.feather")
+service_groups <- arrow::read_feather("datafiles/svc_grps.feather")
 
 #### Formatting Variables ####
 
@@ -44,7 +55,7 @@ pihpCMH_LU<-data404%>%
   distinct(pihp,pihp_name,cmhsp)
 
 
-state_data<-read.csv("../data/TotalServedAnnual.csv")%>%
+state_data<-read.csv("datafiles/TotalServedAnnual.csv")%>%
                      rename(cmhsp = CMHSP, fy = FY)%>%
                      left_join(pihpCMH_LU, by = "cmhsp")%>%
                      mutate(fy = as.factor(fy))%>%

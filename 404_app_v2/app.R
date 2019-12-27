@@ -1,11 +1,8 @@
 source('global.R')
 
-library(shiny)
-library(rlang)
-library(DT)
-library(ggiraph)
-library(shinythemes)
-library(shiny)
+
+
+
 
 # Define UI for application that draws a histogram
 ui <- function(requests){ navbarPage("Explore 404 Data",
@@ -31,7 +28,7 @@ can be used to understand service use, cost trends and
 variation across the state for vulnerable populations.  This 
 application has been developed by"
            ),
-           img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2019"))),
+      #     img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2019"))),
            br(),
            br(),
            tags$strong("license", style = "font-size: 125%;"),

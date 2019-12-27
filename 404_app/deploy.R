@@ -4,6 +4,11 @@ library(rsconnect)
 
 deployApp("404_app", account = "tbdsolutions")
 
+
+
+
+getwd()
+
 # Get info about ShinyApps accounts
 
 accounts()

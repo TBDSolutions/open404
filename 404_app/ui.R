@@ -130,7 +130,7 @@ shinyUI(
           br(),
           dataTableOutput("svs_groups")
         )
-      )
+      ),
     
     navbarMenu(
       "Service Use",
@@ -334,7 +334,7 @@ shinyUI(
   )
 )
 
-        
+)       
 
 
 
