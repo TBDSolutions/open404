@@ -15,7 +15,7 @@ library(shinythemes)
 library(scales)
 library(tidyverse)
 
-#library(hrbrthemes)
+library(hrbrthemes)
 #library(gcookbook)
 library(stringi)
 #library(extrafont)
@@ -48,8 +48,11 @@ data404 <-read_csv("datafiles/data404.csv")%>%
   mutate_at(
     vars(pihp_name,cmhsp,code,code_mod),
     list(~as.factor(.))
-  )%>%
-  mutate(
+  )
+
+
+data404<-data404%>%
+    mutate(
     code_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code),")")),
     codeM_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code_mod),")"))
   )%>%

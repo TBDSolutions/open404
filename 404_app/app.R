@@ -80,7 +80,7 @@ includes data visualizations that can be used to explore the data."
            downloadButton('ServiceGroups', 'Download'),
            br(),
            br(),
-           dataTableOutput("svs_groups")
+           DT::dataTableOutput("svs_groups")
          )
        )
      )
@@ -668,13 +668,13 @@ output$barchart<-renderPlot({
                subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
        labs(fill='PIHP')+
        labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
-    #   theme_ipsum(grid = 'FALSE',
-    #               plot_title_size = 15,
-    #               axis_text_size = 11,
-    #               axis_title_size = 13,
-    #               ticks = TRUE,
-    #               base_family = "IBMPlexSans"
-    #   )+
+       theme_ipsum(grid = 'FALSE',
+                   plot_title_size = 15,
+                   axis_text_size = 11,
+                   axis_title_size = 13,
+                   ticks = TRUE,
+                   base_family = "IBMPlexSans"
+       )+
        theme(axis.text.x=element_text(angle=45, hjust=1))
       
       
@@ -694,13 +694,13 @@ output$barchart<-renderPlot({
                       xlabs," for ",paste(group,collapse = ","),sep = ""),
                 subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
         labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
-      #  theme_ipsum(grid = 'FALSE',
-      #              plot_title_size = 15,
-      #              axis_text_size = 11,
-      #              axis_title_size = 13,
-      #              ticks = TRUE,
-      #              base_family = "IBMPlexSans"
-      #              )+
+        theme_ipsum(grid = 'FALSE',
+                    plot_title_size = 15,
+                    axis_text_size = 11,
+                    axis_title_size = 13,
+                    ticks = TRUE,
+                    base_family = "IBMPlexSans"
+                    )+
         theme(axis.text.x=element_text(angle=45, hjust=1))
     } 
    
@@ -857,10 +857,10 @@ output$heatmap<-renderPlot({
     ylab(str_replace_all(input$metric,pattern = "_"," "))+
     labs(fill=paste(type," Pctl.",sep = "")) +
     theme_minimal()+
-  #  theme_ipsum(grid = 'X',
-  #              plot_title_size = 15,
-  #              axis_text_size = 11,
-  #              axis_title_size = 13)+    
+    theme_ipsum(grid = 'X',
+                plot_title_size = 15,
+                axis_text_size = 11,
+                axis_title_size = 13)+    
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
         axis.line = element_line(color = "black", 
                                  size = .5, linetype = "solid"))+
