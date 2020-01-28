@@ -11,7 +11,7 @@ ui <- function(requests){ navbarPage("Explore 404 Data",
      "General",
      fluidRow(
        column(
-         width = 6,
+         width = 5,
          mainPanel(
            tags$strong("open404", style = "font-size: 125%;"),
            br(),
@@ -24,8 +24,9 @@ ongoing changes to Michigan’s public health system, this data
 can be used to understand service use, cost trends and 
 variation across the state for vulnerable populations.  This 
 application has been developed by"
-           ),
-      #     img(src = 'tbdSolutions-logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2019"))),
+
+           ),#tags$img(src = "www.rstudio.com", width = "100px", height = "100px"),
+           tags$img(src = 'tbd_logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2019"))),
            br(),
            br(),
            tags$strong("license", style = "font-size: 125%;"),
@@ -48,9 +49,9 @@ research purposes cite this source appropriately."
          )
        ),
        column(
-         width = 6,
+         width = 7,
          mainPanel(
-           tags$strong("navigation", style = "font-size: 125%;"),
+           tags$strong("Navigation", style = "font-size: 125%;"),
            br(),
            p(
              "The drop down menus above can be used to navigate the 
@@ -79,7 +80,7 @@ includes data visualizations that can be used to explore the data."
            p("You can download the service groupings used in this application below:"),
            downloadButton('ServiceGroups', 'Download'),
            br(),
-           br(),
+           p("The below table allows you to quickly search to understand service groupings"),
            DT::dataTableOutput("svs_groups")
          )
        )
@@ -99,16 +100,15 @@ includes data visualizations that can be used to explore the data."
            tags$li(strong("CMH: "),
                    "The name of the community mentail health service program"),
            tags$li(strong("Service Type: "),
-                   "High level groupings of services into the following overall types:
-                      'Care Coordination', 'Crisis and Respite', 'Employment Services', 'Equipment', 
-                      'Home & Community Based Services', 'Hospital-based Services', 'Medication', 'Other', 
-                      'Outpatient Treatment', 'Physical Health Services', 'Screening & Assessment', 'Transportation'"),
-           tags$li(strong("Code: "),
-                   "The CPT or HCPCS code and description for a particular service"),
+                   "High level groupings of service groups into the following overall types:"),
+           tags$span("Hospital Based Services,	Crisis Services,	Screening & Assessment,	Psychiatric and Medication Services,	Outpatient Treatment,	Health Services,	Behavioral Treatment,	Equipment/Supplies,	Transportation,	Family Education and Support,	Coordination and Planning,	Sub-acute Withdrawal Management,	Home & Community Based Services,	Peer Services,	Intensive Community-Based Treatment,	Respite,	Employment Services,	Telemedicine,	Other"
+                               ),
+         tags$li(strong("HCPC: "),
+                   "The code and description for a particular service"),
            tags$li(strong("Population: "),
                    "The designation of disability type for which the documented service was provided. 
                       There are 3 disability types included in this dataset: MIA = Mentally Ill Adults, 
-                      MIC = Mentally Ill Children, DD = Developmentally Disabled (Adults and Children)"),
+                      MIC = MIC = Mentally Ill Children (commonly referred to as Severe Emotional Disturbance - SED), DD = Developmentally Disabled (Adults and Children)"),
            tags$li(strong("Total Cases: "),
                    "The total number of unique people who received the service"),
            tags$li(strong("Total Units: "),
@@ -124,16 +124,19 @@ includes data visualizations that can be used to explore the data."
            tags$li(strong("Cost per 1K Served: "),
                    "Cost per 1,000 people served. Uses the general formula (Sum of Cost/Unique Persons Served) x 1000"),
            tags$li(strong("Percent of Total $: "),
-                   "The annual cost of the service as a % of the total annual cost of all services"),
+                   "The annual cost of the service as a percent of the total annual cost of all services"),
            tags$li(strong("Percent Served: "),
-                   "Percentage of people served who received this service (per year)")
+                   "The proportion of individuals who received the selected service out of all 
+                   the unique individuals that received any service at that orginization during 
+                   the defined time period"),
+           tags$h6("For Percent Served the numerator does change based on population selected; please note the denominator for this metric does not changed based on the population selected but does change based on the organization and service selected")
          )
        )
      )
    )),
    navbarMenu("Analysis",
  # Application title
- tabPanel("Bar Charts",
+ tabPanel("Bar Chart & Heatmap",
           fluidRow(column(3,bookmarkButton(),
                           downloadButton("Barchart", "Download"))
                    ),
@@ -153,7 +156,8 @@ includes data visualizations that can be used to explore the data."
                    uiOutput("addOptions")
                  ,style = 'background:#CCD6DD')
             ),
-            column(9,fluidRow(column(3,uiOutput("mean")),
+            column(9,tags$em("* Barchart only options"),fluidRow(
+                              column(3,uiOutput("mean")),
                               column(3, uiOutput("shade")),
                               column(3,uiOutput('shadeOptions'))),
                    tabsetPanel(
@@ -161,11 +165,15 @@ includes data visualizations that can be used to explore the data."
                               # Show a plot of the generated distribution
                               #     textOutput("text"),
                               plotOutput("barchart"),
+                              tags$b((("Barchart Data"))),
+                              br(),
                               DT::dataTableOutput("barTable")
                      ),
                      tabPanel("HeatMap",
                       fluidRow(column(9,
                                      plotOutput('heatmap'),
+                                     tags$b((("Heatmap Data"))),
+                                     br(),
                                      DT::dataTableOutput('dt')),
                                
                                column(3,downloadButton("heatData", "Download Heat Map Table"),
@@ -202,6 +210,19 @@ source('global.R')
 # Bar Chart tabset and main choices  
 ####################################
   
+  
+  output$svs_groups<-renderDataTable({
+    
+    df404<-data404%>%
+      distinct(svc_type,svc_grp,short_desc,code)
+    
+    DT::datatable(df404,rownames = FALSE,class = 'cell-border stripe',
+                  colnames = c("Service Type","Serivce Group","HCPC Desc.",'HCPC Code'))
+    
+    
+    
+    
+  })
   
   ######### UI OUTPUTS FOR BARCHART  
   
@@ -276,7 +297,7 @@ source('global.R')
     
     
     if(input$groupOrHcpcs2 == "svc_grp"){
-      
+      tags$h6("will")
       selectizeInput(
         inputId = 'yAxisSel2',
         label = paste('Compare ',org," across this ",grps,sep = ""),
@@ -285,12 +306,12 @@ source('global.R')
         selected = "Case Management")
       
     } else {
-      
+
       selectizeInput(
         inputId = 'yAxisSel2',
-        label = paste('Compare ',org," across these ",grps,sep = ""),
+        label = paste('Compare ',org," across this ",grps,sep = ""),
         choices = options,
-        multiple = TRUE,
+        multiple = FALSE,
         selected = 'Community Living Supports 15 minutes  ( H2015 )')
     } 
     
@@ -307,6 +328,7 @@ source('global.R')
         #   'Cases' = "cases","Cost Per Case" = 'cost_per_case',
         "Cost Per Unit" = 'cost_per_unit',
         #    "Units Per Case" = "unit_per_case",
+        "Percent of Total Cost" = "pct_of_total_cost",
         "Cost Per 1K Served" = "cost_per_1K_served")
     }else{
       c("Cost" = "cost",'Units' = 'units',
@@ -314,6 +336,7 @@ source('global.R')
         "Cost Per Unit" = 'cost_per_unit',
         "Units Per Case" = "unit_per_case",
         "Pct. Served" = "pct._served",
+        "Percent of Total Cost" = "pct_of_total_cost",
         "Cost Per 1K Served" = "cost_per_1K_served")
     }
     
@@ -480,6 +503,7 @@ source('global.R')
       filter_if( #remove INF values from dividing by zero
               ~is.numeric(.), all_vars(!is.infinite(.))
                )%>%
+      mutate(pct_of_total_cost = 0)%>%
       group_by(fy)%>%
       summarise(avg = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
       pull(avg)
@@ -534,6 +558,34 @@ df<- data404%>%
         pct._served = round(((cases/TotalServed)*100),3)
         )%>%
   filter_if(~is.numeric(.), all_vars(!is.infinite(.)))
+
+
+### Adding total cost 
+    
+        ttlCost<-data404%>%
+        filter(
+          !!as.symbol(org_type()) %in% input$provider,
+          fy %in% fy_filter(),
+        )%>%
+        select(
+          !!as.symbol(org_type()),fy,
+          cost
+        )%>%
+        group_by(
+          !!as.symbol(org_type()),fy
+        )%>%
+        select(!!as.symbol(org_type()),cost,fy)%>%
+        group_by(!!as.symbol(org_type()),fy)%>%
+        summarise(
+          ttl_org_cost = sum(cost, na.rm = TRUE)
+        )
+
+
+        df<-df%>%
+            left_join(ttlCost,by = c(org_type(),"fy"))%>%
+            mutate(pct_of_total_cost = round(((cost/ttl_org_cost)*100),2))%>%
+            select(-ttl_org_cost)
+
 
 
   })
@@ -655,7 +707,7 @@ output$barchart<-renderPlot({
                   fill = PIHP)) +
        geom_bar(stat="identity", position=position_dodge(), alpha = .5,
                 color="black")+
-       scale_y_continuous(label = number_format(big.mark = ","))+
+       scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
        xlab(xlabs)+
        ylab(str_replace_all(input$metric,pattern = "_"," "))+
        scale_fill_manual(values=c('Others' = '#696969','LRE' = '#EA4335',"MSHN" = '#EA4335',
@@ -685,7 +737,7 @@ output$barchart<-renderPlot({
                    y = !!as.symbol(metric()))) +
         geom_bar(stat="identity", position=position_dodge(), alpha = .5,
                  color="black")+
-        scale_y_continuous(label = number_format(big.mark = ","))+
+        scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
         xlab(xlabs)+
         ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
         theme_minimal()+
@@ -819,6 +871,35 @@ output$yAxisSel<-renderUI({
         pct._served = round(((cases/TotalServed)*100),3)
     )
    
+   
+   
+   ### Adding total cost 
+   
+   ttlCost<-data404%>%
+     filter(
+       !!as.symbol(org_type()) %in% input$provider,
+       fy %in% fy_filter(),
+     )%>%
+     select(
+       !!as.symbol(org_type()),fy,
+       cost
+     )%>%
+     group_by(
+       !!as.symbol(org_type()),fy
+     )%>%
+     select(!!as.symbol(org_type()),cost,fy)%>%
+     group_by(!!as.symbol(org_type()),fy)%>%
+     summarise(
+       ttl_org_cost = sum(cost, na.rm = TRUE)
+     )
+   
+   
+   df<-df%>%
+     left_join(ttlCost,by = c(org_type(),"fy"))%>%
+     mutate(pct_of_total_cost = round(((cost/ttl_org_cost)*100),2))%>%
+     select(-ttl_org_cost)
+   
+   
 
    # Transform into Z scores then turn Z scores into percentiles
    df<-df%>%
@@ -906,26 +987,12 @@ output$Barchart <- downloadHandler(
 
 # heatData
 
-heatTable<-reactive({
-  
-  col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
-  else{'PIHP'}
-  
-  col2<-as.name(if(input$groupOrHcpcs == "svc_grp"){'Service Group'}else{"HCPCS"})
-  
-  metric_lab = str_replace_all(input$metric,pattern = "_"," ")
-  
-  
-  foo<-data.frame(heatmapDS())
-  
-})
-
 output$heatData <- downloadHandler(
   filename = function() {
     paste("heatMapData", ".csv", sep = "")
   },
   content = function(file) {
-    write.csv(heatTable(), file, row.names = FALSE)
+    write.csv(heatmapDS(), file, row.names = FALSE)
   }
 )
 
