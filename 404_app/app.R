@@ -133,6 +133,17 @@ includes data visualizations that can be used to explore the data."
          )
        )
      )
+   ),
+   tabPanel(
+     "Data Limitations",
+     fluidRow(column(3,offset = 0,
+                     tags$strong("Data Limitations", style = "font-size: 125%;"))),
+     br(),br(),#,br(),
+     fluidRow(
+              column(12,offset = 0,
+                     tags$ul(tags$li(
+                     "The 904/404 data does not allow for an accurate calculation for length of episode of treatment. The units may have been utilized during multiple time periods during a given year, which may or may not be consecutive. Therefore, a low number of units should not be interpreted as under-utilization – it may be that the service was simply provided during a short period of time to the beneficiaries.1 Only the CMHs that reported the identified service in FY18 appear in the charts in this report. Therefore, rankings are relative to the number of CMHs that reported the service. Furthermore, the average units per case may be skewed if the number of recipients of the service is small (at a given CMH).")))
+)
    )),
    navbarMenu("Analysis",
  # Application title
