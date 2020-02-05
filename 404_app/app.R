@@ -139,12 +139,61 @@ includes data visualizations that can be used to explore the data."
      fluidRow(column(3,offset = 0,
                      tags$strong("Data Limitations", style = "font-size: 125%;"))),
      br(),br(),#,br(),
-     fluidRow(
+     fluidRow(column(8,tags$h5("Calculation for Length of Episode of Treatment")),
               column(12,offset = 0,
                      tags$ul(tags$li(
-                     "The 904/404 data does not allow for an accurate calculation for length of episode of treatment. The units may have been utilized during multiple time periods during a given year, which may or may not be consecutive. Therefore, a low number of units should not be interpreted as under-utilization – it may be that the service was simply provided during a short period of time to the beneficiaries.1 Only the CMHs that reported the identified service in FY18 appear in the charts in this report. Therefore, rankings are relative to the number of CMHs that reported the service. Furthermore, the average units per case may be skewed if the number of recipients of the service is small (at a given CMH).")))
-)
-   )),
+                     "The 904/404 data does not allow for an accurate calculation for length of episode of treatment. The units may have been utilized 
+                     during multiple time periods during a given year, which may or may not be consecutive. 
+                     Therefore, a low number of units should not be interpreted as under-utilization – it may 
+                     be that the service was simply provided during a short period of time to the beneficiaries."
+                     ))),
+              column(5,tags$h5("CMH Reporting Limitations")),
+              column(12,offset = 0,
+                     tags$ul(tags$li("Only the CMHs that reported the identified service in FY18 appear in the charts in this report. 
+                      Furthermore,the average units per case may be skewed if the number of recipients of the service is small 
+                     (at a given CMH)."))),
+              column(5, tags$h5("Availability of Metrics for Service Groupings")),
+              column(12,offset = 0,
+                     tags$ul(tags$li(
+                       "Service Groups represent a set
+                       of HCPC codes with similar clinical intent and provide a natural grouping 
+                       intended for addressing  questions with a broader scope. And while this helps
+                       illuminate larger trends or patterns, in terms of services with similar 
+                       clinical intent, it necessarily does so at the expense of aggregating cases 
+                       related to those individual HCPC services. Therefore, metrics that rely 
+                       on the counting of distinct cases  (units per case, cost per case ) are only 
+                       available when comparing at the HCPC group level and are not available at the 
+                       Service Group level. "
+                     ))),
+#             column(5,tags$h5("Summarized")),
+#             column(12,offset = 0,
+#                     tags$ul(tags$li("Many of the CMHSPs account for their unit service costs using different
+#                                     cost accounting and allocation methods than those of their peers. Although
+#                                     it is our understanding that these methods are consistent with GAAP (Generally
+#                                     Accepted Accounting Principles), the inconsistency in cost allocation does
+#                                     provide a sound basis for allowing comparison to other CMHSPs. The inconsistency
+#                                     may be the primary cause of any reported service unit cost variability. "
+#                                     ))),
+              column(12,tags$h5("Organizations Account for Units Costs Differently, Making Peer-to-Peer Comparisons Challenging ")),
+  #            column(12,offset = 0,
+  #                    tags$ul(tags$li("During the recently completed site visits and interviews with PIHPs and CMHSPs we
+  #                                  identified an overarching observation that the accounting methods employed by the PIHPs
+  #                                   and CMHSPs to assign costs to service units in the MUNC and SECR are not consistent.
+  #                                   Further, understanding that this inconsistency may be contributing to much of reported 
+  #                                   service unit cost variability, it is very difficult for MDHHS to understand how much of
+  #                                   the unit cost variation can or should be attributable to the other factors; differences
+  #                                   in operating structures, differences in resource requirements, and differences related to 
+  #                                   location. Some level of consistency in accounting and allocation methods must be established 
+  #                                   to understand the impacts of the other factor"))),
+  #            
+              column(12,offset = 0,
+                     tags$ul(tags$li("Cost allocation plans may generally follow reasonable and acceptable methods, but appear to
+                                     vary from entity to entity. Changes in an entity’ s cost allocation processes, most significantly the types of 
+                                     costs allocated to unit services, may result in significant changes from one year to the next, and make it difficult
+                                     to understand true drivers of cost increases. This variance increases the difficulty in understanding
+                                     how the CMHSPs and PIHPs actual unit costs compare to each other or to any fee schedule"
+                                     )))
+   ))),
    navbarMenu("Analysis",
  # Application title
  tabPanel("Bar Chart & Heatmap",
