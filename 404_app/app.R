@@ -198,7 +198,8 @@ includes data visualizations that can be used to explore the data."
  # Application title
  tabPanel("Bar Chart & Heatmap",
           fluidRow(column(3,bookmarkButton(),
-                          downloadButton("Barchart", "Download"))
+                          downloadButton("Barchart", "Data"),
+                          downloadButton('plot','Barchart'))
                    ),
           # Sidebar with a slider input for number of bins 
           fluidRow(
@@ -695,12 +696,13 @@ df<- data404%>%
     
   })
   
-  
+ plotInput<-reactive({ 
 
-output$barchart<-renderPlot({
+#output$barchart<-renderPlot({
     
        req(ySel2())
        req(popType())
+       
        
       # Define which dataset to use based on CMH or PIHP
       # Primarily for the left join that will attache nessesary 
@@ -821,9 +823,28 @@ output$barchart<-renderPlot({
                  annotate("Text",  x=Inf, y = Inf, label = paste("State Avg. ",text_avg),
                           vjust=1, hjust=1)
    }else{ barplot}
+      
+      
+   #   ggsave("plot.pdf", plotInput())
+ #     plotInput()
+     
    
   })
+ 
+ output$barchart<-renderPlot({
+   plotInput()
+   
+ #  ggsave("plot.pdf", plotInput())
+   
+   
+})
+ 
+ 
+ 
+ 
+#plotInput<-function(){output$barchart}
   
+#ggsave("barchart.pdf", output$barchart())
 ##########################################################
                    # Heatmap tabset
 ##########################################################
@@ -1056,6 +1077,14 @@ output$heatData <- downloadHandler(
   }
 )
 
+# plot download
+output$plot <- downloadHandler(
+  filename = function() { paste("barchart", '.png', sep='') },
+  content = function(file) {
+    ggsave(file, plot = plotInput(),device = "png", width = 12 #, height = 4
+           )
+  }
+)
 
 }
 # Run the application 
