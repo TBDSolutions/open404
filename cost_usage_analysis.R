@@ -1,4 +1,5 @@
 library(lubridate)
+library(tidyverse)
 
 # Lets control for population growth
 
@@ -21,13 +22,15 @@ groups <-ttl%>%
       group_by(cmhsp)%>%
       summarise(top = mean(top,na.rm = T))%>%
   ungroup()%>%
-    mutate(control_group =  case_when( cmhsp == 'Washtenaw' ~ "Washt",
-                                     #  cmhsp == 'Kalamazoo' ~ "Kzoo",
-                                       top  <.08 ~ "sister CMH",
+    mutate(group =  case_when( cmhsp == 'Washtenaw' ~ "Washt",
+                                       cmhsp == 'Kalamazoo' ~ "Kzoo",
+                                       cmhsp == "Ottawa" ~ "Ottawa",
+                                     #  top  <.05 ~ "sister CMH",
                                             TRUE ~ "unrelated"))
 
 
 plot<-state_data%>%
+    #filter(!groups == "unrelated")%>% 
   # filter(cmhsp %in% c('Washtenaw',"Kalamazoo","CMH for Central Michigan"))%>%
     group_by(cmhsp)%>%
   # filter(fy %in% c("2014","2015","2016","2017","2018"))%>%
@@ -35,13 +38,14 @@ plot<-state_data%>%
            pct_change = (TotalServed - prev_year)/prev_year)%>%
      ungroup()%>%
     left_join(groups, by = "cmhsp")%>%
-    filter(!control_group %in% 'unrelated')
+    filter(!group %in% 'unrelated')
   
  
 
 
 
-ggplot(plot,aes(x = fy,y = pct_change , group = cmhsp))+ geom_line(aes(color = control_group))
+ggplot(plot,aes(x = fy,y = pct_change , group = cmhsp))+ geom_line(aes(color = group),size = 4)+
+  ggtitle("year-over-year population growth")
 
 
 
@@ -254,7 +258,7 @@ ggplot(wshtw_cost,aes(x = fy,y = cost , group = 1))+ geom_line()+
 
 ### Service groups to focus on 
 
-wshtw1<-data404%>%
+pareto<-data404%>%
  # filter(fy %in% c("2018","2017"))%>%
   filter(fy %in% c("2018"))%>%
   filter(cmhsp %in% c('Washtenaw'))%>%
@@ -269,7 +273,8 @@ wshtw1<-data404%>%
   mutate(pareto = cumsum(cost_pct_tot),
          rank = row_number())%>%
   filter(pareto < 90)%>%
-  select(code,cost_pct_tot,rank)
+  select(code,cost_pct_tot,rank)%>%
+  
 
 ###############
 
@@ -302,9 +307,6 @@ test<-wshtw1%>%
 
 ######### Build clustering set based on pop growth and service group cost to total 
 
-
-
-
 ttl_pop_clust<-state_data%>%
   filter(fy %in% c("2014","2015","2016","2017","2018"))%>%
   group_by(cmhsp)%>%
@@ -317,14 +319,176 @@ wshtw_pop_clust<-state_data%>%
   mutate(prev_year = lag(TotalServed),
          pct_change_w = (TotalServed - prev_year)/prev_year)
 
-groups <-ttl_pop_clust%>%
-        left_join(wshtw_pop_clust%>%select(fy,pct_change_w),by = "fy")%>%
-        mutate(top = abs(pct_change_w - pct_change))%>%
-        group_by(cmhsp)%>%
-        summarise(top = mean(top,na.rm = T))%>%
-        ungroup()%>%
-        mutate(control_group =  case_when( cmhsp == 'Washtenaw' ~ "Washt",
-                                           #  cmhsp == 'Kalamazoo' ~ "Kzoo",
-                                           top  <.08 ~ "sister CMH",
-                                           TRUE ~ "unrelated"))
+pop_trend <-ttl_pop_clust%>%
+            left_join(wshtw_pop_clust%>%select(fy,pct_change_w),by = "fy")%>%
+            mutate(top = abs(pct_change_w - pct_change))%>%
+            group_by(cmhsp)%>%
+            summarise(pop_trend = mean(top,na.rm = T))%>%
+            ungroup()
+######
+#Getting the cmhs cost pct total for that service 
+
+total_cost_clust<-data404%>%
+  # filter(fy %in% c("2018","2017"))%>%
+  filter(fy %in% c("2018"),
+         code == "H2014" )%>%
+ # filter(cmhsp %in% c('Washtenaw'))%>%
+  #  filter(code == "H0043")
+  group_by(cmhsp,code)%>%
+  summarise(cost_pct_tot = sum(cost_pct_tot,na.rm = T))%>%
+  select(cmhsp, cost_pct_tot)
+
+
+
+
+clust_df<-groups%>%
+          inner_join(total_cost_clust, by = c("cmhsp"))
+
+
+########
+# By service type cost to total 
+
+pareto_svc_type<-pareto%>%
+  left_join(service_groups%>%select(code,svc_type)%>%distinct(),by = "code")%>%
+  group_by(svc_type)%>%
+  summarise(cost = sum(cost_pct_tot))
+
+
+pareto_list<-pareto%>%
+  left_join(service_groups%>%select(code,svc_type)%>%distinct(),by = "code")%>%
+  filter( svc_type == "Peer Services",
+          !code == "H0043")%>%
+  select(code)%>%pull()
+
+
+
+total_cost_clust<-data404%>%
+  select(cmhsp,svc_type,fy,cost_pct_tot)%>%
+  filter(fy %in% c("2018","2017","2016","2015","2014"),
+
+     svc_type == "Peer Services",
+
+         )%>%
+#   filter(cmhsp %in% c('Washtenaw'))%>%
+  #  filter(code == "H0043")
+  group_by(cmhsp,fy)%>%
+  summarise(cost_pct_tot = sum(cost_pct_tot,na.rm = T))%>%
+  ungroup()%>%
+  group_by(cmhsp)%>%
+  summarise(cost_pct_avg = mean(cost_pct_tot,na.rm = T),
+            cost_pct_sd = sd(cost_pct_tot,na.rm = T))
+ # select(cmhsp, cost_pct_tot)
+
+
+
+hist(total_cost_clust$cost_pct_sd)
+
+clust_df<-pop_trend%>%
+  inner_join(total_cost_clust, by = c("cmhsp"))
+
+
+
+### Get your clust on!!!! Then measure cost per case on each service group
+
+
+row.names(clust_df)<-clust_df$cmhsp
+clust_df$cmhsp<-NULL
+
+clust_df_scaled <- as.data.frame(scale(clust_df))
+
+
+dist_mat <- dist(clust_df_scaled, method = 'euclidean')
+
+score<-as.data.frame(t(as.matrix(dist_mat)))%>%
+      select(score = Washtenaw)%>%
+      mutate(cmh = rownames(as.data.frame(t(as.matrix(dist_mat)))))
+
+###
+
+hclust_ward <- hclust(dist_mat, method = 'ward.D')
+
+#plot
+library(dendextend)
+avg_dend_obj <- as.dendrogram(hclust_ward)
+avg_col_dend <- color_branches(avg_dend_obj, h = 5)
+plot(avg_col_dend)
+
+
+plot(hclust_ward)
+
+cut_avg <- cutree(hclust_avg, k = 5)
+
+
+
+clust_ward<-as.data.frame(as.matrix(cut_avg))%>%
+            mutate(cmh = rownames(as.data.frame(as.matrix(cut_avg))))%>%
+            rename(cluster = V1)
+
+clust_assignement <-clust_ward%>%filter(cmh == "Washtenaw")%>%select(cluster)%>%pull()
+
+sister_cmhs<-clust_ward%>%
+              left_join(score, by = "cmh")%>%
+              filter(cluster == clust_assignement)%>%
+              arrange(score)%>%
+              slice(1:4)%>%
+              select(cmh)%>%
+              pull()
+
+
+#################################
+#Compare
+
+
+
+
+
+peer<-data404%>%
+      filter(
+           fy == "2018",
+           cmhsp %in% sister_cmhs,
+           code %in% pareto_list
+      )%>%
+     group_by(cmhsp,code)%>%
+     summarise(cost_per_case = mean(cost_per_case))%>%
+     arrange(code,desc(cost_per_case))%>%
+     group_by(code)%>%
+     mutate(rank = row_number())%>%
+  #   filter(code == "99214")%>%
+     mutate(group = case_when(cmhsp == "Washtenaw" ~ "subject", 
+                                TRUE ~ "control"))
+     filter(rank == "1")
+
+
+     
+     
+(max(test$cost_per_case)*.25)   
+(max(test$cost_per_case) * 1.10)
+     
+ggplot(phy,aes(x = cmhsp,y = cost_per_case)) + 
+  geom_bar(stat = "identity",alpha = .7, aes(fill = group))+
+  ggtitle("code 99214",subtitle = "service type: Psychiatric and Medication Services")
+      
+
+
+
+ggplot(peer,aes(x = cmhsp,y = cost_per_case)) + 
+  geom_bar(stat = "identity",alpha = .7, aes(fill = group))+
+  ggtitle("code H2011",subtitle = "service type: Peer Services")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
