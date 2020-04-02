@@ -197,6 +197,14 @@ includes data visualizations that can be used to explore the data."
    navbarMenu("Analysis",
  # Application title
  tabPanel("Bar Chart & Heatmap",
+          #Hide error messages at startup
+          tags$style(
+            type = "text/css",
+            ".shiny-output-error { visibility: hidden; }",
+            ".shiny-output-error:before { visibility: hidden; }"
+          ),
+          
+          
           fluidRow(column(3,bookmarkButton(),
                           downloadButton("Barchart", "Data"),
                           downloadButton('plot','Barchart'))
@@ -209,16 +217,17 @@ includes data visualizations that can be used to explore the data."
                    uiOutput("org"),
                    uiOutput('prov'),
                    uiOutput("servType"),
-                   uiOutput("yAxisType2"),
-                   uiOutput("yAxisSel2"),
+                   uiOutput("groupOrHcpcsOrMod"),
+                   uiOutput("compareAcross"),
                    uiOutput('metric'),
                 #   uiOutput('servGrp'),
                 #   uiOutput('code'),
-                   uiOutput("addOptions")
+                   uiOutput("popType")
                  ,style = 'background:#CCD6DD')
             ),
             column(9,tags$em("* Barchart only options"),fluidRow(
                               column(3,uiOutput("mean")),
+                              column(3,uiOutput("PctChange")),
                               column(3, uiOutput("shade")),
                               column(3,uiOutput('shadeOptions'))),
                    tabsetPanel(
@@ -267,26 +276,10 @@ source('global.R')
   
   
   
-####################################
-# Bar Chart tabset and main choices  
-####################################
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Analysis Tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
-  
-  output$svs_groups<-renderDataTable({
-    
-    df404<-data404%>%
-      distinct(svc_type,svc_grp,short_desc,code)
-    
-    DT::datatable(df404,rownames = FALSE,class = 'cell-border stripe',
-                  colnames = c("Service Type","Serivce Group","HCPC Desc.",'HCPC Code'))
-    
-    
-    
-    
-  })
-  
-  ######### UI OUTPUTS FOR BARCHART  
-  
+
+### UI Components
   output$org<-renderUI({
     selectInput(
       inputId = "CMHorPIHP",
@@ -315,7 +308,7 @@ source('global.R')
       selected = prov_options,
       multiple = TRUE,
       options =  list( placeholder = 'Search or Select'))
-  })
+  })  
   
   output$servType<-renderUI({
     req(org_type())
@@ -326,28 +319,30 @@ source('global.R')
       selected = "All")
   })
   
-  
-  output$yAxisType2 <-renderUI({
+  output$groupOrHcpcsOrMod <-renderUI({
     
     #Actual options     
     
     radioButtons(
-      inputId = "groupOrHcpcs2",
-      label = "Service Group or HCPCS",
-      choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
+      inputId = "groupOrHcpcsOrMod_",
+      label = "Service Group, HCPCS Code or Modifier",
+      choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc","Code Mod" = 'codeM_shortDesc' ),
       selected = c("code_shortDesc"),
       inline = TRUE)
     
   })
   
-  
-  output$yAxisSel2<-renderUI({
+  output$compareAcross<-renderUI({
     
-    type<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'svc_grp'}else{"code_shortDesc"})
+    type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
+                  else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
+                  else{"code_shortDesc"})
     
     org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
     
-    grps<-if(input$groupOrHcpcs2 == 'svc_grp'){"Service Group"}else{"HCPC Codes"}
+    grps<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){"Service Group"}
+             else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'Code Modifier'}
+             else{"HCPC Code"}
     
     
     options<-data404%>%
@@ -357,39 +352,48 @@ source('global.R')
       pull(!!type)
     
     
-    if(input$groupOrHcpcs2 == "svc_grp"){
+    if(input$groupOrHcpcsOrMod_ == "svc_grp"){
       tags$h6("will")
       selectizeInput(
-        inputId = 'yAxisSel2',
+        inputId = 'compareAcross',
         label = paste('Compare ',org," across this ",grps,sep = ""),
         choices = options,
         multiple = FALSE,
         selected = "Case Management")
       
-    } else {
-
+    } else if(input$groupOrHcpcsOrMod_ == "code_shortDesc") {
+      
       selectizeInput(
-        inputId = 'yAxisSel2',
+        inputId = 'compareAcross',
         label = paste('Compare ',org," across this ",grps,sep = ""),
         choices = options,
         multiple = FALSE,
         selected = 'Community Living Supports 15 minutes  ( H2015 )')
+    }
+    
+    else{
+      
+      selectizeInput(
+        inputId = 'compareAcross',
+        label = paste('Compare ',org," across this ",grps,sep = ""),
+        choices = options,
+        multiple = TRUE,
+        selected = "Case Management  ( T1017SE )")
     } 
     
     
   })
   
-  
   output$metric<-renderUI({
     
     org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
     
-    choices<-if(input$groupOrHcpcs2 == 'svc_grp'){
+    choices<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){
       c("Cost" = "cost",'Units' = 'units',
         #   'Cases' = "cases","Cost Per Case" = 'cost_per_case',
         "Cost Per Unit" = 'cost_per_unit',
         #    "Units Per Case" = "unit_per_case",
-        "Percent of Total Cost" = "pct_of_total_cost",
+        "Percent of Total Cost" = "cost_pct_tot",
         "Cost Per 1K Served" = "cost_per_1K_served")
     }else{
       c("Cost" = "cost",'Units' = 'units',
@@ -397,7 +401,7 @@ source('global.R')
         "Cost Per Unit" = 'cost_per_unit',
         "Units Per Case" = "unit_per_case",
         "Pct. Served" = "pct._served",
-        "Percent of Total Cost" = "pct_of_total_cost",
+        "Percent of Total Cost" = "cost_pct_tot",
         "Cost Per 1K Served" = "cost_per_1K_served")
     }
     
@@ -408,10 +412,7 @@ source('global.R')
       selected = "units")
   })
   
-  
-  
-  
-  output$addOptions<-renderUI({
+  output$popType<-renderUI({
     # Tag list groups the two widgets together
     tagList(
       selectInput(
@@ -445,7 +446,6 @@ source('global.R')
     
   })  
   
-  
   output$shadeOptions<-renderUI({
     
     req(input$shadeByPihp)
@@ -465,7 +465,6 @@ source('global.R')
     
   })
   
-
   output$mean<-renderUI({
     radioButtons(inputId = 'includeMean',
                  label = "State Avg. Line",
@@ -474,78 +473,83 @@ source('global.R')
                  inline = TRUE)
     
   })
-  
-  
-############# REACTIVITY  
-    
-# Define Reactive inputs 
-  org_type <- reactive({input$CMHorPIHP})
-  provider<-reactive({input$provider})
-  fy_filter<-reactive({input$fy_filter})
-  metric <-reactive({input$metric})
-  serviceType<-reactive({input$serviceType})
-  serviceGroup <-reactive({input$serviceGroup})
-  popType<-reactive({input$popType})
-  codes<-reactive({input$codes})
-  
-  
-  WhichPIHP<-reactive({input$WhichPIHP})
-  
-  
-  yType2<-reactive({input$groupOrHcpcs2})
-  ySel2<-reactive({input$yAxisSel2})
-  
-  
-  stateAggData<-reactive({
-    
-      stateAggData<-state_data%>%
-      group_by(!!as.symbol(org_type()),fy)%>%
-      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
 
+  output$PctChange<-renderUI({
+    
+    radioButtons(
+      inputId = "includePctChange"
+    ,label = "Add 3 Year % Change"
+    ,choices = c('Yes',"No")
+    ,inline = T
+    ,selected = "No"
+    )
+    
+    
   })
+  
+### Reactive Input 
+  
+org_type <- reactive({input$CMHorPIHP})
+provider<-reactive({input$provider})
+fy_filter<-reactive({input$fy_filter})
+metric <-reactive({input$metric})
+serviceType<-reactive({input$serviceType})
+serviceGroup <-reactive({input$serviceGroup})
+popType<-reactive({input$popType})
+codes<-reactive({input$codes})
+groupOrHcpcsOrMod_<-reactive({input$groupOrHcpcsOrMod_})
+compareAcross<-reactive({input$compareAcross})
+WhichPIHP<-reactive({input$WhichPIHP})
+
+### Reactive datasets  
+
+stateAggData<-reactive({
+  
+  stateAggData<-state_data%>%
+    group_by(!!as.symbol(org_type()),fy)%>%
+    summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+  
+}) 
+
+pop_filter<-reactive({
   
   # Pre-made filter for below DPLYR manipulations for formatting multiple pop
   # code options. Makes it easier to use when pre-defined
-  pop_filter<-reactive({
-    
-    if('' %in% popType()){ as.character(unique(data404$population))}else{
+  
+  
+  if('' %in% popType()){ as.character(unique(data404$population))}else{
     
     data404[which(data404$population %in% popType()),'population']%>%
       mutate(population = as.character(population))%>%
       distinct(population)%>%
       pull(population)}
-  })
+})
   
-  
-  
-
-# Define Reactive dataset for barchart 
-  
-  stateAvg<-reactive({
+stateAvg<-reactive({
     
-   #Aggregated Michigan Data
-   stateAggData<-as.data.frame(stateAggData())
+    #Aggregated Michigan Data
+    stateAggData<-as.data.frame(stateAggData())
     
     
     df<-data404%>%
       filter(
         fy %in% fy_filter(),
-     #   svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
-         (!!as.symbol(yType2())) %in% input$yAxisSel2,
-         population %in% pop_filter()
+        #   svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+        (!!as.symbol(groupOrHcpcsOrMod_())) %in%  input$compareAcross,
+        population %in% pop_filter()
       )%>%
       select(
-         fy,
-         !!as.symbol(org_type()),
-          cost,units,cases
+        fy,
+        !!as.symbol(org_type()),
+        cost,units,cases,cost_pct_tot
       )%>%
       group_by(
-          fy,
-         (!!as.symbol(org_type()))
+        fy,
+        (!!as.symbol(org_type()))
       )%>%
       summarise_at(
         
-        vars(cases,units,cost),
+        vars(cases,units,cost,cost_pct_tot),
         list(~sum(., na.rm = T))
       )%>%
       mutate(
@@ -554,115 +558,314 @@ source('global.R')
         unit_per_case = round(units/cases,digits = 1)
       )%>%
       left_join(
-              stateAggData,by = c(org_type() ,"fy")
-              )%>%
+        stateAggData,by = c(org_type() ,"fy")
+      )%>%
       mutate(
         
-             cost_per_1K_served = (cost/TotalServed)*1000,
-             pct._served = round(((cases/TotalServed)*100),3)
-             )%>%
+        cost_per_1K_served = (cost/TotalServed)*1000,
+        pct._served = round(((cases/TotalServed)*100),3)
+      )%>%
       filter_if( #remove INF values from dividing by zero
-              ~is.numeric(.), all_vars(!is.infinite(.))
-               )%>%
-      mutate(pct_of_total_cost = 0)%>%
+        ~is.numeric(.), all_vars(!is.infinite(.))
+      )%>%
+    #  mutate(pct_of_total_cost = 0)%>%
       group_by(fy)%>%
       summarise(avg = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
       pull(avg)
-  
+    
     
   })
 
-  selectedDS<-reactive({
-    
-    req(input$provider)
-    
-    
-    # If the selection is by PIHP, I need to aggregate the data before joining 
-    # This table will be used below to calulate cost per 1K ect. 
-    #Aggregated Michigan Data
-    stateAggData<-as.data.frame(stateAggData())
-    
-
-df<- data404%>%
+selectedDS<-reactive({
+  
+  req(input$provider)
+  
+  
+  # If the selection is by PIHP, I need to aggregate the data before joining 
+  # This table will be used below to calulate cost per 1K ect. 
+  # Aggregated Michigan Data
+  stateAggData<-as.data.frame(stateAggData())
+  
+  df<- data404%>%
     filter(
-              !!as.symbol(org_type()) %in% input$provider,
-              fy %in% fy_filter(),
-              (!!as.symbol(yType2())) %in% input$yAxisSel2,
-              population %in% pop_filter()
-              # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
-        )%>%
+      !!as.symbol(org_type()) %in% input$provider,
+      fy %in% fy_filter(),
+      (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
+      population %in% pop_filter()
+      # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+    )%>%
     select(
-            !!as.symbol(org_type()),fy,
-            cost,units,cases
-           )%>%
+      !!as.symbol(org_type()),fy,
+      cost,units,cases,cost_pct_tot
+    )%>%
     group_by(
-              !!as.symbol(org_type()),fy
-           )%>%
+      !!as.symbol(org_type()),fy
+    )%>%
     summarise_at(
       
-            vars(cases,units,cost),
-            list(~sum(., na.rm = T))
-          )%>%
+      vars(cases,units,cost,cost_pct_tot),
+      list(~sum(., na.rm = T))
+    )%>%
     mutate(
       
-          cost_per_case = round(cost/cases,digits = 2),
-          cost_per_unit = round(cost/units,digits = 2),
-          unit_per_case = round(units/cases,digits = 1)
-         )%>%
+      cost_per_case = round(cost/cases,digits = 2),
+      cost_per_unit = round(cost/units,digits = 2),
+      unit_per_case = round(units/cases,digits = 1)
+    )%>%
     left_join(
       
-          stateAggData,by = c(org_type() ,"fy")
-          )%>%
+      stateAggData,by = c(org_type() ,"fy")
+    )%>%
     mutate(
       
-        cost_per_1K_served = round((cost/TotalServed)*1000,0),
-        pct._served = round(((cases/TotalServed)*100),3)
-        )%>%
-  filter_if(~is.numeric(.), all_vars(!is.infinite(.)))
-
-
-### Adding total cost 
+      cost_per_1K_served = round((cost/TotalServed)*1000,0),
+      pct._served = round(((cases/TotalServed)*100),3)
+    )%>%
+    filter_if(~is.numeric(.), all_vars(!is.infinite(.)))
+  
+##### Year over Year trends 
+  
+  start<-as.numeric(fy_filter())
+  
+  pct_change<- data404%>%
+    filter(
+      !!as.symbol(org_type()) %in% input$provider,
+   #   fy %in% c('2016','2018'),
+       fy %in% c(start - 3, as.numeric(fy_filter())),
+      (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
+      population %in% pop_filter()
+      # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+    )%>%
+    select(
+      !!as.symbol(org_type()),fy,
+      cost,units,cases,cost_pct_tot
+    )%>%
+    group_by(
+      !!as.symbol(org_type()),fy
+    )%>%
+    summarise_at(
+      
+      vars(cases,units,cost,cost_pct_tot),
+      list(~sum(., na.rm = T))
+    )%>%
+    mutate(
+      
+      cost_per_case = round(cost/cases,digits = 2),
+      cost_per_unit = round(cost/units,digits = 2),
+      unit_per_case = round(units/cases,digits = 1)
+    )%>%
+    left_join(
+      
+      stateAggData,by = c(org_type() ,"fy")
+    )%>%
+    mutate(
+      
+      cost_per_1K_served = round((cost/TotalServed)*1000,0),
+      pct._served = round(((cases/TotalServed)*100),3)
+    )%>%
+    filter_if(
+             ~is.numeric(.), all_vars(!is.infinite(.))
+              )%>% # rerunning the above manipulations so 
+                   # I can create a dataframe that only looks 
+                   # at the year over year pct changes
+    select(!!as.symbol(org_type()),fy,
+           metric = !!as.symbol(metric())
+           )%>% 
     
-        ttlCost<-data404%>%
-        filter(
-          !!as.symbol(org_type()) %in% input$provider,
-          fy %in% fy_filter(),
-        )%>%
-        select(
-          !!as.symbol(org_type()),fy,
-          cost
-        )%>%
-        group_by(
-          !!as.symbol(org_type()),fy
-        )%>%
-        select(!!as.symbol(org_type()),cost,fy)%>%
-        group_by(!!as.symbol(org_type()),fy)%>%
-        summarise(
-          ttl_org_cost = sum(cost, na.rm = TRUE)
-        )
+    mutate(
+      prev_time = lag(metric),
+      metric_pct_change = round( (metric - prev_time)/prev_time *100,0)
+      ) %>%
+    ungroup()%>%
+    filter(is.na(prev_time) == FALSE)%>%
+    select(!!as.symbol(org_type()),fy,metric_pct_change) 
+  
+  
+   df<-df%>%
+       left_join(pct_change,by = c("fy",org_type()))
+    
+  
+})
 
+plotInput<-reactive({ 
+  
+  #output$barchart<-renderPlot({
+  
+  req(compareAcross())
+  req(popType())
+  
+  
+  # Define which dataset to use based on CMH or PIHP
+  # Primarily for the left join that will attach nessesary 
+  # Grouping and shading columns for the graph
+  # The nesting if statement checks to see if the user also needed to 
+  # highlight a particular CMH, if so, conduct a mutate based on the users 
+  # input
+  #########################################
+  df<-if(input$CMHorPIHP == 'cmhsp'){
+    
+    if(input$shadeByPihp== "Yes"){
+      req(input$WhichPIHP)
+      
+      data.frame(selectedDS())%>%
+        left_join(pihpCMH_LU, by = "cmhsp")%>%
+        mutate(PIHP = case_when(pihp_name %in% input$WhichPIHP ~ input$WhichPIHP,
+                                TRUE ~ 'Others'))}
+    else{data.frame(selectedDS())%>%
+        left_join(pihpCMH_LU, by = "cmhsp")}
+    
+    
+  }else if(input$CMHorPIHP == 'pihp_name'){ 
+    
+    p<-pihpCMH_LU%>%distinct(pihp,pihp_name)
+    
+    
+    data.frame(selectedDS())%>%
+      left_join(p, by = "pihp_name")
+    
+  } else {data.frame(selectedDS())}
+  ###########################################
+  
+  
+  # Format X-Axis labels 
+  xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+  else{'PIHP'}
+  ############################################
+  
+  # Set the axis title and ensure all selections of HCPCS codes are included
+  group<-if(input$groupOrHcpcsOrMod_ == "svc_grp"){ paste(compareAcross()," Service Group")}
+  else{ as.data.frame(list(compareAcross()))%>%
+      mutate(code = as.character(.[[1]]))%>%
+      pull(code)
+  }
+  ##############################################
+  
+  # Set the State average in proper format
+  text_avg<-format(round(stateAvg(),0),big.mark=",", scientific=FALSE)
+  
+  populations<-as.data.frame(list(popType()))%>%
+    mutate(popType = as.character(.[[1]]))%>%
+    pull(popType)
+  #################################################
+  
+  # setting pct change variable 
+  
+  df<-df%>%
+      mutate(`3 Year Pct Change` = as.factor( case_when(metric_pct_change < 0 ~ 'Down',
+                                   metric_pct_change > 0 ~ 'Up',
+                                   TRUE ~ "neutral")))
+  
+  
+  
+  barplot<- if(input$shadeByPihp == 'Yes' & input$CMHorPIHP == 'cmhsp'){
+    
+    
+    df%>%
+      ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),!!as.symbol(metric()),
+                                 .desc = TRUE),
+                 y = !!as.symbol(metric()),
+                 fill = PIHP)) +
+      geom_bar(stat="identity", position=position_dodge(), alpha = .5,
+               color="black")+
+      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
+      xlab(xlabs)+
+      ylab(str_replace_all(input$metric,pattern = "_"," "))+
+      scale_fill_manual(values=c('Others' = '#696969','LRE' = '#EA4335',"MSHN" = '#EA4335',
+                                 'DWMHA' = '#EA4335',"OCCMHA" = '#EA4335',"SWMBH" = '#EA4335',
+                                 'CMHPSM' = '#EA4335',"NMRE" = '#EA4335',"Region10"='#EA4335',
+                                 "Northcare" = '#EA4335',"MCMHS" = '#EA4335')) +
+      theme_minimal()+
+      ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
+                    xlabs," for ",paste(group,collapse = ","),sep = ""),
+              subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
+      labs(fill='PIHP')+
+      labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+      theme_ipsum(grid = 'FALSE',
+                  plot_title_size = 15,
+                  axis_text_size = 11,
+                  axis_title_size = 13,
+                  ticks = TRUE
+                  #    base_family = "IBMPlexSans"
+      )+
+      theme(axis.text.x=element_text(angle=45, hjust=1))
 
-        df<-df%>%
-            left_join(ttlCost,by = c(org_type(),"fy"))%>%
-            mutate(pct_of_total_cost = round(((cost/ttl_org_cost)*100),2))%>%
-            select(-ttl_org_cost)
-
-
-
+ 
+    
+  }else{
+    df%>%
+      ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),!!as.symbol(metric()),
+                                 .desc = TRUE),
+                 y = !!as.symbol(metric()))) +
+      geom_bar(stat="identity", position=position_dodge(), alpha = .5,
+               color="black")+
+      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
+      xlab(xlabs)+
+      ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
+      theme_minimal()+
+      theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
+      ggtitle(paste("Comparing ",stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," "))," by ",
+                    xlabs," for ",paste(group,collapse = ","),sep = ""),
+              subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
+      labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+      theme_ipsum(grid = 'FALSE',
+                  plot_title_size = 15,
+                  axis_text_size = 11,
+                  axis_title_size = 13,
+                  ticks = TRUE
+                  #   base_family = "IBMPlexSans"
+      )+
+      theme(axis.text.x=element_text(angle=45, hjust=1))
+  } 
+  
+ if(input$includeMean == 'Yes' & input$includePctChange == "Yes"){
+   
+    barplot +  geom_hline(yintercept = c(stateAvg()),linetype = "dashed",size = 1)+
+      annotate("Text",  x=Inf, y = Inf, label = paste("State Avg. ",text_avg),
+               vjust=1, hjust=1)+
+     geom_text(aes(label= metric_pct_change,color = `3 Year Pct Change`), size = 3,
+               position=position_dodge(width=0.5), vjust=-0.5)+
+     scale_colour_manual(values=c(Down = "#006699", Up = "#EA4335", "neutral" = 'grey'))
+     
+     
+ }else if(input$includeMean == 'Yes' & input$includePctChange == "No"){
+  
+   barplot +  geom_hline(yintercept = c(stateAvg()),linetype = "dashed",size = 1)+
+    annotate("Text",  x=Inf, y = Inf, label = paste("State Avg. ",text_avg),
+             vjust=1, hjust=1)
+  
+ } else if(input$includeMean == 'No' & input$includePctChange == "Yes"){
+   
+   barplot + geom_text(aes(label= metric_pct_change,color = `3 Year Pct Change`), size = 3,
+                       position=position_dodge(width=0.5), vjust=-0.5)+
+     scale_colour_manual(values=c(Down = "#006699", Up = "#EA4335", "neutral" = 'grey'))
+   
+ }
+  else{ barplot}
+  
+  
+})
+  
+### Graphs and Tables  
+  
+output$svs_groups<-renderDataTable({
+    
+    df404<-data404%>%
+      distinct(svc_type,svc_grp,short_desc,code)
+    
+    DT::datatable(df404,rownames = FALSE,class = 'cell-border stripe',
+                  colnames = c("Service Type","Serivce Group","HCPC Desc.",'HCPC Code'))
+    
+    
+    
+    
   })
   
-
-
-######## PLOT & TABLE OUTPUTS     
-  
-  # Reactive for tab to include datatable 
-  
-  output$dt<-DT::renderDataTable({
+output$dt<-DT::renderDataTable({
     
        col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
        else{'PIHP'}
        
-       col2<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'Service Group'}else{"HCPCS"})
+       col2<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'Service Group'}else{"HCPCS"})
        
        metric_lab = str_replace_all(input$metric,pattern = "_"," ")
 
@@ -673,8 +876,7 @@ df<- data404%>%
     
   })
   
-  
-  output$barTable<-DT::renderDataTable({
+output$barTable<-DT::renderDataTable({
     
     col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
     else{'PIHP'}
@@ -683,163 +885,30 @@ df<- data404%>%
     
     metric_lab = str_replace_all(input$metric,pattern = "_"," ")
     
+    change <- "3 Year % Change"
+    
     foo<-as.data.frame( selectedDS())
     
     foo<-foo%>%
-         select(input$CMHorPIHP,
+         select(
+           input$CMHorPIHP,
                 input$metric,
+                metric_pct_change,
                 fy)
 
-    DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
-                  colnames = c(col1,metric_lab,col2))
+    DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe'
+                  ,colnames = c(col1,metric_lab,change,col2))
                   #colnames = c(col1,col2,metric_lab))
-    
+
   })
   
- plotInput<-reactive({ 
-
-#output$barchart<-renderPlot({
-    
-       req(ySel2())
-       req(popType())
-       
-       
-      # Define which dataset to use based on CMH or PIHP
-      # Primarily for the left join that will attache nessesary 
-      # Grouping and shading columns for the graph
-      # The nesting if statement checks to see if the user also needed to 
-      # highlight a particular CMH, if so, conduct a mutate based on the users 
-      # input
-      #########################################
-        df<-if(input$CMHorPIHP == 'cmhsp'){
-          
-          if(input$shadeByPihp== "Yes"){
-            req(input$WhichPIHP)
-          
-            data.frame(selectedDS())%>%
-                left_join(pihpCMH_LU, by = "cmhsp")%>%
-                 mutate(PIHP = case_when(pihp_name %in% input$WhichPIHP ~ input$WhichPIHP,
-                                    TRUE ~ 'Others'))}
-          else{data.frame(selectedDS())%>%
-              left_join(pihpCMH_LU, by = "cmhsp")}
-            
-          
-        }else if(input$CMHorPIHP == 'pihp_name'){ 
-          
-          p<-pihpCMH_LU%>%distinct(pihp,pihp_name)
-           
-          
-          data.frame(selectedDS())%>%
-          left_join(p, by = "pihp_name")
-          
-        } else {data.frame(selectedDS())}
-      ###########################################
-      
-  
-      # Format X-Axis labels 
-      xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
-      else{'PIHP'}
-      ############################################
-      
-      # Set the axis title and ensure all selections of HCPCS codes are included
-      group<-if(input$groupOrHcpcs2 == "svc_grp"){ paste(ySel2()," Service Group")}
-            else{ as.data.frame(list(ySel2()))%>%
-                  mutate(code = as.character(.[[1]]))%>%
-                  pull(code)
-            }
-     ##############################################
-      
-     # Set the State average in poper format
-      text_avg<-format(round(stateAvg(),0),big.mark=",", scientific=FALSE)
-
-      populations<-as.data.frame(list(popType()))%>%
-        mutate(popType = as.character(.[[1]]))%>%
-        pull(popType)
-     #################################################
-
-      
-      
-   barplot<- if(input$shadeByPihp == 'Yes' & input$CMHorPIHP == 'cmhsp'){
-     
-  
-     df%>%
-       ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),!!as.symbol(metric()),
-                                  .desc = TRUE),
-                  y = !!as.symbol(metric()),
-                  fill = PIHP)) +
-       geom_bar(stat="identity", position=position_dodge(), alpha = .5,
-                color="black")+
-       scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
-       xlab(xlabs)+
-       ylab(str_replace_all(input$metric,pattern = "_"," "))+
-       scale_fill_manual(values=c('Others' = '#696969','LRE' = '#EA4335',"MSHN" = '#EA4335',
-                                  'DWMHA' = '#EA4335',"OCCMHA" = '#EA4335',"SWMBH" = '#EA4335',
-                                  'CMHPSM' = '#EA4335',"NMRE" = '#EA4335',"Region10"='#EA4335',
-                                  "Northcare" = '#EA4335',"MCMHS" = '#EA4335')) +
-       theme_minimal()+
-       ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
-                     xlabs," for ",paste(group,collapse = ","),sep = ""),
-               subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
-       labs(fill='PIHP')+
-       labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
-       theme_ipsum(grid = 'FALSE',
-                   plot_title_size = 15,
-                   axis_text_size = 11,
-                   axis_title_size = 13,
-                   ticks = TRUE,
-                   base_family = "IBMPlexSans"
-       )+
-       theme(axis.text.x=element_text(angle=45, hjust=1))
-      
-      
-    }else{
-      df%>%
-        ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),!!as.symbol(metric()),
-                                   .desc = TRUE),
-                   y = !!as.symbol(metric()))) +
-        geom_bar(stat="identity", position=position_dodge(), alpha = .5,
-                 color="black")+
-        scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
-        xlab(xlabs)+
-        ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
-        theme_minimal()+
-        theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
-        ggtitle(paste("Comparing ",stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," "))," by ",
-                      xlabs," for ",paste(group,collapse = ","),sep = ""),
-                subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
-        labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
-        theme_ipsum(grid = 'FALSE',
-                    plot_title_size = 15,
-                    axis_text_size = 11,
-                    axis_title_size = 13,
-                    ticks = TRUE,
-                    base_family = "IBMPlexSans"
-                    )+
-        theme(axis.text.x=element_text(angle=45, hjust=1))
-    } 
-   
-   if(input$includeMean == 'Yes'){
-     barplot +  geom_hline(yintercept = c(stateAvg()),linetype = "dashed",size = 1)+
-                 annotate("Text",  x=Inf, y = Inf, label = paste("State Avg. ",text_avg),
-                          vjust=1, hjust=1)
-   }else{ barplot}
-      
-      
-   #   ggsave("plot.pdf", plotInput())
- #     plotInput()
-     
-   
-  })
- 
- output$barchart<-renderPlot({
+output$barchart<-renderPlot({
    plotInput()
    
  #  ggsave("plot.pdf", plotInput())
    
    
 })
- 
- 
  
  
 #plotInput<-function(){output$barchart}
@@ -857,7 +926,7 @@ output$yAxisType <-renderUI({
   #Actual options     
   
   radioButtons(
-    inputId = "groupOrHcpcs",
+    inputId = "groupOrHcpcsOrMod",
     label = "Service Group or HCPCS",
     choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
     selected = c("svc_grp"),
@@ -868,11 +937,11 @@ output$yAxisType <-renderUI({
 
 output$yAxisSel<-renderUI({
   
-  type<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'svc_grp'}else{"code_shortDesc"})
+  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}else{"code_shortDesc"})
   
   org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
   
-  grps<-if(input$groupOrHcpcs2 == 'svc_grp'){"Service Groups"}else{"HCPC Codes"}
+  grps<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){"Service Groups"}else{"HCPC Codes"}
   
   
   options<-data404%>%
@@ -897,7 +966,7 @@ output$yAxisSel<-renderUI({
   
 ################ REACTIVITY
   
- yType<-reactive({input$groupOrHcpcs})
+ yType<-reactive({input$groupOrHcpcsOrMod_})
  ySel<-reactive({input$yAxisSel})
  
  
@@ -920,17 +989,17 @@ output$yAxisSel<-renderUI({
      filter((!!as.symbol(org_type())) %in% input$provider,
             fy %in% fy_filter(),
             population %in% pop_filter,
-            (!!as.symbol(yType2())) %in% input$yAxisSel
+            (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$yAxisSel
      )%>%
      select(!!as.symbol(org_type()), # Provider column 
-            (!!as.symbol(yType2())),
+            (!!as.symbol(groupOrHcpcsOrMod_())),
              fy,
             cost,units,cases
      )%>%
      group_by(
        
          !!as.symbol(org_type()), # Provider column 
-        (!!as.symbol(yType2())),
+        (!!as.symbol(groupOrHcpcsOrMod_())),
          fy
      )%>%
      summarise_at(
@@ -954,38 +1023,10 @@ output$yAxisSel<-renderUI({
    
    
    
-   ### Adding total cost 
-   
-   ttlCost<-data404%>%
-     filter(
-       !!as.symbol(org_type()) %in% input$provider,
-       fy %in% fy_filter(),
-     )%>%
-     select(
-       !!as.symbol(org_type()),fy,
-       cost
-     )%>%
-     group_by(
-       !!as.symbol(org_type()),fy
-     )%>%
-     select(!!as.symbol(org_type()),cost,fy)%>%
-     group_by(!!as.symbol(org_type()),fy)%>%
-     summarise(
-       ttl_org_cost = sum(cost, na.rm = TRUE)
-     )
-   
-   
-   df<-df%>%
-     left_join(ttlCost,by = c(org_type(),"fy"))%>%
-     mutate(pct_of_total_cost = round(((cost/ttl_org_cost)*100),2))%>%
-     select(-ttl_org_cost)
-   
-   
-
    # Transform into Z scores then turn Z scores into percentiles
    df<-df%>%
-     select(!!as.symbol(org_type()),(!!as.symbol(yType2())),!!as.symbol(metric()))%>%
-     group_by((!!as.symbol(yType2())))%>%
+     select(!!as.symbol(org_type()),(!!as.symbol(groupOrHcpcsOrMod_())),!!as.symbol(metric()))%>%
+     group_by((!!as.symbol(groupOrHcpcsOrMod_())))%>%
      mutate(metric = round((pnorm(scale_fun(!!as.symbol(metric())))*100),2))
    
  }) 
@@ -1003,7 +1044,7 @@ output$heatmap<-renderPlot({
   xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
         else{'PIHP'}
   
-  type<-as.name(if(input$groupOrHcpcs2 == "svc_grp"){'svc grp'}else{"HCPCs"})
+  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc grp'}else{"HCPCs"})
   
   populations<-as.data.frame(list(popType()))%>%
     mutate(popType = as.character(.[[1]]))%>%
@@ -1012,7 +1053,7 @@ output$heatmap<-renderPlot({
   
   df<-heatmapDS()
   
-  ggplot(df,aes( y = (!!as.symbol(yType2())),x = as.factor(!!as.symbol(org_type())))) + 
+  ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
     geom_tile(aes(fill = metric), colour = "white") + 
     #   scale_fill_manual(values=c("#FB8604", "#DB4133", "#A3A7A8","#2B80A1"))+
     xlab(xlabs)+

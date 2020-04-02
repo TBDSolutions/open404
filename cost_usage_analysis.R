@@ -270,23 +270,45 @@ ggplot(wshtw_cost,aes(x = fy,y = cost , group = 1))+ geom_line()+
 
 ### Service groups to focus on 
 
-pareto<-data404%>%
+pareto_by_population<-data404%>%
  # filter(fy %in% c("2018","2017"))%>%
   filter(fy %in% c("2018"))%>%
   filter(cmhsp %in% c('Washtenaw'))%>%
-#  filter(code == "H0043")
-  group_by(fy,code)%>%
-  summarise(cost_pct_tot = sum(cost_pct_tot,na.rm = T))%>%
+  group_by(population,code_mod,codeM_shortDesc)%>%
+  summarise(cost = sum(cost,na.rm = T))%>%
   ungroup()%>%
-  group_by(code)%>%
-  summarise(cost_pct_tot = mean(cost_pct_tot))%>%
-  arrange(desc(cost_pct_tot))%>%
- # mutate( cum_s)
-  mutate(pareto = cumsum(cost_pct_tot),
-         rank = row_number())%>%
-  filter(pareto < 90)%>%
-  select(code,cost_pct_tot,rank)
-  
+  group_by(population)%>%
+  arrange(desc(cost), .by_group = TRUE)%>%  
+  mutate( total = sum(cost),
+         pct_to_total = round(cost/sum(cost) * 100,2),
+         running_total = cumsum(pct_to_total))
+
+
+
+
+
+pareto_total<-data404%>%
+  # filter(fy %in% c("2018","2017"))%>%
+  filter(fy %in% c("2018"))%>%
+  filter(cmhsp %in% c('Washtenaw'))%>%
+  group_by(codeM_shortDesc)%>%
+  summarise(cost = sum(cost,na.rm = T))%>%
+  ungroup()%>%
+  arrange(desc(cost))%>%  
+  mutate( total = sum(cost),
+          pct_to_total = round(cost/sum(cost) * 100,2),
+          running_total = cumsum(pct_to_total))
+
+
+
+#write_csv(pareto_total,"pareto_total.csv")
+
+#write_csv(pareto_by_population,"pareto_by_population.csv")
+
+
+
+
+hist(pareto$running_total)
 
 ###############
 
