@@ -225,9 +225,9 @@ includes data visualizations that can be used to explore the data."
                    uiOutput("popType")
                  ,style = 'background:#CCD6DD')
             ),
-            column(9,tags$em("* Barchart only options"),fluidRow(
-                              column(3,uiOutput("mean")),
-                              column(3,uiOutput("PctChange")),
+            column(9,fluidRow(
+                              column(2,uiOutput("mean")),
+                              column(4,uiOutput("PctChange")),
                               column(3, uiOutput("shade")),
                               column(3,uiOutput('shadeOptions'))),
                    tabsetPanel(
@@ -437,7 +437,7 @@ source('global.R')
     if(input$CMHorPIHP == 'cmhsp'){
       
       radioButtons(inputId = 'shadeByPihp',
-                   label = 'Highlight a Single PIHP',
+                   label = "Highlight CMH's of a PIHP?",
                    choices = c("Yes",'No'),
                    selected = "No",
                    inline = TRUE)
@@ -467,7 +467,7 @@ source('global.R')
   
   output$mean<-renderUI({
     radioButtons(inputId = 'includeMean',
-                 label = "State Avg. Line",
+                 label = "Add State Avg.",
                  choices = c("Yes",'No'),
                  selected = "No",
                  inline = TRUE)
@@ -478,7 +478,7 @@ source('global.R')
     
     radioButtons(
       inputId = "includePctChange"
-    ,label = "Add 3 Year % Change"
+    ,label = "Add percent change over past 3 years?"
     ,choices = c('Yes',"No")
     ,inline = T
     ,selected = "No"
@@ -928,7 +928,7 @@ output$yAxisType <-renderUI({
   radioButtons(
     inputId = "groupOrHcpcsOrMod",
     label = "Service Group or HCPCS",
-    choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc"),
+    choices = c("Service Group" = "svc_grp", "HCPCS Code" = "code_shortDesc", "Code Modifier" = 'codeM_shortDesc'),
     selected = c("svc_grp"),
     inline = TRUE)
   
@@ -937,11 +937,15 @@ output$yAxisType <-renderUI({
 
 output$yAxisSel<-renderUI({
   
-  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}else{"code_shortDesc"})
+  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
+                else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
+                else{"code_shortDesc"})
   
   org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
   
-  grps<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){"Service Groups"}else{"HCPC Codes"}
+  grps<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){"Service Groups"}
+  else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'Code Modifiers'}
+  else{"HCPC Codes"}
   
   
   options<-data404%>%
@@ -950,7 +954,7 @@ output$yAxisSel<-renderUI({
     distinct(!!type)%>%
     pull(!!type)
   
-  
+
   selectizeInput(
     inputId = 'yAxisSel',
     label = paste('I want to compare ',org," across these ",grps,sep = ""),
@@ -1030,9 +1034,6 @@ output$yAxisSel<-renderUI({
      mutate(metric = round((pnorm(scale_fun(!!as.symbol(metric())))*100),2))
    
  }) 
- 
- 
- 
  
 
 
