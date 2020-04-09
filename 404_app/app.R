@@ -225,11 +225,13 @@ includes data visualizations that can be used to explore the data."
                    uiOutput("popType")
                  ,style = 'background:#CCD6DD')
             ),
-            column(9,fluidRow(
+            column(9,p(tags$em("*barchart options only")),fluidRow(
                               column(2,uiOutput("mean")),
                               column(4,uiOutput("PctChange")),
                               column(3, uiOutput("shade")),
                               column(3,uiOutput('shadeOptions'))),
+                   
+##########################################################################                   
                    tabsetPanel(
                      tabPanel("Barchart",
                               # Show a plot of the generated distribution
@@ -239,7 +241,26 @@ includes data visualizations that can be used to explore the data."
                               br(),
                               DT::dataTableOutput("barTable")
                      ),
-                     tabPanel("HeatMap",
+                     
+                     tabPanel("Line Chart",
+                              # Show a plot of the generated distribution
+                              #     textOutput("text"),
+                              plotOutput("byYearPlot"),
+                           #   tags$b((("Barchart Data"))),
+                        #      br(),
+                              DT::dataTableOutput("byYear")
+                     ),
+                     
+                     tabPanel("Trended Heatmap ",
+                              # Show a plot of the generated distribution
+                              #     textOutput("text"),
+                              plotOutput("byYearHeatmap"),
+                              #   tags$b((("Barchart Data"))),
+                              #      br(),
+                              DT::dataTableOutput("trendedHeatmapTable")
+                     ),
+ 
+                     tabPanel("Heatmap",
                       fluidRow(column(9,
                                      plotOutput('heatmap'),
                                      tags$b((("Heatmap Data"))),
@@ -249,9 +270,12 @@ includes data visualizations that can be used to explore the data."
                                column(3,downloadButton("heatData", "Download Heat Map Table"),
                                         wellPanel(
                                        #   uiOutput("yAxisType"),
-                                        uiOutput("yAxisSel"))))
-                    )
-                ), # Tabsets for bar
+                                        uiOutput("yAxisSel")))))
+
+                     
+                     
+                ), # closure for tabsetpannl
+#################################################################################
             ),
         )
     ) # Tabpannel for barchart 
@@ -746,6 +770,7 @@ plotInput<-reactive({
   populations<-as.data.frame(list(popType()))%>%
     mutate(popType = as.character(.[[1]]))%>%
     pull(popType)
+  
   #################################################
   
   # setting pct change variable 
@@ -914,13 +939,238 @@ output$barchart<-renderPlot({
 #plotInput<-function(){output$barchart}
   
 #ggsave("barchart.pdf", output$barchart())
-##########################################################
-                   # Heatmap tabset
-##########################################################
-
-############### UI OUPUTS FOR HEATMAP TABSET
 
 
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Line chart tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+### Reatctive datasets 
+
+selectedDS_byYear<-reactive({
+  
+  req(input$provider)
+  
+  
+  # If the selection is by PIHP, I need to aggregate the data before joining 
+  # This table will be used below to calulate cost per 1K ect. 
+  # Aggregated Michigan Data
+  stateAggData<-as.data.frame(stateAggData())
+  
+  ##### Year over Year trends 
+  
+  start<-as.numeric(fy_filter())
+  
+  pct_change<- data404%>%
+    filter(
+      !!as.symbol(org_type()) %in% input$provider,
+         fy %in% c("2012","2013","2014","2015",'2016',"2017",'2018'),
+    #  fy %in% c(start - 3, as.numeric(fy_filter())),
+      (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
+      population %in% pop_filter()
+      # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+    )%>%
+    select(
+      !!as.symbol(org_type()),fy,
+      cost,units,cases,cost_pct_tot
+    )%>%
+    group_by(
+      !!as.symbol(org_type()),fy
+    )%>%
+    summarise_at(
+      
+      vars(cases,units,cost,cost_pct_tot),
+      list(~sum(., na.rm = T))
+    )%>%
+    mutate(
+      
+      cost_per_case = round(cost/cases,digits = 2),
+      cost_per_unit = round(cost/units,digits = 2),
+      unit_per_case = round(units/cases,digits = 1)
+    )%>%
+    left_join(
+      
+      stateAggData,by = c(org_type() ,"fy")
+    )%>%
+    mutate(
+      
+      cost_per_1K_served = round((cost/TotalServed)*1000,0),
+      pct._served = round(((cases/TotalServed)*100),3)
+    )%>%
+    filter_if(
+      ~is.numeric(.), all_vars(!is.infinite(.))
+    )%>%
+    select(!!as.symbol(org_type()),fy,
+           !!as.symbol(metric()))
+    
+})
+
+### Graphs and Tables  
+
+output$byYearPlot<-renderPlot({
+  
+  
+  time_df<-data.frame(selectedDS_byYear())
+  
+  
+  # Format X-Axis labels 
+ org_lab<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+  else{'PIHP'}
+  ############################################
+  
+  # Set the axis title and ensure all selections of HCPCS codes are included
+  group<-if(input$groupOrHcpcsOrMod_ == "svc_grp"){ paste(compareAcross()," Service Group")}
+  else{ as.data.frame(list(compareAcross()))%>%
+      mutate(code = as.character(.[[1]]))%>%
+      pull(code)
+  }
+ 
+ 
+ # Adding population formatting 
+ populations<-as.data.frame(list(popType()))%>%
+   mutate(popType = as.character(.[[1]]))%>%
+   pull(popType)
+ 
+
+
+df<-if(input$CMHorPIHP == 'cmhsp'){
+  
+  
+p<- time_df%>%
+    mutate(org = !!as.symbol(org_type()))%>%
+    rename(CMH = org)%>%
+    ggplot(aes(x = fy,group = !!as.symbol(org_type()))) + 
+    geom_line(aes(y = !!as.symbol(metric()),color = CMH))+
+    theme_minimal()+
+    scale_color_hue(l=30, c=80 ,h=c(0, 360), na.value = "black")+
+#  scale_color_brewer(palette="Dark2")+
+    xlab("Fiscal Year")+
+  ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
+                org_lab," for ",paste(group,collapse = ","),sep = ""),
+          subtitle = "Fiscal Years 2012-2018")+
+  labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+  theme_ipsum(grid = 'FALSE',
+              plot_title_size = 15,
+              axis_text_size = 11,
+              axis_title_size = 13,
+              ticks = TRUE
+              #   base_family = "IBMPlexSans"
+  )
+
+  
+  p
+}
+  else{
+    
+    p<- time_df%>%
+      mutate(org = !!as.symbol(org_type()))%>%
+      rename(PIHP = org)%>%
+      ggplot(aes(x = fy,group = !!as.symbol(org_type()))) + 
+      geom_line(aes(y = !!as.symbol(metric()),color = PIHP))+
+      theme_minimal()+
+      scale_color_hue(l=30, c=80 ,h=c(0, 360), na.value = "black")+
+      xlab("Fiscal Year")+
+      ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
+                    org_lab," for ",paste(group,collapse = ","),sep = ""),
+              subtitle = "Fiscal Years 2012-2018")+
+      labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+      theme_ipsum(grid = 'FALSE',
+                  plot_title_size = 15,
+                  axis_text_size = 11,
+                  axis_title_size = 13,
+                  ticks = TRUE
+                  #   base_family = "IBMPlexSans"
+      )
+    
+    
+    
+    
+    p
+    
+    }
+  
+
+ print(df) 
+  
+  
+})
+
+output$byYear <- renderDataTable({
+  
+  df<-data.frame(selectedDS_byYear())
+  
+  col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+  else{'PIHP'}
+  
+  col2<-"Fiscal Year"
+  
+  metric_lab = str_replace_all(input$metric,pattern = "_"," ")
+
+  
+  DT::datatable(df,rownames = FALSE,class = 'cell-border stripe'
+                ,colnames = c(col1,col2,metric_lab))
+  #colnames = c(col1,col2,metric_lab))
+  
+  
+  
+})
+
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% By year heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+output$byYearHeatmap <- renderPlot({
+  
+  # function for normalizing data 
+  norm<- function(x){(x - min(x))/(max(x) - min(x))} 
+  
+  df<-data.frame(selectedDS_byYear())%>%
+                  filter(!fy %in% c("2006","2007","2008","2009","2010"))%>%
+                  group_by(!!as.symbol(org_type()))%>%
+                  mutate(norm = norm( !!as.symbol(metric()) ))%>%
+                  ungroup()
+                
+
+  ggplot(df,aes( y = !!as.symbol(org_type()) ,x = fy)) + 
+    geom_tile(aes(fill =norm), colour = "white")+
+    #scale_fill_viridis_c(direction = -1)
+    #  scale_fill_gradientn(colours = terrain.colors(10))
+    scale_fill_gradientn(colours = c("#98C4F6","#236AB9","#FE2712"),na.value = "white")+
+    theme_bw() +
+    theme(panel.grid=element_blank()) +
+    coord_cartesian(expand=FALSE)
+ 
+  
+})
+
+output$trendedHeatmapTable<-renderDataTable({
+  
+  
+  df<-data.frame(selectedDS_byYear())%>%
+    filter(!fy %in% c("2006","2007","2008","2009","2010"))%>%
+    group_by(!!as.symbol(org_type()))%>%
+    mutate(norm = round( norm( !!as.symbol(metric()) ), 2))%>%
+    ungroup()
+  
+  col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+  else{'PIHP'}
+  
+  col2<-"Fiscal Year"
+  
+  metric_lab = str_replace_all(input$metric,pattern = "_"," ")
+  
+  col4 <-paste("Normalized",input$metric,"per",col1,sep = " ")
+  
+  
+  DT::datatable(df,rownames = FALSE,class = 'cell-border stripe'
+                ,colnames = c(col1,col2,metric_lab,col4))
+  
+  
+  
+  
+  
+})
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+### UI Components
 output$yAxisType <-renderUI({
   
   #Actual options     
@@ -933,8 +1183,6 @@ output$yAxisType <-renderUI({
     inline = TRUE)
   
 })
-
-
 output$yAxisSel<-renderUI({
   
   type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
@@ -967,13 +1215,11 @@ output$yAxisSel<-renderUI({
   
 })
 
-  
-################ REACTIVITY
-  
- yType<-reactive({input$groupOrHcpcsOrMod_})
- ySel<-reactive({input$yAxisSel})
+### Reactive imputs
+yType<-reactive({input$groupOrHcpcsOrMod_})
+ySel<-reactive({input$yAxisSel})
  
- 
+### Reactive datasets
  heatmapDS<-reactive({
    
    pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
@@ -1035,11 +1281,7 @@ output$yAxisSel<-renderUI({
    
  }) 
  
-
-
-############## VISUALS AND TABLES FOR HEATMAP 
-
-
+### Graphs and tables 
 output$heatmap<-renderPlot({
   
   xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
@@ -1056,12 +1298,15 @@ output$heatmap<-renderPlot({
   
   ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
     geom_tile(aes(fill = metric), colour = "white") + 
-    #   scale_fill_manual(values=c("#FB8604", "#DB4133", "#A3A7A8","#2B80A1"))+
+    scale_fill_gradientn(colours = c("#98C4F6","#236AB9","#FE2712"),na.value = "white")+
+    theme(panel.grid=element_blank()) +
+    coord_cartesian(expand=FALSE)+
+  
     xlab(xlabs)+
     ylab(str_replace_all(input$metric,pattern = "_"," "))+
     labs(fill=paste(type," Pctl.",sep = "")) +
-    theme_minimal()+
-    theme_ipsum(grid = 'X',
+    theme_bw()+
+    theme_ipsum(grid = FALSE,
                 plot_title_size = 15,
                 axis_text_size = 11,
                 axis_title_size = 13)+    
@@ -1072,8 +1317,7 @@ output$heatmap<-renderPlot({
 
 })
 
-################## Download handlers and bookmarks 
-### bookmarks 
+###Download handlers and bookmarks 
 
 # Downloadable csv of selected dataset ----
 
