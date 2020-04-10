@@ -498,7 +498,7 @@ source('global.R')
     
     radioButtons(
       inputId = "includePctChange"
-    ,label = "Add percent change over past 3 years?"
+    ,label = "Add percent % Change LY?"
     ,choices = c('Yes',"No")
     ,inline = T
     ,selected = "No"
@@ -651,7 +651,7 @@ selectedDS<-reactive({
     filter(
       !!as.symbol(org_type()) %in% input$provider,
    #   fy %in% c('2016','2018'),
-       fy %in% c(start - 3, as.numeric(fy_filter())),
+       fy %in% c(start - 1, as.numeric(fy_filter())),
       (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
       population %in% pop_filter()
       # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
@@ -772,10 +772,17 @@ plotInput<-reactive({
   # setting pct change variable 
   
   df<-df%>%
-      mutate(`3 Year Pct Change` = as.factor( case_when(metric_pct_change < 0 ~ 'Down',
+      mutate(`% Change LY` = as.factor( case_when(metric_pct_change < 0 ~ 'Down',
                                    metric_pct_change > 0 ~ 'Up',
                                    TRUE ~ "neutral")))
+  ####################################################
   
+  #Setting Y-axis height 
+  y_max <-df%>%
+          mutate(y_max = max(!!as.symbol(metric()),na.rm = T) * 1.05)%>%
+          select(y_max)%>%
+          distinct(y_max)%>%
+          pull()
   
   
   barplot<- if(input$shadeByPihp == 'Yes' & input$CMHorPIHP == 'cmhsp'){
@@ -788,7 +795,8 @@ plotInput<-reactive({
                  fill = PIHP)) +
       geom_bar(stat="identity", position=position_dodge(), alpha = .5,
                color="black")+
-      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
+      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","),
+                         limits = c(0,y_max))+
       xlab(xlabs)+
       ylab(str_replace_all(input$metric,pattern = "_"," "))+
       scale_fill_manual(values=c('Others' = '#696969','LRE' = '#EA4335',"MSHN" = '#EA4335',
@@ -808,8 +816,14 @@ plotInput<-reactive({
                   ticks = TRUE
                   #    base_family = "IBMPlexSans"
       )+
-      theme(axis.text.x=element_text(angle=45, hjust=1))
+      theme(axis.text.x=element_text(angle=45, hjust=1)
+            ,plot.title = element_text(hjust = 0.5),
+            plot.subtitle = element_text(hjust = 0.5)
+            
+            )
 
+    
+    
  
     
   }else{
@@ -819,7 +833,8 @@ plotInput<-reactive({
                  y = !!as.symbol(metric()))) +
       geom_bar(stat="identity", position=position_dodge(), alpha = .5,
                color="black")+
-      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
+      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","),
+                         limits = c(0,y_max))+
       xlab(xlabs)+
       ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
       theme_minimal()+
@@ -835,7 +850,11 @@ plotInput<-reactive({
                   ticks = TRUE
                   #   base_family = "IBMPlexSans"
       )+
-      theme(axis.text.x=element_text(angle=45, hjust=1))
+      theme(axis.text.x=element_text(angle=45, hjust=1)
+            ,plot.title = element_text(hjust = 0.5),
+             plot.subtitle = element_text(hjust = 0.5)
+            
+      )
   } 
   
  if(input$includeMean == 'Yes' & input$includePctChange == "Yes"){
@@ -843,7 +862,7 @@ plotInput<-reactive({
     barplot +  geom_hline(yintercept = c(stateAvg()),linetype = "dashed",size = 1)+
       annotate("Text",  x=Inf, y = Inf, label = paste("State Avg. ",text_avg),
                vjust=1, hjust=1)+
-     geom_text(aes(label= metric_pct_change,color = `3 Year Pct Change`), size = 3,
+     geom_text(aes(label= metric_pct_change,color = `% Change LY`), size = 3,
                position=position_dodge(width=0.5), vjust=-0.5)+
      scale_colour_manual(values=c(Down = "#006699", Up = "#EA4335", "neutral" = 'grey'))
      
@@ -856,7 +875,7 @@ plotInput<-reactive({
   
  } else if(input$includeMean == 'No' & input$includePctChange == "Yes"){
    
-   barplot + geom_text(aes(label= metric_pct_change,color = `3 Year Pct Change`), size = 3,
+   barplot + geom_text(aes(label= metric_pct_change,color = `% Change LY`), size = 3,
                        position=position_dodge(width=0.5), vjust=-0.5)+
      scale_colour_manual(values=c(Down = "#006699", Up = "#EA4335", "neutral" = 'grey'))
    
@@ -1052,7 +1071,12 @@ p<- time_df%>%
               ticks = TRUE
               #   base_family = "IBMPlexSans"
   )+
-  scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))
+  scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
+  theme(axis.text.x=element_text(angle=45, hjust=1)
+        ,plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)
+        
+  )
 
   
   p
@@ -1079,7 +1103,12 @@ p<- time_df%>%
                   ticks = TRUE
                   #   base_family = "IBMPlexSans"
       )+
-      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))
+      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
+      theme(axis.text.x=element_text(angle=45, hjust=1)
+            ,plot.title = element_text(hjust = 0.5),
+            plot.subtitle = element_text(hjust = 0.5)
+            
+      )
      p
     
     }
@@ -1369,6 +1398,8 @@ output$plot <- downloadHandler(
            )
   }
 )
+
+
 
 }
 # Run the application 
