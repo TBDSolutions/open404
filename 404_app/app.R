@@ -207,7 +207,7 @@ includes data visualizations that can be used to explore the data."
           
           fluidRow(column(3,bookmarkButton(),
                           downloadButton("Barchart", "Data"),
-                          downloadButton('plot','Barchart'))
+                          downloadButton('plot','Barchart Image'))
                    ),
           # Sidebar with a slider input for number of bins 
           fluidRow(
@@ -260,7 +260,7 @@ includes data visualizations that can be used to explore the data."
                               DT::dataTableOutput("trendedHeatmapTable")
                      ),
  
-                     tabPanel("Heatmap",
+                     tabPanel("Distribution Heatmap",
                       fluidRow(column(9,
                                      plotOutput('heatmap'),
                                      tags$b((("Heatmap Data"))),
@@ -292,16 +292,12 @@ includes data visualizations that can be used to explore the data."
 #$@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
-
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
 source('global.R')
   
-  
-  
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Analysis Tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
 
 ### UI Components
   output$org<-renderUI({
@@ -402,7 +398,7 @@ source('global.R')
         label = paste('Compare ',org," across this ",grps,sep = ""),
         choices = options,
         multiple = TRUE,
-        selected = "Case Management  ( T1017SE )")
+        selected = "Nursing Facility Mental Health Monitoring ( T1017SE )")
     } 
     
     
@@ -1038,14 +1034,16 @@ p<- time_df%>%
     mutate(org = !!as.symbol(org_type()))%>%
     rename(CMH = org)%>%
     ggplot(aes(x = fy,group = !!as.symbol(org_type()))) + 
-    geom_line(aes(y = !!as.symbol(metric()),color = CMH))+
+    geom_line(aes(y = !!as.symbol(metric()),color = CMH),size=1.2)+
     theme_minimal()+
-    scale_color_hue(l=30, c=80 ,h=c(0, 360), na.value = "black")+
+    scale_color_hue(l=50, c=100 ,h=c(0, 360), na.value = "black")+
 #  scale_color_brewer(palette="Dark2")+
     xlab("Fiscal Year")+
+  ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
   ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
                 org_lab," for ",paste(group,collapse = ","),sep = ""),
           subtitle = "Fiscal Years 2012-2018")+
+  labs(fill='CMH')+
   labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
   theme_ipsum(grid = 'FALSE',
               plot_title_size = 15,
@@ -1053,7 +1051,8 @@ p<- time_df%>%
               axis_title_size = 13,
               ticks = TRUE
               #   base_family = "IBMPlexSans"
-  )
+  )+
+  scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))
 
   
   p
@@ -1064,10 +1063,11 @@ p<- time_df%>%
       mutate(org = !!as.symbol(org_type()))%>%
       rename(PIHP = org)%>%
       ggplot(aes(x = fy,group = !!as.symbol(org_type()))) + 
-      geom_line(aes(y = !!as.symbol(metric()),color = PIHP))+
+      geom_line(aes(y = !!as.symbol(metric()),color = PIHP),size=1.2)+
       theme_minimal()+
-      scale_color_hue(l=30, c=80 ,h=c(0, 360), na.value = "black")+
+      scale_color_hue(l=50, c=100 ,h=c(0, 360), na.value = "black")+
       xlab("Fiscal Year")+
+     # ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
       ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
                     org_lab," for ",paste(group,collapse = ","),sep = ""),
               subtitle = "Fiscal Years 2012-2018")+
@@ -1078,12 +1078,9 @@ p<- time_df%>%
                   axis_title_size = 13,
                   ticks = TRUE
                   #   base_family = "IBMPlexSans"
-      )
-    
-    
-    
-    
-    p
+      )+
+      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))
+     p
     
     }
   
@@ -1134,6 +1131,8 @@ output$byYearHeatmap <- renderPlot({
     #  scale_fill_gradientn(colours = terrain.colors(10))
     scale_fill_gradientn(colours = c("#98C4F6","#236AB9","#FE2712"),na.value = "white")+
     theme_bw() +
+    xlab("Fiscal Year")+
+    ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
     theme(panel.grid=element_blank()) +
     coord_cartesian(expand=FALSE)
  
@@ -1163,8 +1162,7 @@ output$trendedHeatmapTable<-renderDataTable({
                 ,colnames = c(col1,col2,metric_lab,col4))
   
   
-  
-  
+
   
 })
 
@@ -1367,7 +1365,7 @@ output$heatData <- downloadHandler(
 output$plot <- downloadHandler(
   filename = function() { paste("barchart", '.png', sep='') },
   content = function(file) {
-    ggsave(file, plot = plotInput(),device = "png", width = 12 #, height = 4
+    ggsave(file, plot = plotInput(),device = "png", width = 12 , height = 6
            )
   }
 )

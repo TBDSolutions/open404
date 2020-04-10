@@ -25,39 +25,31 @@ library(plotly)
 
 #### Read datasets ####
 
-
 #data404 <- read_feather('datafiles/df_404.feather') %>%
-  
-data404 <-read_csv("datafiles/data404.csv")%>%
-           mutate(
-             fy = as.factor(fy),
-             pihp = as.numeric(pihp),
-             pihp_name = as.character(pihp_name),
-             cmhsp = as.character(cmhsp),
-             population = as.factor(population),
-             svc_type = as.character(svc_type),
-             svc_grp = as.character(svc_grp),
-             code = as.character(code),
-             short_desc = as.character(short_desc),
-             modifier = as.character(modifier),
-             unit_type = as.character(unit_type),
-             cases = as.numeric(cases),
-             units = as.numeric(units))%>%
-   mutate(
-    code_mod = paste0(code,replace_na(modifier,replace = ""))
-  ) %>%
+
+data404 <-read_csv("datafiles/data404_newMod.csv")%>%
+
+  mutate(
+    fy = as.factor(fy),
+    pihp = as.numeric(pihp),
+    pihp_name = as.character(pihp_name),
+    cmhsp = as.character(cmhsp),
+    population = as.factor(population),
+    svc_type = as.character(svc_type),
+    svc_grp = as.character(svc_grp),
+    code = as.character(code),
+    short_desc = as.character(short_desc),
+    modifier = as.character(modifier),
+    unit_type = as.character(unit_type),
+    cases = as.numeric(cases),
+    units = as.numeric(units))%>%
   mutate_at(
     vars(pihp_name,cmhsp,code,code_mod),
     list(~as.factor(.))
   )
 
 
-data404<-data404%>%
-    mutate(
-    code_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code),")")),
-    codeM_shortDesc = as.factor(paste(data404$short_desc," (",(data404$code_mod),")"))
-  )%>%
-  mutate(state = 'MI')
+
 
 #service_groups <- read_feather("datafiles/svc_grps.feather")
 
@@ -75,6 +67,16 @@ state_data<-read_csv("datafiles/TotalServedAnnual.csv")%>%
                      mutate(fy = as.factor(fy))%>%
                      select(-pihp)
   
+
+
+### New code modifers 
+
+
+
+
+
+
+
 
 
 
