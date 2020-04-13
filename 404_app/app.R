@@ -498,7 +498,7 @@ source('global.R')
     
     radioButtons(
       inputId = "includePctChange"
-    ,label = "Add percent % Change LY?"
+    ,label = "Add % Change LY?"
     ,choices = c('Yes',"No")
     ,inline = T
     ,selected = "No"
@@ -925,7 +925,7 @@ output$barTable<-DT::renderDataTable({
     
     metric_lab = str_replace_all(input$metric,pattern = "_"," ")
     
-    change <- "3 Year % Change"
+    change <- "% Change LY"
     
     foo<-as.data.frame( selectedDS())
     
@@ -977,7 +977,7 @@ selectedDS_byYear<-reactive({
   pct_change<- data404%>%
     filter(
       !!as.symbol(org_type()) %in% input$provider,
-         fy %in% c("2012","2013","2014","2015",'2016',"2017",'2018'),
+         fy %in% c("2014","2015",'2016',"2017",'2018'),
     #  fy %in% c(start - 3, as.numeric(fy_filter())),
       (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
       population %in% pop_filter()
