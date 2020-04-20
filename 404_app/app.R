@@ -980,22 +980,6 @@ output$svs_groups<-renderDataTable({
     
   })
   
-output$dt<-DT::renderDataTable({
-    
-       col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
-       else{'PIHP'}
-       
-       col2<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'Service Group'}else{"HCPCS"})
-       
-       metric_lab = str_replace_all(input$metric,pattern = "_"," ")
-
-       foo<-data.frame(heatmapDS())
-  
-       DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
-                     colnames = c(col1,col2,metric_lab,'Pctl.'))
-    
-  })
-  
 output$barTable<-DT::renderDataTable({
     
     col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
@@ -1017,7 +1001,8 @@ output$barTable<-DT::renderDataTable({
                 fy)
 
     DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
-                  ,colnames = c(col1,metric_lab,change,col2))
+                  colnames = c(col1,metric_lab,change,col2),
+                  options = list(pageLength = 5))
                   #colnames = c(col1,col2,metric_lab))
 
   })
@@ -1291,7 +1276,9 @@ output$byYear <- renderDataTable({
 
   
   DT::datatable(df,rownames = FALSE,class = 'cell-border stripe'
-                ,colnames = c(col1,col2,metric_lab))
+                ,colnames = c(col1,col2,metric_lab),
+                options = list(pageLength = 5)
+                )
   #colnames = c(col1,col2,metric_lab))
   
   
@@ -1498,7 +1485,9 @@ output$trendedHeatmapTable<-renderDataTable({
   
   
   DT::datatable(df,rownames = FALSE,class = 'cell-border stripe'
-                ,colnames = c(col1,col2,metric_lab,col4))
+                ,colnames = c(col1,col2,metric_lab,col4),
+                options = list(pageLength = 5)
+                )
   
   
 
@@ -1646,6 +1635,25 @@ output$heatmap<-renderPlot({
 
 
 })
+
+output$dt<-DT::renderDataTable({
+  
+  col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+  else{'PIHP'}
+  
+  col2<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'Service Group'}else{"HCPCS"})
+  
+  metric_lab = str_replace_all(input$metric,pattern = "_"," ")
+  
+  foo<-data.frame(heatmapDS())
+  
+  DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
+                colnames = c(col1,col2,metric_lab,'Pctl.'),
+                options = list(pageLength = 5)
+  )
+  
+})
+
 
 # Tab selection test
 #output$text <- renderText({paste0("You are viewing tab \"", input$tabs, "\"")})
