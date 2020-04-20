@@ -21,6 +21,7 @@ library(stringi)
 #library(extrafont)
 library(rsconnect)
 library(plotly)
+library(viridis)
 #hrbrthemes::import_roboto_condensed()
 
 #### Read datasets ####

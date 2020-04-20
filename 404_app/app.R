@@ -26,7 +26,7 @@ variation across the state for vulnerable populations.  This
 application has been developed by"
 
            ),#tags$img(src = "www.rstudio.com", width = "100px", height = "100px"),
-           tags$img(src = 'tbd_logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2019"))),
+           tags$img(src = 'tbd_logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2020"))),
            br(),
            br(),
            tags$strong("license", style = "font-size: 125%;"),
@@ -133,70 +133,11 @@ includes data visualizations that can be used to explore the data."
          )
        )
      )
-   ),
-   tabPanel(
-     "Data Limitations",
-     fluidRow(column(3,offset = 0,
-                     tags$strong("Data Limitations", style = "font-size: 125%;"))),
-     br(),br(),#,br(),
-     fluidRow(column(8,tags$h5("Calculation for Length of Episode of Treatment")),
-              column(12,offset = 0,
-                     tags$ul(tags$li(
-                     "The 904/404 data does not allow for an accurate calculation for length of episode of treatment. The units may have been utilized 
-                     during multiple time periods during a given year, which may or may not be consecutive. 
-                     Therefore, a low number of units should not be interpreted as under-utilization – it may 
-                     be that the service was simply provided during a short period of time to the beneficiaries."
-                     ))),
-              column(5,tags$h5("CMH Reporting Limitations")),
-              column(12,offset = 0,
-                     tags$ul(tags$li("Only the CMHs that reported the identified service in FY18 appear in the charts in this report. 
-                      Furthermore,the average units per case may be skewed if the number of recipients of the service is small 
-                     (at a given CMH)."))),
-              column(5, tags$h5("Availability of Metrics for Service Groupings")),
-              column(12,offset = 0,
-                     tags$ul(tags$li(
-                       "Service Groups represent a set
-                       of HCPC codes with similar clinical intent and provide a natural grouping 
-                       intended for addressing  questions with a broader scope. And while this helps
-                       illuminate larger trends or patterns, in terms of services with similar 
-                       clinical intent, it necessarily does so at the expense of aggregating cases 
-                       related to those individual HCPC services. Therefore, metrics that rely 
-                       on the counting of distinct cases  (units per case, cost per case ) are only 
-                       available when comparing at the HCPC group level and are not available at the 
-                       Service Group level. "
-                     ))),
-#             column(5,tags$h5("Summarized")),
-#             column(12,offset = 0,
-#                     tags$ul(tags$li("Many of the CMHSPs account for their unit service costs using different
-#                                     cost accounting and allocation methods than those of their peers. Although
-#                                     it is our understanding that these methods are consistent with GAAP (Generally
-#                                     Accepted Accounting Principles), the inconsistency in cost allocation does
-#                                     provide a sound basis for allowing comparison to other CMHSPs. The inconsistency
-#                                     may be the primary cause of any reported service unit cost variability. "
-#                                     ))),
-              column(12,tags$h5("Organizations Account for Units Costs Differently, Making Peer-to-Peer Comparisons Challenging ")),
-  #            column(12,offset = 0,
-  #                    tags$ul(tags$li("During the recently completed site visits and interviews with PIHPs and CMHSPs we
-  #                                  identified an overarching observation that the accounting methods employed by the PIHPs
-  #                                   and CMHSPs to assign costs to service units in the MUNC and SECR are not consistent.
-  #                                   Further, understanding that this inconsistency may be contributing to much of reported 
-  #                                   service unit cost variability, it is very difficult for MDHHS to understand how much of
-  #                                   the unit cost variation can or should be attributable to the other factors; differences
-  #                                   in operating structures, differences in resource requirements, and differences related to 
-  #                                   location. Some level of consistency in accounting and allocation methods must be established 
-  #                                   to understand the impacts of the other factor"))),
-  #            
-              column(12,offset = 0,
-                     tags$ul(tags$li("Cost allocation plans may generally follow reasonable and acceptable methods, but appear to
-                                     vary from entity to entity. Changes in an entity’ s cost allocation processes, most significantly the types of 
-                                     costs allocated to unit services, may result in significant changes from one year to the next, and make it difficult
-                                     to understand true drivers of cost increases. This variance increases the difficulty in understanding
-                                     how the CMHSPs and PIHPs actual unit costs compare to each other or to any fee schedule"
-                                     )))
-   ))),
+   )
+  ),
    navbarMenu("Analysis",
  # Application title
- tabPanel("Bar Chart & Heatmap",
+ tabPanel("Graphs and Tables",
           #Hide error messages at startup
           tags$style(
             type = "text/css",
@@ -205,10 +146,7 @@ includes data visualizations that can be used to explore the data."
           ),
           
           
-          fluidRow(column(3,bookmarkButton(),
-                          downloadButton("Barchart", "Data"),
-                          downloadButton('plot','Barchart Image'))
-                   ),
+          fluidRow(column(6,bookmarkButton())),
           # Sidebar with a slider input for number of bins 
           fluidRow(
             column(3,
@@ -216,75 +154,166 @@ includes data visualizations that can be used to explore the data."
                    wellPanel(
                    uiOutput("org"),
                    uiOutput('prov'),
+                   br(),
                    uiOutput("servType"),
                    uiOutput("groupOrHcpcsOrMod"),
                    uiOutput("compareAcross"),
+                   br(),
                    uiOutput('metric'),
                 #   uiOutput('servGrp'),
                 #   uiOutput('code'),
-                   uiOutput("popType")
-                 ,style = 'background:#CCD6DD')
-            ),
-            column(9,p(tags$em("*barchart options only")),fluidRow(
-                              column(2,uiOutput("mean")),
-                              column(4,uiOutput("PctChange")),
-                              column(3, uiOutput("shade")),
-                              column(3,uiOutput('shadeOptions'))),
-                   
-##########################################################################                   
-                   tabsetPanel(
-                     tabPanel("Barchart",
-                              # Show a plot of the generated distribution
-                              #     textOutput("text"),
-                              plotOutput("barchart"),
-                              tags$b((("Barchart Data"))),
-                              br(),
-                              DT::dataTableOutput("barTable")
-                     ),
-                     
-                     tabPanel("Line Chart",
-                              # Show a plot of the generated distribution
-                              #     textOutput("text"),
-                              plotOutput("byYearPlot"),
-                           #   tags$b((("Barchart Data"))),
-                        #      br(),
-                              DT::dataTableOutput("byYear")
-                     ),
-                     
-                     tabPanel("Trended Heatmap ",
-                              # Show a plot of the generated distribution
-                              #     textOutput("text"),
-                              plotOutput("byYearHeatmap"),
-                              #   tags$b((("Barchart Data"))),
-                              #      br(),
-                              DT::dataTableOutput("trendedHeatmapTable")
-                     ),
- 
-                     tabPanel("Distribution Heatmap",
-                      fluidRow(column(9,
-                                     plotOutput('heatmap'),
-                                     tags$b((("Heatmap Data"))),
-                                     br(),
-                                     DT::dataTableOutput('dt')),
-                               
-                               column(3,downloadButton("heatData", "Download Heat Map Table"),
-                                        wellPanel(
-                                       #   uiOutput("yAxisType"),
-                                        uiOutput("yAxisSel")))))
-
-                     
-                     
-                ), # closure for tabsetpannl
-#################################################################################
-            ),
+                   uiOutput("popType"),
+                   uiOutput("fiscalYear"),
+                  style = 'background:#CCD6DD')
+            ),#---
+    column(9,
+      #     fluidRow(
+      #column(2,uiOutput("mean")),
+      #column(4,uiOutput("PctChange")),
+      #column(3, uiOutput("shade")),
+      #column(3,uiOutput('shadeOptions'))),
+      
+      ##########################################################################                   
+      tabsetPanel(id = "tabs",
+        tabPanel("Barchart",
+                 fluidRow(
+                   br(),
+                 column(2,uiOutput("mean")),
+                 column(4,uiOutput("PctChange")),
+                 column(3, uiOutput("shade")),
+                 column(3,uiOutput('shadeOptions'))),
+                 tabsetPanel(
+                             tabPanel("Plot",
+                 # Show a plot of the generated distribution
+                 #     textOutput("text"),
+                 plotOutput("barchart")),
+                 tabPanel("Table",
+                 #tags$b((("Barchart Data"))),
+                # br(),
+                 DT::dataTableOutput("barTable")),
+                fluidRow(column(8,
+                                downloadButton("Barchart", "Barchart Data"),
+                                downloadButton('plot','Barchart Image'))
+                )
+        )),
+        
+        tabPanel("Line Chart",id = "line_chart",
+                 tabsetPanel(
+                   tabPanel("Plot",
+                   plotOutput("byYearPlot"),
+                   fluidRow(column(12,
+                   column(2,uiOutput("byYearSelection_start")),
+                   column(2,uiOutput("byYearSelection_end")),
+                   column(6,uiOutput("byYearSelection_org")),
+                   column(2,tags$h5(tags$li(tags$em("We recommend selecting no more than 8 organizations 
+                              to avoid line clutter and to maintain 
+                              color distinctiveness "))))))
+              #     ,textOutput("text")
+                   ),
+                   tabPanel("Table",
+                 DT::dataTableOutput("byYear")),
+                 fluidRow(column(8,
+                                 downloadButton("LineplotData", "Line Chart Data"),
+                                 downloadButton('LineplotImage','Line Chart Image'))
+                 )
+        )),
+        
+        tabPanel("Trended Heatmap ",
+                 # Show a plot of the generated distribution
+                 #     textOutput("text"),
+                 plotOutput("byYearHeatmap"),
+                 #   tags$b((("Barchart Data"))),
+                 #      br(),
+                 DT::dataTableOutput("trendedHeatmapTable")
+        ),
+        
+        tabPanel("Distribution Heatmap",id = "dist_heatmap",
+                 tabsetPanel(
+                   tabPanel("Plot",
+                 fluidRow(column(12,
+                                 plotOutput('heatmap'),
+                             #    textOutput("text")
+                             ))),
+                 tabPanel("Table",
+                                 DT::dataTableOutput('dt'),
+                          downloadButton("heatData", "Download Heat Map Table")),
+                          
+                          column(12,wellPanel(uiOutput("yAxisSel"))))
         )
-    ) # Tabpannel for barchart 
- 
- 
+      
+        
+        
+        
+      ), # closure for tabsetpannl
+      #################################################################################
+    ),
+  )
+), # Tabpannel for barchart 
+tabPanel(
+  "Data Limitations",
+  fluidRow(column(3,offset = 0,
+                  tags$strong("Data Limitations", style = "font-size: 125%;"))),
+  br(),br(),#,br(),
+  fluidRow(column(8,tags$h5("Calculation for Length of Episode of Treatment")),
+           column(12,offset = 0,
+                  tags$ul(tags$li(
+                    "The 904/404 data does not allow for an accurate calculation for length of episode of treatment. The units may have been utilized 
+                     during multiple time periods during a given year, which may or may not be consecutive. 
+                     Therefore, a low number of units should not be interpreted as under-utilization – it may 
+                     be that the service was simply provided during a short period of time to the beneficiaries."
+                  ))),
+           column(5,tags$h5("CMH Reporting Limitations")),
+           column(12,offset = 0,
+                  tags$ul(tags$li("Only the CMHs that reported the identified service in FY18 appear in the charts in this report. 
+                      Furthermore,the average units per case may be skewed if the number of recipients of the service is small 
+                     (at a given CMH)."))),
+           column(5, tags$h5("Availability of Metrics for Service Groupings")),
+           column(12,offset = 0,
+                  tags$ul(tags$li(
+                    "Service Groups represent a set
+                       of HCPC codes with similar clinical intent and provide a natural grouping 
+                       intended for addressing  questions with a broader scope. And while this helps
+                       illuminate larger trends or patterns, in terms of services with similar 
+                       clinical intent, it necessarily does so at the expense of aggregating cases 
+                       related to those individual HCPC services. Therefore, metrics that rely 
+                       on the counting of distinct cases  (units per case, cost per case ) are only 
+                       available when comparing at the HCPC group level and are not available at the 
+                       Service Group level. "
+                  ))),
+           #             column(5,tags$h5("Summarized")),
+           #             column(12,offset = 0,
+           #                     tags$ul(tags$li("Many of the CMHSPs account for their unit service costs using different
+           #                                     cost accounting and allocation methods than those of their peers. Although
+           #                                     it is our understanding that these methods are consistent with GAAP (Generally
+           #                                     Accepted Accounting Principles), the inconsistency in cost allocation does
+           #                                     provide a sound basis for allowing comparison to other CMHSPs. The inconsistency
+           #                                     may be the primary cause of any reported service unit cost variability. "
+           #                                     ))),
+           column(12,tags$h5("Organizations Account for Units Costs Differently, Making Peer-to-Peer Comparisons Challenging ")),
+           #            column(12,offset = 0,
+           #                    tags$ul(tags$li("During the recently completed site visits and interviews with PIHPs and CMHSPs we
+           #                                  identified an overarching observation that the accounting methods employed by the PIHPs
+           #                                   and CMHSPs to assign costs to service units in the MUNC and SECR are not consistent.
+           #                                   Further, understanding that this inconsistency may be contributing to much of reported 
+           #                                   service unit cost variability, it is very difficult for MDHHS to understand how much of
+           #                                   the unit cost variation can or should be attributable to the other factors; differences
+           #                                   in operating structures, differences in resource requirements, and differences related to 
+           #                                   location. Some level of consistency in accounting and allocation methods must be established 
+           #                                   to understand the impacts of the other factor"))),
+           #            
+           column(12,offset = 0,
+                  tags$ul(tags$li("Cost allocation plans may generally follow reasonable and acceptable methods, but appear to
+                                     vary from entity to entity. Changes in an entity’ s cost allocation processes, most significantly the types of 
+                                     costs allocated to unit services, may result in significant changes from one year to the next, and make it difficult
+                                     to understand true drivers of cost increases. This variance increases the difficulty in understanding
+                                     how the CMHSPs and PIHPs actual unit costs compare to each other or to any fee schedule"
+                  )))
+  ))
+
+
 ) # analysis navbar menu
 ) # final closure 
 }
-
 #$@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #$@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #$@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -310,6 +339,14 @@ source('global.R')
   
   output$prov<-renderUI({
     
+    req(input$tabs)
+    
+    if(input$tabs ==  "Line Chart"){
+      
+      tags$b("Use the selector on the Line Chart tab to choose orginizations")     
+    }
+    else{
+      
     org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
     
     
@@ -320,7 +357,6 @@ source('global.R')
     else{"MI"}
     
     
-    
     selectizeInput(
       inputId = "provider",
       label =   paste("Which ",org,"are you interested in viewing?"),
@@ -328,6 +364,10 @@ source('global.R')
       selected = prov_options,
       multiple = TRUE,
       options =  list( placeholder = 'Search or Select'))
+    
+    } 
+    
+    
   })  
   
   output$servType<-renderUI({
@@ -353,6 +393,24 @@ source('global.R')
   })
   
   output$compareAcross<-renderUI({
+    
+    
+    
+    req(input$tabs)
+    
+    if(input$tabs ==  "Distribution Heatmap"){
+      
+      tags$b("Please choose a bundle of services using the selector 
+             on the distribution heatmap tab")
+    
+      }
+    else{
+
+    
+    
+    
+    
+    
     
     type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
                   else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
@@ -400,7 +458,8 @@ source('global.R')
         multiple = TRUE,
         selected = "Nursing Facility Mental Health Monitoring ( T1017SE )")
     } 
-    
+
+    }    
     
   })
   
@@ -434,20 +493,37 @@ source('global.R')
   
   output$popType<-renderUI({
     # Tag list groups the two widgets together
-    tagList(
+
       selectInput(
         inputId = 'popType',
         label = 'Population Grouping',
         multiple = T,
         choices = c("",levels(as.factor(data404$population))),
-        selected = levels(as.factor(data404$population))),
+        selected = levels(as.factor(data404$population)))
       
-      selectInput(
-        inputId = 'fy_filter',
-        label = 'Fiscal Year',
-        choices = c(levels(data404$fy)),
-        selected = "2018")
-    )
+
+  })
+  
+  output$fiscalYear <-renderUI({
+    
+    req(input$tabs)
+    
+    if(input$tabs ==  "Line Chart"){
+      
+      tags$b("Use the selector on the Line Chart tab to select multiple years")     
+    }
+    else{
+    
+    
+    selectInput(
+      inputId = 'fy_filter',
+      label = 'Fiscal Year',
+      choices = c(levels(data404$fy)),
+      selected = "2018")
+}
+    
+    
+    
   })
   
   output$shade<-renderUI({
@@ -457,7 +533,7 @@ source('global.R')
     if(input$CMHorPIHP == 'cmhsp'){
       
       radioButtons(inputId = 'shadeByPihp',
-                   label = "Highlight CMH's of a PIHP?",
+                   label = "Highlight the CMH's of a PIHP?",
                    choices = c("Yes",'No'),
                    selected = "No",
                    inline = TRUE)
@@ -707,6 +783,20 @@ selectedDS<-reactive({
   
 })
 
+selectedDS_download<-reactive({
+  foo<-selectedDS()
+  
+  foo<-foo%>%
+    select(
+      input$CMHorPIHP,
+      input$metric,
+      metric_pct_change,
+      fy)
+  
+  
+})
+
+# need to make barchart reactive for download later
 plotInput<-reactive({ 
   
   #output$barchart<-renderPlot({
@@ -795,7 +885,7 @@ plotInput<-reactive({
                  fill = PIHP)) +
       geom_bar(stat="identity", position=position_dodge(), alpha = .5,
                color="black")+
-      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","),
+      scale_y_continuous(label = number_format(big.mark = ","),
                          limits = c(0,y_max))+
       xlab(xlabs)+
       ylab(str_replace_all(input$metric,pattern = "_"," "))+
@@ -833,7 +923,7 @@ plotInput<-reactive({
                  y = !!as.symbol(metric()))) +
       geom_bar(stat="identity", position=position_dodge(), alpha = .5,
                color="black")+
-      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","),
+      scale_y_continuous(label = number_format(big.mark = ","),
                          limits = c(0,y_max))+
       xlab(xlabs)+
       ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
@@ -936,7 +1026,7 @@ output$barTable<-DT::renderDataTable({
                 metric_pct_change,
                 fy)
 
-    DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe'
+    DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
                   ,colnames = c(col1,metric_lab,change,col2))
                   #colnames = c(col1,col2,metric_lab))
 
@@ -951,12 +1041,78 @@ output$barchart<-renderPlot({
 })
  
  
-#plotInput<-function(){output$barchart}
-  
-#ggsave("barchart.pdf", output$barchart())
+### Downloads and Bookmarks
 
+{
+
+output$Barchart <- downloadHandler(
+  filename = function() {
+    paste("Barchart_data", ".csv", sep = "")
+  },
+  content = function(file) {
+    write.csv(selectedDS_download(), file, row.names = FALSE)
+  }
+)
+
+}
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Line chart tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+### UI Components 
+
+output$byYearSelection_start <- renderUI({
+  
+selectInput(inputId = "byYearSelection_star",
+            label = "Start Year",
+            choices = seq(2006,(max(as.numeric(as.character(data404$fy)))-1), by = 1),
+            selected = 2006)
+
+})
+
+output$byYearSelection_end <-renderUI({
+  
+  
+  
+ selectInput(inputId = "byYearSelection_end",
+            label = "End Year",
+            choices = seq(as.numeric(input$byYearSelection_star) + 1
+                          ,(max(as.numeric(as.character(data404$fy)))),
+                          by = 1),
+            selected = 2018)
+  
+
+})
+
+output$byYearSelection_org <- renderUI({
+  
+  org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
+  
+  
+  # Conditinal statements to populate the list
+  prov_options<- if(input$CMHorPIHP == "cmhsp"){
+    levels(data404$cmhsp)}
+  else if(input$CMHorPIHP == "pihp_name"){levels(data404$pihp_name)}
+  else{"MI"}
+  
+  
+  selectizeInput(
+    inputId = "provider_byYear",
+    label =   paste("Which ",org,"are you interested in viewing?"),
+    choices =  prov_options,
+    selected = prov_options[1:5],
+    multiple = TRUE,
+    options =  list( placeholder = 'Search or Select'))
+  
+  
+  
+  
+}) 
+
+output$text <- renderText({paste0("You are viewing tab \"", input$byYearSelection, "\"")})
+
+### Reactive input 
+
+provider_byYear_input<-reactive({input$provider_byYear})
 
 ### Reatctive datasets 
 
@@ -976,8 +1132,8 @@ selectedDS_byYear<-reactive({
   
   pct_change<- data404%>%
     filter(
-      !!as.symbol(org_type()) %in% input$provider,
-         fy %in% c("2014","2015",'2016',"2017",'2018'),
+      !!as.symbol(org_type()) %in% input$provider_byYear,
+         fy %in% seq(input$byYearSelection_star,input$byYearSelection_end,by = 1),
     #  fy %in% c(start - 3, as.numeric(fy_filter())),
       (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
       population %in% pop_filter()
@@ -1018,16 +1174,22 @@ selectedDS_byYear<-reactive({
     
 })
 
-### Graphs and Tables  
+line_plot_download_ds<-reactive({
+  
+  df<-data.frame(selectedDS_byYear())
+  
+  
+})
 
-output$byYearPlot<-renderPlot({
+#Making plot a reactive so image can be downloaded
+line_plot_image<-reactive({
   
   
   time_df<-data.frame(selectedDS_byYear())
   
   
   # Format X-Axis labels 
- org_lab<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+  org_lab<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
   else{'PIHP'}
   ############################################
   
@@ -1037,64 +1199,35 @@ output$byYearPlot<-renderPlot({
       mutate(code = as.character(.[[1]]))%>%
       pull(code)
   }
- 
- 
- # Adding population formatting 
- populations<-as.data.frame(list(popType()))%>%
-   mutate(popType = as.character(.[[1]]))%>%
-   pull(popType)
- 
-
-
-df<-if(input$CMHorPIHP == 'cmhsp'){
   
   
-p<- time_df%>%
-    mutate(org = !!as.symbol(org_type()))%>%
-    rename(CMH = org)%>%
-    ggplot(aes(x = fy,group = !!as.symbol(org_type()))) + 
-    geom_line(aes(y = !!as.symbol(metric()),color = CMH),size=1.2)+
-    theme_minimal()+
-    scale_color_hue(l=50, c=100 ,h=c(0, 360), na.value = "black")+
-#  scale_color_brewer(palette="Dark2")+
-    xlab("Fiscal Year")+
-  ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
-  ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
-                org_lab," for ",paste(group,collapse = ","),sep = ""),
-          subtitle = "Fiscal Years 2012-2018")+
-  labs(fill='CMH')+
-  labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
-  theme_ipsum(grid = 'FALSE',
-              plot_title_size = 15,
-              axis_text_size = 11,
-              axis_title_size = 13,
-              ticks = TRUE
-              #   base_family = "IBMPlexSans"
-  )+
-  scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
-  theme(axis.text.x=element_text(angle=45, hjust=1)
-        ,plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5)
-        
-  )
-
+  # Adding population formatting 
+  populations<-as.data.frame(list(popType()))%>%
+    mutate(popType = as.character(.[[1]]))%>%
+    pull(popType)
   
-  p
-}
-  else{
+  
+  
+  df<-if(input$CMHorPIHP == 'cmhsp'){
+    
     
     p<- time_df%>%
       mutate(org = !!as.symbol(org_type()))%>%
-      rename(PIHP = org)%>%
+      rename(CMH = org)%>%
       ggplot(aes(x = fy,group = !!as.symbol(org_type()))) + 
-      geom_line(aes(y = !!as.symbol(metric()),color = PIHP),size=1.2)+
+      geom_line(aes(y = !!as.symbol(metric()),color = CMH),size=1.2)+
       theme_minimal()+
-      scale_color_hue(l=50, c=100 ,h=c(0, 360), na.value = "black")+
+    #  scale_color_hue(l=50, c=100 ,h=c(0, 360), na.value = "black")+
+   #   scale_color_viridis(discrete=TRUE) +
+      #  scale_color_brewer(palette="Dark2")+
+    #  scale_fill_manual(values = c("blue","orange","green","purple"))+
       xlab("Fiscal Year")+
-     # ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
+      ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
       ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
                     org_lab," for ",paste(group,collapse = ","),sep = ""),
-              subtitle = "Fiscal Years 2012-2018")+
+              subtitle = paste("Fiscal Years",input$byYearSelection_star,
+                               "-",input$byYearSelection_end, sep = " "))+
+      labs(fill='CMH')+
       labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
       theme_ipsum(grid = 'FALSE',
                   plot_title_size = 15,
@@ -1103,21 +1236,57 @@ p<- time_df%>%
                   ticks = TRUE
                   #   base_family = "IBMPlexSans"
       )+
-      scale_y_continuous(label = number_format(accuracy = 0.1,big.mark = ","))+
+      scale_y_continuous(label = number_format(big.mark = ","))+
       theme(axis.text.x=element_text(angle=45, hjust=1)
             ,plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5)
             
       )
-     p
     
-    }
+    
+    p
+  }
+  else{
+    
+    p<- time_df%>%
+      mutate(org = !!as.symbol(org_type()))%>%
+      rename(PIHP = org)%>%
+      ggplot(aes(x = fy,group = !!as.symbol(org_type()))) + 
+      geom_line(aes(y = !!as.symbol(metric()),color = PIHP),size=1.2)+
+      scale_color_viridis(discrete=TRUE) +
+      theme_minimal()+
+     # scale_color_hue(l=50, c=100 ,h=c(0, 360), na.value = "black")+
+      xlab("Fiscal Year")+
+      # ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
+      ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
+                    org_lab," for ",paste(group,collapse = ","),sep = ""),
+              subtitle = paste("Fiscal Years",input$byYearSelection_star,
+                               "-",input$byYearSelection_end, sep = " "))+
+      labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+      theme_ipsum(grid = 'FALSE',
+                  plot_title_size = 15,
+                  axis_text_size = 11,
+                  axis_title_size = 13,
+                  ticks = TRUE
+                  #   base_family = "IBMPlexSans"
+      )+
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme(axis.text.x=element_text(angle=45, hjust=1)
+            ,plot.title = element_text(hjust = 0.5),
+            plot.subtitle = element_text(hjust = 0.5)
+            
+      )
+    p
+    
+  }
   
-
- print(df) 
+  
+  print(df) 
   
   
 })
+
+### Graphs and Tables  
 
 output$byYear <- renderDataTable({
   
@@ -1139,6 +1308,37 @@ output$byYear <- renderDataTable({
   
 })
 
+output$byYearPlot <-renderPlot({
+ 
+   line_plot_image()
+  
+  
+})
+
+
+### Downloads and Bookmarks
+
+
+  
+  output$LineplotData <- downloadHandler(
+    filename = function() {
+      paste("Linechart_data", ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(line_plot_download_ds(), file)
+    }
+  )
+  
+  # plot download
+  output$LineplotImage <- downloadHandler(
+    filename = function() { paste("line_chart_image", '.png', sep='') },
+    content = function(file) {
+      ggsave(file, plot = line_plot_image(),device = "png", width = 12 , height = 6
+      )
+    }
+  )
+  
+  
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% By year heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1164,6 +1364,7 @@ output$byYearHeatmap <- renderPlot({
     ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
     theme(panel.grid=element_blank()) +
     coord_cartesian(expand=FALSE)
+    
  
   
 })
@@ -1198,18 +1399,7 @@ output$trendedHeatmapTable<-renderDataTable({
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ### UI Components
-output$yAxisType <-renderUI({
-  
-  #Actual options     
-  
-  radioButtons(
-    inputId = "groupOrHcpcsOrMod",
-    label = "Service Group or HCPCS",
-    choices = c("Service Group" = "svc_grp", "HCPCS Code" = "code_shortDesc", "Code Modifier" = 'codeM_shortDesc'),
-    selected = c("svc_grp"),
-    inline = TRUE)
-  
-})
+
 output$yAxisSel<-renderUI({
   
   type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
@@ -1229,13 +1419,14 @@ output$yAxisSel<-renderUI({
     distinct(!!type)%>%
     pull(!!type)
   
+  
 
   selectizeInput(
     inputId = 'yAxisSel',
     label = paste('I want to compare ',org," across these ",grps,sep = ""),
     choices = options,
     multiple = TRUE,
-    selected = "")
+    selected = options[1:10])
   
   
   
@@ -1344,6 +1535,9 @@ output$heatmap<-renderPlot({
 
 })
 
+# Tab selection test
+#output$text <- renderText({paste0("You are viewing tab \"", input$tabs, "\"")})
+
 ###Download handlers and bookmarks 
 
 # Downloadable csv of selected dataset ----
@@ -1368,16 +1562,7 @@ output$ServiceGroups <- downloadHandler(
   }
 )
 
-# Barchart DS
 
-output$Barchart <- downloadHandler(
-  filename = function() {
-    paste("Barchart", ".csv", sep = "")
-  },
-  content = function(file) {
-    write.csv(selectedDS(), file, row.names = FALSE)
-  }
-)
 
 # heatData
 
