@@ -213,10 +213,10 @@ includes data visualizations that can be used to explore the data."
               fluidRow(column(12,
                               column(2,uiOutput("byYearSelection_start")),
                               column(2,uiOutput("byYearSelection_end")),
-                              column(6,uiOutput("byYearSelection_org")),
-                              column(2,tags$h6(tags$li(tags$em("For the Line Plot, we recommend selecting no more than 8 organizations 
+                              column(5,uiOutput("byYearSelection_org")),
+                              column(3,p("For the Line Plot, we recommend selecting no more than 8 organizations 
                               to avoid line clutter and to maintain 
-                              color distinctiveness ")))))),
+                              color distinctiveness ")))),
                  fluidRow(column(8,
                                  downloadButton("LineplotData", "Line Chart Data"),
                                  downloadButton('LineplotImage','Line Chart Image'))
@@ -233,8 +233,10 @@ includes data visualizations that can be used to explore the data."
                                  DT::dataTableOutput('dt'),
                           downloadButton("heatData", "Download Heat Map Table")),
                           
-                          column(12,wellPanel(uiOutput("yAxisSel"))))
-        )
+                          column(9,wellPanel(uiOutput("yAxisSel"))),
+                          column(3,p("Each row represents a “bell curve”, comparing a particular service across different organizations. Each organizations position on the “bell curve” is indicated by a percentile score which can range between 0 and 100 with 
+                                     50 being the row average"))
+        ))
       
         
         
@@ -1326,7 +1328,7 @@ output$byYearPlot <-renderPlot({
 } 
   
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% By year heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+############# By year heatmap tab 
 
 ### Reactive datasets 
   selectedDS_byYear<-reactive({
@@ -1438,8 +1440,8 @@ df<-ggplot(df,aes( y = !!as.symbol(org_type()) ,x = fy)) +
     coord_cartesian(expand=FALSE)+
   xlab("Fiscal Year")+
   ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
-  ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
-                org_lab," for ",paste(group,collapse = ","),sep = ""),
+  ggtitle(paste("Normalized ", str_replace_all(input$metric,pattern = "_"," "),
+                " for ",paste(group,collapse = ","),sep = ""),
           subtitle = paste("Fiscal Years",input$byYearSelection_star,
                            "-",input$byYearSelection_end, sep = " "))+
   labs(fill= paste(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")),"Normalized",
@@ -1503,7 +1505,7 @@ output$trendedHeatmapTable<-renderDataTable({
   
 })
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Distribtuion Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ### UI Components
 
@@ -1533,7 +1535,7 @@ output$yAxisSel<-renderUI({
     label = paste('I want to compare ',org," across these ",grps,sep = ""),
     choices = options,
     multiple = TRUE,
-    selected = options[1:10])
+    selected = options[1:8])
   
   
   
@@ -1621,7 +1623,7 @@ output$heatmap<-renderPlot({
   
   df<-heatmapDS()
   
-  ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
+   ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
     geom_tile(aes(fill = metric), colour = "white") + 
     scale_fill_gradientn(colours = c("#98C4F6","#236AB9","#FE2712"),na.value = "white")+
     theme(panel.grid=element_blank()) +
@@ -1639,6 +1641,9 @@ output$heatmap<-renderPlot({
         axis.line = element_line(color = "black", 
                                  size = .5, linetype = "solid"))+
     labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))
+
+
+
 
 })
 
