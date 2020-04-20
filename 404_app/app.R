@@ -128,8 +128,10 @@ includes data visualizations that can be used to explore the data."
            tags$li(strong("Percent Served: "),
                    "The proportion of individuals who received the selected service out of all 
                    the unique individuals that received any service at that orginization during 
-                   the defined time period"),
-           tags$h6("For Percent Served the numerator does change based on population selected; please note the denominator for this metric does not changed based on the population selected but does change based on the organization and service selected")
+                   the defined time period.  For Percent Served the numerator does change based on 
+                   population selected; please note the denominator for this metric does not change 
+                   based on the population selected but does change based on the organization and 
+                   service selected")
          )
        )
      )
