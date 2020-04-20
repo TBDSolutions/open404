@@ -203,38 +203,31 @@ includes data visualizations that can be used to explore the data."
                  tabsetPanel(
                    tabPanel("Plot",
                    plotOutput("byYearPlot"),
-                   fluidRow(column(12,
-                   column(2,uiOutput("byYearSelection_start")),
-                   column(2,uiOutput("byYearSelection_end")),
-                   column(6,uiOutput("byYearSelection_org")),
-                   column(2,tags$h5(tags$li(tags$em("We recommend selecting no more than 8 organizations 
-                              to avoid line clutter and to maintain 
-                              color distinctiveness "))))))
               #     ,textOutput("text")
                    ),
+                   tabPanel("Trended Heatmap",
+                            plotOutput("byYearHeatmap")),
+                            
                    tabPanel("Table",
                  DT::dataTableOutput("byYear")),
+              fluidRow(column(12,
+                              column(2,uiOutput("byYearSelection_start")),
+                              column(2,uiOutput("byYearSelection_end")),
+                              column(6,uiOutput("byYearSelection_org")),
+                              column(2,tags$h6(tags$li(tags$em("For the Line Plot, we recommend selecting no more than 8 organizations 
+                              to avoid line clutter and to maintain 
+                              color distinctiveness ")))))),
                  fluidRow(column(8,
                                  downloadButton("LineplotData", "Line Chart Data"),
                                  downloadButton('LineplotImage','Line Chart Image'))
                  )
         )),
         
-        tabPanel("Trended Heatmap ",
-                 # Show a plot of the generated distribution
-                 #     textOutput("text"),
-                 plotOutput("byYearHeatmap"),
-                 #   tags$b((("Barchart Data"))),
-                 #      br(),
-                 DT::dataTableOutput("trendedHeatmapTable")
-        ),
-        
         tabPanel("Distribution Heatmap",id = "dist_heatmap",
                  tabsetPanel(
-                   tabPanel("Plot",
+                   tabPanel("Line Plot",
                  fluidRow(column(12,
-                                 plotOutput('heatmap'),
-                             #    textOutput("text")
+                               plotOutput('heatmap'),
                              ))),
                  tabPanel("Table",
                                  DT::dataTableOutput('dt'),
@@ -396,8 +389,6 @@ source('global.R')
   
   output$compareAcross<-renderUI({
     
-    
-    
     req(input$tabs)
     
     if(input$tabs ==  "Distribution Heatmap"){
@@ -408,11 +399,6 @@ source('global.R')
       }
     else{
 
-    
-    
-    
-    
-    
     
     type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
                   else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
@@ -1110,7 +1096,7 @@ output$byYearSelection_org <- renderUI({
   
 }) 
 
-output$text <- renderText({paste0("You are viewing tab \"", input$byYearSelection, "\"")})
+#output$text <- renderText({paste0("You are viewing tab \"", input$byYearSelection, "\"")})
 
 ### Reactive input 
 
@@ -1319,9 +1305,7 @@ output$byYearPlot <-renderPlot({
 
 
 ### Downloads and Bookmarks
-
-
-  
+{
   output$LineplotData <- downloadHandler(
     filename = function() {
       paste("Linechart_data", ".csv", sep = "")
@@ -1339,24 +1323,110 @@ output$byYearPlot <-renderPlot({
       )
     }
   )
-  
+} 
   
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% By year heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+### Reactive datasets 
+  selectedDS_byYear<-reactive({
+    
+    req(input$provider)
+    
+    
+    # If the selection is by PIHP, I need to aggregate the data before joining 
+    # This table will be used below to calulate cost per 1K ect. 
+    # Aggregated Michigan Data
+    stateAggData<-as.data.frame(stateAggData())
+    
+    ##### Year over Year trends 
+    
+    start<-as.numeric(fy_filter())
+    
+    pct_change<- data404%>%
+      filter(
+        !!as.symbol(org_type()) %in% input$provider_byYear,
+        fy %in% seq(input$byYearSelection_star,input$byYearSelection_end,by = 1),
+        #  fy %in% c(start - 3, as.numeric(fy_filter())),
+        (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
+        population %in% pop_filter()
+        # svc_grp %in%  serviceGroup() )%>% # unless individuals chosen
+      )%>%
+      select(
+        !!as.symbol(org_type()),fy,
+        cost,units,cases,cost_pct_tot
+      )%>%
+      group_by(
+        !!as.symbol(org_type()),fy
+      )%>%
+      summarise_at(
+        
+        vars(cases,units,cost,cost_pct_tot),
+        list(~sum(., na.rm = T))
+      )%>%
+      mutate(
+        
+        cost_per_case = round(cost/cases,digits = 2),
+        cost_per_unit = round(cost/units,digits = 2),
+        unit_per_case = round(units/cases,digits = 1)
+      )%>%
+      left_join(
+        
+        stateAggData,by = c(org_type() ,"fy")
+      )%>%
+      mutate(
+        
+        cost_per_1K_served = round((cost/TotalServed)*1000,0),
+        pct._served = round(((cases/TotalServed)*100),3)
+      )%>%
+      filter_if(
+        ~is.numeric(.), all_vars(!is.infinite(.))
+      )%>%
+      select(!!as.symbol(org_type()),fy,
+             !!as.symbol(metric()))
+    
+  })
+  
+  
+### Graphs and tables
+  
 output$byYearHeatmap <- renderPlot({
   
   # function for normalizing data 
   norm<- function(x){(x - min(x))/(max(x) - min(x))} 
   
+  
+  
+  # Format X-Axis labels 
+  org_lab<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+  else{'PIHP'}
+  ############################################
+  
+  # Set the axis title and ensure all selections of HCPCS codes are included
+  group<-if(input$groupOrHcpcsOrMod_ == "svc_grp"){ paste(compareAcross()," Service Group")}
+  else{ as.data.frame(list(compareAcross()))%>%
+      mutate(code = as.character(.[[1]]))%>%
+      pull(code)
+  }
+  
+  
+  # Adding population formatting 
+  populations<-as.data.frame(list(popType()))%>%
+    mutate(popType = as.character(.[[1]]))%>%
+    pull(popType)
+  
+  
+
   df<-data.frame(selectedDS_byYear())%>%
-                  filter(!fy %in% c("2006","2007","2008","2009","2010"))%>%
+            #      filter(!fy %in% c("2006","2007","2008","2009","2010"))%>%
                   group_by(!!as.symbol(org_type()))%>%
                   mutate(norm = norm( !!as.symbol(metric()) ))%>%
                   ungroup()
                 
 
-  ggplot(df,aes( y = !!as.symbol(org_type()) ,x = fy)) + 
+  
+  
+df<-ggplot(df,aes( y = !!as.symbol(org_type()) ,x = fy)) + 
     geom_tile(aes(fill =norm), colour = "white")+
     #scale_fill_viridis_c(direction = -1)
     #  scale_fill_gradientn(colours = terrain.colors(10))
@@ -1365,9 +1435,44 @@ output$byYearHeatmap <- renderPlot({
     xlab("Fiscal Year")+
     ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
     theme(panel.grid=element_blank()) +
-    coord_cartesian(expand=FALSE)
-    
- 
+    coord_cartesian(expand=FALSE)+
+  xlab("Fiscal Year")+
+  ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
+  ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
+                org_lab," for ",paste(group,collapse = ","),sep = ""),
+          subtitle = paste("Fiscal Years",input$byYearSelection_star,
+                           "-",input$byYearSelection_end, sep = " "))+
+  labs(fill= paste(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")),"Normalized",
+                   sep = " "))+
+  labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
+  theme_ipsum(grid = 'FALSE',
+              plot_title_size = 15,
+              axis_text_size = 11,
+              axis_title_size = 13,
+              ticks = TRUE)
+
+
+
+
+
+lab = textGrob("Normalization is the process of converting the range of values (e.g. Units) for the organization to a number between zero and one; zero being the lowest value in the selected time span and one being the highest.
+              This allows for the user to see which years an organization reached their minimum and maximum usage in comparison to other organizations, independent of scale. ",
+               x = unit(.5, "npc"), just = c("center"), 
+               gp = gpar(fontface = "italic", fontsize = 9, col = "black"))
+
+
+gp = ggplotGrob(df)
+
+# Add a row below the 2nd from the bottom
+gp = gtable_add_rows(gp, unit(2, "grobheight", lab), -2)
+
+# Add 'lab' grob to that row, under the plot panel
+gp = gtable_add_grob(gp, lab, t = -2, l = gp$layout[gp$layout$name == "panel",]$l)
+
+grid.newpage()
+grid.draw(gp)
+
+
   
 })
 

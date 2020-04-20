@@ -22,6 +22,8 @@ library(stringi)
 library(rsconnect)
 library(plotly)
 library(viridis)
+library(grid)
+library(gtable)
 #hrbrthemes::import_roboto_condensed()
 
 #### Read datasets ####
