@@ -1,92 +1,85 @@
-# global.R #
+
+
+width_px = "150px"
+
+scale_fun <- function(x) as.vector(scale(x))
+
+#font_import()
+library(shiny)
+#library(rlang)
+library(DT)
+library(shinythemes)
+#library(shiny)
 
 #### Load packages ####
-
-library(shiny); library(shinythemes)
-library(plotly)
-library(tidyverse); library(magrittr)
-library(shinydashboard)
-library(shinythemes)
-library(feather)
 library(scales)
+library(tidyverse)
+
+library(hrbrthemes)
+#library(gcookbook)
+library(stringi)
+#library(extrafont)
+library(rsconnect)
+library(plotly)
+library(viridis)
+library(grid)
+library(gtable)
+#hrbrthemes::import_roboto_condensed()
 
 #### Read datasets ####
 
-data404 <- read_feather("data/clean/Master.feather") %>%
+#data404 <- read_feather('datafiles/df_404.feather') %>%
+
+data404 <-read_csv("datafiles/data404_newMod.csv")%>%
+
   mutate(
-    PIHPname = as.factor(PIHPname),
-    CMHSP = as.factor(CMHSP)
+    fy = as.factor(fy),
+    pihp = as.numeric(pihp),
+    pihp_name = as.character(pihp_name),
+    cmhsp = as.character(cmhsp),
+    population = as.factor(population),
+    svc_type = as.character(svc_type),
+    svc_grp = as.character(svc_grp),
+    code = as.character(code),
+    short_desc = as.character(short_desc),
+    modifier = as.character(modifier),
+    unit_type = as.character(unit_type),
+    cases = as.numeric(cases),
+    units = as.numeric(units))%>%
+  mutate_at(
+    vars(pihp_name,cmhsp,code,code_mod),
+    list(~as.factor(.))
   )
 
-service_groups <- unique(data404[,c('ServiceType', 'Service', 'short_description', 'Description', 'Code', 'Code_Mod')])
+
+
+
+#service_groups <- read_feather("datafiles/svc_grps.feather")
+
+service_groups<-read_csv("datafiles/svc_grps.csv")%>%
+                 mutate_if(is.factor,as.character)
 
 #### Formatting Variables ####
 
-data404 %<>%
-  mutate(
-    Code = as.factor(data404$Code),
-    Code_shortDesc = as.factor(paste(data404$short_description," (",(data404$Code),")")),
-    Code_Desc = as.factor(paste(data404$Description," (",(data404$Code),")")),
-    CodeM_shortDesc = as.factor(paste(data404$short_description," (",(data404$Code_Mod),")")),
-    CodeM_Desc = as.factor(paste(data404$Description," (",(data404$Code_Mod),")"))
-  )
+pihpCMH_LU<-data404%>%
+  distinct(pihp,pihp_name,cmhsp)
 
-#### Defining variable inputs ####
-
-inputs <- 
-  data.frame(SumOfCases = integer(),
-             SumOfUnits = integer(),
-             SumOfCost = integer(),
-             CostPerCase = integer(),
-             CostPerUnit = integer(),
-             UnitPerCase = integer(),
-             Cost_Perc_Tot = integer(),
-             Cost1kSvd = integer(),
-             Perc_Svd = integer()
-  ) %>%
-  rename(
-    "Total Cases" = SumOfCases,
-    "Total Units" = SumOfUnits,
-    "Total Cost" = SumOfCost,
-    "Cost Per Case" = CostPerCase,
-    "Cost Per Unit" = CostPerUnit,
-    "Total Unit Per Case" = UnitPerCase,
-    "Cost per 1K Served" = Cost1kSvd,
-    "Percent of Total $" = Cost_Perc_Tot,
-    "Percent Served" = Perc_Svd
-  )
+state_data<-read_csv("datafiles/TotalServedAnnual.csv")%>%
+                     rename(cmhsp = CMHSP, fy = FY)%>%
+                     left_join(pihpCMH_LU, by = "cmhsp")%>%
+                     mutate(fy = as.factor(fy))%>%
+                     select(-pihp)
+  
 
 
-inputs_sub <- 
-  data.frame(SumOfCost = integer(),
-             Cost_Perc_Tot = integer(),
-             Cost1kSvd = integer()
-  ) %>%
-  rename(
-    "Total Cost" = SumOfCost,
-    "Cost per 1K Served" = Cost1kSvd,
-    "Percent of Total $" = Cost_Perc_Tot
-  )
+### New code modifers 
 
-# https://gist.githubusercontent.com/stla/9033053/raw/9c3ad4ce296397b923c88b40c2d43e4fbea8e4be/ShinyColumnsSelector.R
-# https://groups.google.com/forum/#!topic/shiny-discuss/0V4sR4LjAuc
 
-#### Colors ####
 
-# library(RColorBrewer)
-# n <- 47
-# qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-# cmh_palette = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
 
-library(randomcoloR)
-n <- 47
-cmh_palette <- distinctColorPalette(n)
 
-# cmh_palette <- c("#a3ab73","#4e64ed","#b6d325","#971da8","#66ad00","#fb79fd",
-#                  "#009721","#f22a9b","#9ed75a","#7630a1","#6f9100","#ad7cff",
-#                  "#fda812","#0071da","#c69e00","#7a93ff","#8f8e00","#b0008a",
-#                  "#86d88f","#ab0066","#009266","#f62f51","#02c6ee","#c8081d",
-#                  "#62d8d4","#cf4900","#334da2","#cbcb67","#ff8de3","#50571e",
-#                  "#e6a5ff","#a26700","#64467f","#e0c476","#c60052","#ffaa79",
-#                  "#ff94cb","#9a4400","#bc7ea0","#982b1e","#ffa6b2","#774723",
-#                  "#ff7a6f","#893b26","#c1798a","#a3615b","#9844bd")
+
+
+
+
+
