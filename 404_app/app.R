@@ -79,9 +79,6 @@ includes data visualizations that can be used to explore the data."
            br(),
            p("You can download the service groupings used in this application below:"),
            downloadButton('ServiceGroups', 'Download'),
-           br(),
-           p("The below table allows you to quickly search to understand service groupings"),
-           DT::dataTableOutput("svs_groups")
          )
        )
      )
@@ -305,7 +302,11 @@ tabPanel(
                                      to understand true drivers of cost increases. This variance increases the difficulty in understanding
                                      how the CMHSPs and PIHPs actual unit costs compare to each other or to any fee schedule"
                   )))
-  ))
+  )),
+tabPanel("Service Groupings Search",
+         br(),
+         p("The below table allows you to quickly search to better understand service groupings"),
+         DT::dataTableOutput("svs_groups"))
 
 
 ) # analysis navbar menu
@@ -654,6 +655,7 @@ stateAvg<-reactive({
       filter_if( #remove INF values from dividing by zero
         ~is.numeric(.), all_vars(!is.infinite(.))
       )%>%
+      ungroup()%>%
     #  mutate(pct_of_total_cost = 0)%>%
       group_by(fy)%>%
       summarise(avg = mean(!!as.symbol(metric()), na.rm= TRUE))%>%
@@ -1318,7 +1320,7 @@ output$byYearPlot <-renderPlot({
 ############# By year heatmap tab 
 
 ### Reactive datasets 
-  selectedDS_byYear<-reactive({
+selectedDS_byYear<-reactive({
     
     req(input$provider)
     
