@@ -65,8 +65,45 @@ While cost is the only measure which might presumably be summed across service c
 - The use of "inconsistent definitions for direct service administration and other non-direct service administration" (p. 2) may lead different types of administrative activities which are included by one CMHSP to be excluded for another.  Furthermore, the distribution of administrative or overhead costs across different service code/modifier combinations is likely to vary.
 - Additional factors which influence variation in unit costs cannot be ascertained from the data, due to the issues with accounting methods identified above: "(a) PIHP/CMHSP operating structures, (b) resources required to provide the similarly defined services (due to variations in client acuity or applied clinical methods), (c) costs of resources that can be attributed to PIHP/CMHSP and provider locations or regions, and (d) volume of services provided with no appreciable change in program costs" (p. 3)
 
+**Cost per Unit**
 
-Cost per Unit
+- All caveats related to both the `cost` and `units` measures separately should be taken into account when considering the use of the cost per unit measure, as this measure is derived from them.
+- In addition, users of this measure should note that this is an average derived by taking the sum of total cost, divided by the total count of units.  It therefore includes a number of different unit costs for a given service code/modifier combination.  These may vary within a given CMHSP's reporting according to internal/external service provision, and may change based on provider contracts, and even by a contract for services to a specific beneficiary.
+- These differences may have a greater impact on the overall average for CMHSPs who serve a smaller number of cases using a given service code/modifier, since each case will have a stronger influence on the mean.
+
+**Cost per Case**
+
+- All caveats related to both the `cost` and `cases` measures separately should be taken into account when considering the use of the cost per case measure, as this measure is derived from them.
+- In addition, users should bear in mind that the cost per case may be distributed over multiple "episodes" of service, if a person has left and returned to receive that particular service during the `fy` reporting timeframe.  These episodes may have gaps between them and thus not reflect service use that is evenly distributed across the `fy`.
+- Individual cases may not receive a given service for the same amount of time during a reporting period.  For instance, an individual who begins service at a CMHSP midway through the `fy` will have a longer period during which costs can be accumulated than a person who begins receiving services near the end of the `fy`, yet both may be included in the count of `cases`
+- While the report is an annual reporting of total costs, it is important to note that it is not an annualized measure, since the specific timeframe for services received by each beneficiary is not known and can therefore not be used for annualization.
+- These differences may have a greater impact on the overall average for CMHSPs who serve a smaller number of cases using a given service code/modifier, since each case will have a stronger influence on the mean. 
+
+**Units per Case**
+
+- All caveats related to both the `units` and `cases` measures separately should be taken into account when considering the use of the units per case measure, as this measure is derived from them.
+- In addition, users should keep in mind that the number of units counted may be distributed across multiple episodes of a person receiving the service, as with `cost per case` above.  For instance, if an individual has 3 psychiatric inpatient stay during a `fy`, then the count of units will include the total of all three stays.  Thus, it is not possible to use the units per case measure as equivalent to a 'length of stay' measure.  
+- In addition, only partial units from a given 'episode' or 'stay' will be reported if it overlaps the `fy` reporting period.
+
+**Percent Served**
+
+- Because the global population counts for distinct cases are not available per `fy`, it is necessary to add up the `percent served` for all populations (MIA, MIC and DD) for each service code/modifer in order to get a total percent of CMSHP beneficiaries who received that service code/modifier.
+- Individuals receiving services as a member of multiple populations from a single CMSHP during a single `fy` would be counted more than once using the approach above, but it is assumed that this is an infrequent occurrence.
+
+**Service Code / Modifier**
+
+In addition to the discrepancies in reporting of the measures identified above, which make it unsafe to assume that variations in the values reported by various CMHSPs are due to an actual variation in underlying practices or resource use, it is also worth noting several limitations of analyses which aim to compare service code/modifier use across CMHSPs and to treat variations as indicative of over- or under-utilization.
+
+- Since multiple service might appropriately be used to address similar client needs, and because the type of service selected for use may be based on both beneficiary choice and provider network availability at a particular CMHSP, a discrepancy in service use for a particular service code/modifier might be balanced by the use of another service code and modifier.  For instance, a CMHSP with relatively high usage of a 30-minute outpatient service code compared to its peers, may simultaneously have a relatively low use of a 15-minute outpatient code.  To say that the first instance constitutes overuse, while the second constitutes underuse would be a mis-interpretation of the data, and may be more indicative of billing practice than clinical practice.
+- For this reason, we have used a set of service groups to allow for easier side-by-side comparison of service codes with similar clinical intent and/or unit types.  While most metrics should not be aggregated by these service groupings due to the limitations noted above for `cases`, `units`, and `cost` measures, they do provide a way to filter and compare similar services out of the broad scope of the available service benefit.
+
+## Limitations Related to Specific Services
+
+### Inpatient Psychiatric Hospitalization
+
+
+
+### CLS and Related Services
 
 ## Additional Considerations
 
