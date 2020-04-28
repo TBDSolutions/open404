@@ -1,0 +1,193 @@
+The following documentation pertains to the sub-element cost report
+(SECR) of the section 404/904 legislative boilerplate reports, a set of
+publicly available data reporting the service use and related costs for
+the public behavioral health system in Michigan.
+
+Level of Aggregation
+====================
+
+Each observation (i.e. row) in the `df_404` dataset pertains to a
+specific service (combination of `code` and `modifier`), for each year
+(`fy`) when that service was provided by a given `cmhsp` to
+beneficiaries from a specific `population`.
+
+Definitions
+===========
+
+The following variables are included in this dataset:
+
+-   `fy`: The fiscal year in which the reported services were submitted
+    as claims.
+-   `pihp`: The number of the region corresponding to the prepaid
+    inpatient health plan (PIHP) to which a `cmhsp` belongs, as
+    organized for the 2013 AFP. A map of the regions [can be found
+    here](http://www.chrt.org/assets/policy-papers/community-mental-health-images/appendix-d.png).
+-   `pihp_name`: The name of the prepaid inpatient health plan (PIHP).
+-   `cmhsp`: The name of the community mental health service program
+    (CMHSP) which provided or contracted for the service reported.
+-   `population`: The disability type of beneficiaries who received the
+    service. There are 3 disability types included in this dataset:
+    *MIA* = Mentally Ill Adults, *MIC* = Mentally Ill Children, *DD* =
+    Developmentally Disabled (Adults and Children).
+-   `svc_type`: High level designation of types of services into the
+    following overall types: *“Behavioral Treatment”,“Coordination and
+    Planning”,“Crisis Services”,“Employment
+    Services”,“Equipment/Supplies”,“Health Services”,“Home & Community
+    Based Services”,“Hospital Based Services”,“Outpatient
+    Treatment”,“Psychiatric and Medication
+    Services”,“Respite”,“Screening & Assessment”,“Family Education and
+    Support”,“Intensive Community-Based Treatment”,“Peer
+    Services”,“Transportation”,“Other”,“Sub-acute Withdrawal
+    Management”,“Telemedicine”*
+-   `svc_grp`: Groupings of HCPCS and/or revenue codes into multiple
+    types, each falling into only one of the `svc_type` groupings.
+-   `code`: The CPT or HCPCS code for the service reported. For services
+    which only have revenue codes, these are used.
+-   `short_description`: A shortened description of the `code`, drawn
+    from the official CMS documentation where available,[1] or else from
+    904 data descriptions. For inpatient or other services using the
+    UBREV codeset, these are included in this field.
+-   `modifier`: If applicable, the modifier for the `code` field. The
+    combination of `code` and `modifier` is the most granular
+    specification of the type of service provided. For inpatient
+    services using provider type codes, these are included in this
+    field.
+-   `unit_type`: The unit of measurement for the `code`.
+-   `unit_hrs`: Conversion factor for all time-based units to be coerced
+    into a common measurement. For example, units which are of the
+    `unit_type` “hour” have a multiplier of 1, while units of the unit
+    type “15 minutes” have a multiplier of 0.25.
+-   `cases`: The number of distinct people who received the service.
+    *Note that this field cannot be aggregated across multiple `code`s,
+    since beneficiaries often receive more than a single service.*
+-   `units`: The total number of units of the service which were
+    provided. *Note that this field cannot be aggregated across multiple
+    `code`s, if those `code`s do not share the same `unit_type`.*
+-   `cost`: The total cost of the service.
+-   `cost_per_case`: The average cost of the service for all people who
+    received it.
+-   `cost_per_unit`: The average cost for a single unit of the service.
+-   `unit_per_case`: The average number of units for each person who
+    received the service.
+-   `cost_pct_tot`: The annual cost of the service as a % of the total
+    annual cost of all services, per `cmhsp` and `population`.
+-   `cost_1k_served`: Cost per 1,000 people served by the CMHSP. Uses
+    the general formula *(Sum Of Cost/Unique Persons Served by CMHSP) x
+    1000*
+-   `pct_cmh_served`: Percentage of people served by the CMHSP who
+    received this service (per `fy`).
+
+Data Issues and Limitations
+===========================
+
+General Limitations of the Dataset
+----------------------------------
+
+As noted above, the only measures included in the sub-element cost
+report (SECR) of the section 404/904 legislative boilerplate are the
+following: `cases`, `units`, and `cost`. These values are reported
+separately for each service code, modifier, CMHSP, population (MIA, MIC,
+DD), and fiscal year (FY). A unique count of all individuals who
+received services the CMHSP during each year is also provided by MDHHS,
+though it is not broken out by population. The measures listed above are
+then combined to produce the following derivative measures: cost per
+case, cost per unit, unit per case, percent receiving service, cost per
+10k served.
+
+Assumptions and limitations for specific variables are ennumerated
+below. These considerations apply generally for any use of the dataset:
+
+**Cases:**
+
+-   Cases are assumed to provide a distinct count of beneficiaries who
+    received one or more units of the service code/modifier combination
+    being reported.
+-   As the number of cases is a distinct count for each service
+    code/modifier combination, and beneficiaries may receive more than
+    one service, it is not possible to combine the counts of multiple
+    services.
+
+**Units**
+
+-   Units are assumed to be a count of all units of the service
+    code/modifier combination being reported.
+-   As units are of different types (e.g. per diem, 15 minutes, etc.),
+    it is not possible to combine the units counts of multiple services.
+-   While assumed to be uncommon, it is possible that a beneficiaries
+    units are spread across CMHSPs or populations. If a beneficiary
+    received a code/modifier combination from multiple CMHSPs (or from
+    multiple populations within a single CMHSP) during a given year,
+    that beneficiary’s units would be split among those CMHSPs or
+    populations.
+
+**Cost**
+
+While cost is the only measure which might presumably be summed across
+service code/modifier combinations, there are significant issues in the
+data which lead us to advise caution in the interpretation of findings.
+A 2019 report by the state’s actuary, Milliman, found that “…many of the
+CMHSPs account for their unit service costs using different cost
+accounting and allocation methods than those of their peers. Although…
+consistent with generally accepted accounting principles, the
+inconsistency in cost allocation methods does not provide a sound basis
+for allowing comparisons to other CMHSPs…” (p. 2). It is reasonable to
+assume that this finding applies retrospectively to the entire period
+covered by the SECR dataset. The issues below are drawn from that
+report:
+
+-   “The accounting methods employed … to assign costs to service units
+    in the MUNC and SECR are not consistent \[making it difficult\] to
+    understand how much of the unit cost variation can…be attributable
+    to other factors” (p. 3)
+-   The use of “inconsistent definitions for direct service
+    administration and other non-direct service administration” (p. 2)
+    may lead different types of administrative activities which are
+    included by one CMHSP to be excluded for another. Furthermore, the
+    distribution of administrative or overhead costs across different
+    service code/modifier combinations is likely to vary.
+-   Additional factors which influence variation in unit costs cannot be
+    ascertained from the data, due to the issues with accounting methods
+    identified above: “(a) PIHP/CMHSP operating structures, (b)
+    resources required to provide the similarly defined services (due to
+    variations in client acuity or applied clinical methods), (c) costs
+    of resources that can be attributed to PIHP/CMHSP and provider
+    locations or regions, and (d) volume of services provided with no
+    appreciable change in program costs” (p. 3)
+
+Cost per Unit
+
+Additional Considerations
+-------------------------
+
+The following considerations should be kept in mind when interpreting
+this data:
+
+-   It should be noted that not all of the PIHPs oversaw the management
+    of services prior to CY 2014, and that this field should thus be
+    used to group the historical data for CMHSPs that are currently in
+    the regions, rather than to erroneously attribute historical
+    performance to those entities.
+-   The CMHSP “Clinton Eaton Ingham” did not submit their cost and
+    service use data for fiscal year 2014. Since services with values of
+    zero for cost, units and cases are excluded from the Master dataset,
+    this CMHSP does not show up in 2014.
+-   In some years, CMHSPs reported the same HCPCS code and modifier on
+    multiple lines with a slightly different service description. In
+    these instances, `cases`, `units` and `costs` are assumed to be
+    non-duplicative and are summed.
+
+References
+==========
+
+The following resources are referenced here or may otherwise be relevant
+for the interpretation of the 904/404 SECR dataset:
+
+-   Culley, B., et al. *Milliman Client Report: Behavioral Health Fee
+    Schedule Development - Project Status and Standard Cost Allocation
+    Process*. State of Michigan, Department of Health and Human
+    Services: August 21, 2019.
+-   [MDHHS 904/404
+    site](http://www.michigan.gov/mdch/0,4612,7-132-2941_4868_4902-256889--,00.html)
+
+[1] See option “Current LCDs” from CMS site
+[here](https://www.cms.gov/medicare-coverage-database/downloads/downloadable-databases.aspx)
