@@ -99,11 +99,22 @@ In addition to the discrepancies in reporting of the measures identified above, 
 
 ## Limitations Related to Specific Services
 
+The aforementioned data limitations apply to the entirety of the SECR dataset.  There are also a number of additional issues related to specific services.  This especially pertains to services whose reporting requirements have been modified during the timeframe covered by the dataset.  The inclusion of a specific service below is not intended to reflect an exhaustive list of all potential caveats, but simply to note known issues related to commonly used, high-cost services which are often included in analyses.
+
 ### Inpatient Psychiatric Hospitalization
 
+#### Differentiating Inpatient Psychiatric at a State Facility
 
+- 0101 is the only revenue code that can differentiate Inpatient Psychiatric at a State Facility (versus Community Inpatient or IMD), however this code is no longer used
+- Specific provider types, present in the modifier field of the 904/404 data, could be used to identify Inpatient Psychiatric services provided at a State Facility, however these provider types (PT22 and PT65) appear to have been discontinued starting in FY16 suggesting that, post FY16, these services are bundled under the IMD (PT68) provider type
+- While we can differentiate State Facility (PT22) and ICF/MR (PT65) between 2006 and 2015 in the 904/404 data, all Inpatient Psychiatric revenue codes (0100, 0101, 0114, 0124, 0134, 0154) are reported in aggregate during this time frame meaning we cannot differentiate between episodes where the physician services were or were not included thus limiting the interpretation
+- All revenue codes are also reported in aggregate for Community Inpatient (PT68) and IMD (PT73) between 2006 and 2015, but starting in 2016 we are able to differentiate episodes where physician services were or were not included
 
-### CLS and Related Services
+#### Reporting of Inpatient Psychiatric Services
+
+- Prior to the FY16 reporting change for Inpatient Psychiatric services there were inconsistencies in the way inpatient episodes were reported (see attached for details). This will make meaningful comparisons across PIHPs/CMHSPs from 2004 through 2015 difficult. Comparing a single PIHP/CMSHP year-to-year may be meaningful if we are comfortable assuming PIHPs/CMHSPs used the same reporting practices each year.
+- Effective 10/1/2016 PIHPs/CMHSPs must report all inpatient encounters where a portion of the episode was paid by the PIHP/CMHSP, however the entire cost of the episode (if there were multiple payers) may not be fully reflected until the FY17 reporting year (although complications of receiving this data from other payers is noted, indicating the data is likely still incomplete); this suggests that the reported cost per case in the 904/404 data may be lower than actual
+- Incurred But Not Reported (IBNR) costs for PT68 and PT73 are included as separate line items in the 904/404 data – we’ll need to determine if/how this gets included in the overall reporting of this service
 
 ## Additional Considerations
 
@@ -117,5 +128,7 @@ The following considerations should be kept in mind when interpreting this data:
 
 The following resources are referenced here or may otherwise be relevant for the interpretation of the 904/404 SECR dataset:
 
+- [MDHHS BHDDA Reporting Requirements](https://www.michigan.gov/documents/mdhhs/MHCodeChart_554443_7.pdf)
+- [MDHHS BHDDA Reporting Requirements: PIHP/CMHSP Reporting Cost Per Code and Code Chart; Appendix: Encounter Reporting and Financial Work Group, Data Integrity Effort, Psychiatric Inpatient in a Local Hospital. 2016. p. 83](https://www.michigan.gov/documents/mdhhs/MHCodeChart_October12016_EDIT_WG_Decisions_536182_7.pdf)
 - Culley, B., et al. *Milliman Client Report: Behavioral Health Fee Schedule Development - Project Status and Standard Cost Allocation Process*.  State of Michigan, Department of Health and Human Services: August 21, 2019.
 - [MDHHS 904/404 site](http://www.michigan.gov/mdch/0,4612,7-132-2941_4868_4902-256889--,00.html)

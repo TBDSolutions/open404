@@ -154,7 +154,162 @@ report:
     locations or regions, and (d) volume of services provided with no
     appreciable change in program costs” (p. 3)
 
-Cost per Unit
+**Cost per Unit**
+
+-   All caveats related to both the `cost` and `units` measures
+    separately should be taken into account when considering the use of
+    the cost per unit measure, as this measure is derived from them.
+-   In addition, users of this measure should note that this is an
+    average derived by taking the sum of total cost, divided by the
+    total count of units. It therefore includes a number of different
+    unit costs for a given service code/modifier combination. These may
+    vary within a given CMHSP’s reporting according to internal/external
+    service provision, and may change based on provider contracts, and
+    even by a contract for services to a specific beneficiary.
+-   These differences may have a greater impact on the overall average
+    for CMHSPs who serve a smaller number of cases using a given service
+    code/modifier, since each case will have a stronger influence on the
+    mean.
+
+**Cost per Case**
+
+-   All caveats related to both the `cost` and `cases` measures
+    separately should be taken into account when considering the use of
+    the cost per case measure, as this measure is derived from them.
+-   In addition, users should bear in mind that the cost per case may be
+    distributed over multiple “episodes” of service, if a person has
+    left and returned to receive that particular service during the `fy`
+    reporting timeframe. These episodes may have gaps between them and
+    thus not reflect service use that is evenly distributed across the
+    `fy`.
+-   Individual cases may not receive a given service for the same amount
+    of time during a reporting period. For instance, an individual who
+    begins service at a CMHSP midway through the `fy` will have a longer
+    period during which costs can be accumulated than a person who
+    begins receiving services near the end of the `fy`, yet both may be
+    included in the count of `cases`
+-   While the report is an annual reporting of total costs, it is
+    important to note that it is not an annualized measure, since the
+    specific timeframe for services received by each beneficiary is not
+    known and can therefore not be used for annualization.
+-   These differences may have a greater impact on the overall average
+    for CMHSPs who serve a smaller number of cases using a given service
+    code/modifier, since each case will have a stronger influence on the
+    mean.
+
+**Units per Case**
+
+-   All caveats related to both the `units` and `cases` measures
+    separately should be taken into account when considering the use of
+    the units per case measure, as this measure is derived from them.
+-   In addition, users should keep in mind that the number of units
+    counted may be distributed across multiple episodes of a person
+    receiving the service, as with `cost per case` above. For instance,
+    if an individual has 3 psychiatric inpatient stay during a `fy`,
+    then the count of units will include the total of all three stays.
+    Thus, it is not possible to use the units per case measure as
+    equivalent to a ‘length of stay’ measure.  
+-   In addition, only partial units from a given ‘episode’ or ‘stay’
+    will be reported if it overlaps the `fy` reporting period.
+
+**Percent Served**
+
+-   Because the global population counts for distinct cases are not
+    available per `fy`, it is necessary to add up the `percent served`
+    for all populations (MIA, MIC and DD) for each service code/modifer
+    in order to get a total percent of CMSHP beneficiaries who received
+    that service code/modifier.
+-   Individuals receiving services as a member of multiple populations
+    from a single CMSHP during a single `fy` would be counted more than
+    once using the approach above, but it is assumed that this is an
+    infrequent occurrence.
+
+**Service Code / Modifier**
+
+In addition to the discrepancies in reporting of the measures identified
+above, which make it unsafe to assume that variations in the values
+reported by various CMHSPs are due to an actual variation in underlying
+practices or resource use, it is also worth noting several limitations
+of analyses which aim to compare service code/modifier use across CMHSPs
+and to treat variations as indicative of over- or under-utilization.
+
+-   Since multiple service might appropriately be used to address
+    similar client needs, and because the type of service selected for
+    use may be based on both beneficiary choice and provider network
+    availability at a particular CMHSP, a discrepancy in service use for
+    a particular service code/modifier might be balanced by the use of
+    another service code and modifier. For instance, a CMHSP with
+    relatively high usage of a 30-minute outpatient service code
+    compared to its peers, may simultaneously have a relatively low use
+    of a 15-minute outpatient code. To say that the first instance
+    constitutes overuse, while the second constitutes underuse would be
+    a mis-interpretation of the data, and may be more indicative of
+    billing practice than clinical practice.
+-   For this reason, we have used a set of service groups to allow for
+    easier side-by-side comparison of service codes with similar
+    clinical intent and/or unit types. While most metrics should not be
+    aggregated by these service groupings due to the limitations noted
+    above for `cases`, `units`, and `cost` measures, they do provide a
+    way to filter and compare similar services out of the broad scope of
+    the available service benefit.
+
+Limitations Related to Specific Services
+----------------------------------------
+
+The aforementioned data limitations apply to the entirety of the SECR
+dataset. There are also a number of additional issues related to
+specific services. This especially pertains to services whose reporting
+requirements have been modified during the timeframe covered by the
+dataset. The inclusion of a specific service below is not intended to
+reflect an exhaustive list of all potential caveats, but simply to note
+known issues related to commonly used, high-cost services which are
+often included in analyses.
+
+### Inpatient Psychiatric Hospitalization
+
+#### Differentiating Inpatient Psychiatric at a State Facility
+
+-   0101 is the only revenue code that can differentiate Inpatient
+    Psychiatric at a State Facility (versus Community Inpatient or IMD),
+    however this code is no longer used
+-   Specific provider types, present in the modifier field of the
+    904/404 data, could be used to identify Inpatient Psychiatric
+    services provided at a State Facility, however these provider types
+    (PT22 and PT65) appear to have been discontinued starting in FY16
+    suggesting that, post FY16, these services are bundled under the IMD
+    (PT68) provider type
+-   While we can differentiate State Facility (PT22) and ICF/MR (PT65)
+    between 2006 and 2015 in the 904/404 data, all Inpatient Psychiatric
+    revenue codes (0100, 0101, 0114, 0124, 0134, 0154) are reported in
+    aggregate during this time frame meaning we cannot differentiate
+    between episodes where the physician services were or were not
+    included thus limiting the interpretation
+-   All revenue codes are also reported in aggregate for Community
+    Inpatient (PT68) and IMD (PT73) between 2006 and 2015, but starting
+    in 2016 we are able to differentiate episodes where physician
+    services were or were not included
+
+#### Reporting of Inpatient Psychiatric Services
+
+-   Prior to the FY16 reporting change for Inpatient Psychiatric
+    services there were inconsistencies in the way inpatient episodes
+    were reported (see attached for details). This will make meaningful
+    comparisons across PIHPs/CMHSPs from 2004 through 2015 difficult.
+    Comparing a single PIHP/CMSHP year-to-year may be meaningful if we
+    are comfortable assuming PIHPs/CMHSPs used the same reporting
+    practices each year.
+-   Effective 10/1/2016 PIHPs/CMHSPs must report all inpatient
+    encounters where a portion of the episode was paid by the
+    PIHP/CMHSP, however the entire cost of the episode (if there were
+    multiple payers) may not be fully reflected until the FY17 reporting
+    year (although complications of receiving this data from other
+    payers is noted, indicating the data is likely still incomplete);
+    this suggests that the reported cost per case in the 904/404 data
+    may be lower than actual
+-   Incurred But Not Reported (IBNR) costs for PT68 and PT73 are
+    included as separate line items in the 904/404 data – we’ll need to
+    determine if/how this gets included in the overall reporting of this
+    service
 
 Additional Considerations
 -------------------------
@@ -182,6 +337,13 @@ References
 The following resources are referenced here or may otherwise be relevant
 for the interpretation of the 904/404 SECR dataset:
 
+-   [MDHHS BHDDA Reporting
+    Requirements](https://www.michigan.gov/documents/mdhhs/MHCodeChart_554443_7.pdf)
+-   [MDHHS BHDDA Reporting Requirements: PIHP/CMHSP Reporting Cost Per
+    Code and Code Chart; Appendix: Encounter Reporting and Financial
+    Work Group, Data Integrity Effort, Psychiatric Inpatient in a Local
+    Hospital. 2016.
+    p. 83](https://www.michigan.gov/documents/mdhhs/MHCodeChart_October12016_EDIT_WG_Decisions_536182_7.pdf)
 -   Culley, B., et al. *Milliman Client Report: Behavioral Health Fee
     Schedule Development - Project Status and Standard Cost Allocation
     Process*. State of Michigan, Department of Health and Human
