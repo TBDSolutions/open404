@@ -103,6 +103,12 @@ The aforementioned data limitations apply to the entirety of the SECR dataset.  
 
 ### Inpatient Psychiatric Hospitalization
 
+The following data limitations should be considered when attempting to conduct an analysis of inpateint hospitalization using the SECR dataset:
+
+#### Lack of Single Code to Combine Service Use Data for Inpatient Services
+
+
+
 #### Differentiating Inpatient Psychiatric at a State Facility
 
 - 0101 is the only revenue code that can differentiate Inpatient Psychiatric at a State Facility (versus Community Inpatient or IMD), however this code is no longer used
@@ -113,8 +119,13 @@ The aforementioned data limitations apply to the entirety of the SECR dataset.  
 #### Reporting of Inpatient Psychiatric Services
 
 - Prior to the FY16 reporting change for Inpatient Psychiatric services there were inconsistencies in the way inpatient episodes were reported (see attached for details). This will make meaningful comparisons across PIHPs/CMHSPs from 2004 through 2015 difficult. Comparing a single PIHP/CMSHP year-to-year may be meaningful if we are comfortable assuming PIHPs/CMHSPs used the same reporting practices each year.
-- Effective 10/1/2016 PIHPs/CMHSPs must report all inpatient encounters where a portion of the episode was paid by the PIHP/CMHSP, however the entire cost of the episode (if there were multiple payers) may not be fully reflected until the FY17 reporting year (although complications of receiving this data from other payers is noted, indicating the data is likely still incomplete); this suggests that the reported cost per case in the 904/404 data may be lower than actual
-- Incurred But Not Reported (IBNR) costs for PT68 and PT73 are included as separate line items in the 904/404 data – we’ll need to determine if/how this gets included in the overall reporting of this service
+- Effective 10/1/2016 PIHPs/CMHSPs must report all inpatient encounters where a portion of the episode was paid by the PIHP/CMHSP, however the entire cost of the episode (if there were multiple payers) may not be fully reflected until the FY17 reporting year (although complications of receiving this data from other payers is noted, indicating the data is likely still incomplete); this suggests that the reported cost per case in the 904/404 data may be lower than actual cost.
+- Incurred But Not Reported (IBNR) costs for PT68 and PT73 are included as separate line items in the 904/404 data – the interpretation of these line items compared to the overall reporting of this service is not entirely clear, and methods for calculating IBNR are likely to vary across organizations.
+
+#### Additional Considerations regarding Inpatient Hospitalization Reporting
+
+- Per the 2016 *Encounter Reporting and Financial Work Group's Data Integrity Effort*: "The Department of Community Health (DCH) reporting rule from 2004 was to report all episodes where CMH was actively involved in the admission for an existing consumer. For others the reporting of episodes was more tied to CMH role re authorized/approved admission, PLUS the ability to get information about the length of stay - especially challenging for Medicare-covered persons."
+- Per the 2016 *Encounter Reporting and Financial Work Group's Data Integrity Effort*: "In 2013 with the addition of including financial information on encounters, some CMHSPs/PIHPs went to reporting encounters only if they paid something for the episode. Thus a number of Medicare and Medicaid eligible (MME) episodes are not reported, i.e., when Medicare payment covered the cost of the stay."
 
 ## Additional Considerations
 
