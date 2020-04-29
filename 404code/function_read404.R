@@ -93,8 +93,12 @@ clean404 <- function(df) {
     rename_all(list(~str_replace(.,"\\.","_"))) %>%
     rename_all(list(~str_replace(.,"per","_per_")))%>%
     select(-unittype) %>%
-    # Must be used
-    filter(cases > 0 | units > 0 | cost > 0) %>%
+    # Identify IBNR records
+    mutate(ibnr_record = if_else(cases == 0 & units == 0 & cost > 0, 1, 0)) %>%
+    filter(
+      cases > 0 | units > 0 | cost > 0, # Must be used # 99,175
+      ibnr_record != 1 # Exclude IBNR records (Inpatient Psychiatric) # 98,555
+    ) %>%
     mutate(
       hcpcs_code = str_replace(hcpcs_code,"[[:punct:]].*",""),
       hcpcs_code = case_when(
@@ -110,6 +114,10 @@ clean404 <- function(df) {
         str_detect(tolower(service_description), "^substance abuse") ~ "SUD",
         TRUE ~ modifier
       ),
+      revenue_code = case_when(
+        revenue_code == "0114, 0124, 0134, 0154" ~ "01X4", # format Psychiatric Inpatient post-FY15
+        TRUE ~ revenue_code
+      ),
       revenue_code = str_replace(revenue_code,"[[:punct:]].*",""),
       revenue_code = case_when(
         # Make 4 digit revenue codes into 3 digits
@@ -117,9 +125,15 @@ clean404 <- function(df) {
         TRUE ~ revenue_code
       ),
       code = case_when(
+        modifier == "PT22"   ~ "PT22",
+        modifier == "PT65"   ~ "PT65",
+        modifier == "PT68" & 
+          fy %in% c("2006","2007","2008","2009","2010","2011","2012","2013","2014","2015") ~ "PT68",
+        modifier == "PT73" &
+          fy %in% c("2006","2007","2008","2009","2010","2011","2012","2013","2014","2015") ~ "PT73",
         !is.na(hcpcs_code)   ~ hcpcs_code,
         !is.na(revenue_code) ~ revenue_code,
-        !is.na(modifier)     ~ modifier
+        !is.na(modifier) ~ modifier
       ),
       # Remove pesky carriage returns
       code = str_replace_all(code,"\n|\r","")
@@ -132,7 +146,8 @@ clean404 <- function(df) {
         `Manistee-Benzie (Centra Wellness)` = 'Manistee-Benzie',
         `Muskegon (HealthWest)` = 'Muskegon'
       )
-    )
+    ) %>%
+    select(-ibnr_record)
   
   return(df)
   
