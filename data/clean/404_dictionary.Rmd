@@ -2,6 +2,9 @@
 title: "Data Dictionary"
 subtitle: "904/404 Sub-Element Cost Report Codebook"
 output: 
+  word_document:
+    toc: true
+    toc_depth: 2
   md_document:
     variant: markdown_github
 ---
@@ -39,6 +42,8 @@ The following variables are included in this dataset:
 - `pct_cmh_served`: Percentage of people served by the CMHSP who received this service (per `fy`).
 
 # Data Issues and Limitations
+
+While this document outlines known data limitations, there is no claim to have identified all possible issues with the accuracy or reasonableness of data included in the CMHSP-reported SECR data, during any of the time period for which these data are made available.  The limitations noted here are provided as an aid for data users to formulate analysis questions and to caveat any claims made using this data as part of reporting.  Due to the issues noted here, this dataset may be useful for certain limited analyses or for exploratory analyses which serve as an initial step in developing questions which are subsequently investigated using more reliable data sources. 
 
 ## General Limitations of the Dataset
 
@@ -99,19 +104,23 @@ In addition to the discrepancies in reporting of the measures identified above, 
 
 ## Limitations Related to Specific Services
 
-The aforementioned data limitations apply to the entirety of the SECR dataset.  There are also a number of additional issues related to specific services.  This especially pertains to services whose reporting requirements have been modified during the timeframe covered by the dataset.  The inclusion of a specific service below is not intended to reflect an exhaustive list of all potential caveats, but simply to note known issues related to commonly used, high-cost services which are often included in analyses.
+The aforementioned data limitations apply to the entirety of the SECR dataset.  There are also a number of additional issues related to specific services.  This especially pertains to services whose reporting requirements have been modified during the timeframe covered by the dataset.  The inclusion of specific services below is not intended to reflect an exhaustive list of all potential caveats, but simply to note known issues related to commonly used, high-cost services which are often included in analyses.
 
 ### Inpatient Psychiatric Hospitalization
 
-The following data limitations should be considered when attempting to conduct an analysis of inpateint hospitalization using the SECR dataset:
+The following data limitations should be considered when attempting to conduct an analysis of inpatient hospitalization using the SECR dataset.
 
 #### Lack of Single Code to Combine Service Use Data for Inpatient Services
 
+This dataset does not provide a sound basis for aggregating global costs related to inpatient hospitalization, both because of the issues identified above and of reporting details specific to inpatient codes.  The challenges with aggregation include the following:
 
+- While the preferred method of reporting for inpatient per diem costs is as a bundled per diem, including the physician costs, in some instances the hospital will not bundle the physician cost into the per diem and these are reported separately.  Non-bundled codes that do not include physician costs are 0114, 0124, 0134, and 0154, which indicate ward size.  Measures including `cases` cannot be aggregated across these codes and bundled per diems, as they may include duplicate counts of beneficiaries.
+- Inpatient reporting includes multiple ancillary services,^[Ancillary services include: 0144, 0183, 0250, 0251, 0252, 0253, 0254, 0257, 0258, 0270, 0271, 0272, 0300, 0301, 0302, 0305, 0306, 0307, 0320, 0370, 0410, 0420, 0421, 0422, 0423, 0424, 0430, 0431, 0432, 0433, 0434, 0440, 0441, 0442, 0443, 0444, 0450, 0460, 0470, 0471, 0472, 0610, 0611, 0636, 0710, 0730, 0731, 0740, 0762, 0900, 0901, 0902, 0903, 0904, 0911, 0914, 0915, 0916, 0917, 0918, 0919, 0925, 0940, 0941, 0942] some of which may or may not have been incurred during the course of an inpatient stay.
+- For beneficiaries with dual Medicare/Medicaid, the costs may include only the portion of payment by Medicaid.  
 
 #### Differentiating Inpatient Psychiatric at a State Facility
 
-- 0101 is the only revenue code that can differentiate Inpatient Psychiatric at a State Facility (versus Community Inpatient or IMD), however this code is no longer used
+- 0101 is the only revenue code that can differentiate Inpatient Psychiatric at a State Facility (versus Community Inpatient or IMD), however this code is no longer used in FY 2016 and following
 - Specific provider types, present in the modifier field of the 904/404 data, could be used to identify Inpatient Psychiatric services provided at a State Facility, however these provider types (PT22 and PT65) appear to have been discontinued starting in FY16 suggesting that, post FY16, these services are bundled under the IMD (PT68) provider type
 - While we can differentiate State Facility (PT22) and ICF/MR (PT65) between 2006 and 2015 in the 904/404 data, all Inpatient Psychiatric revenue codes (0100, 0101, 0114, 0124, 0134, 0154) are reported in aggregate during this time frame meaning we cannot differentiate between episodes where the physician services were or were not included thus limiting the interpretation
 - All revenue codes are also reported in aggregate for Community Inpatient (PT68) and IMD (PT73) between 2006 and 2015, but starting in 2016 we are able to differentiate episodes where physician services were or were not included
@@ -127,6 +136,16 @@ The following data limitations should be considered when attempting to conduct a
 - Per the 2016 *Encounter Reporting and Financial Work Group's Data Integrity Effort*: "The Department of Community Health (DCH) reporting rule from 2004 was to report all episodes where CMH was actively involved in the admission for an existing consumer. For others the reporting of episodes was more tied to CMH role re authorized/approved admission, PLUS the ability to get information about the length of stay - especially challenging for Medicare-covered persons."
 - Per the 2016 *Encounter Reporting and Financial Work Group's Data Integrity Effort*: "In 2013 with the addition of including financial information on encounters, some CMHSPs/PIHPs went to reporting encounters only if they paid something for the episode. Thus a number of Medicare and Medicaid eligible (MME) episodes are not reported, i.e., when Medicare payment covered the cost of the stay."
 
+### Home and Community-Based Services (HCBS)
+
+Users of this dataset who wish to conduct comparative analyses of home and community based services (HCBS), should consult the comprehensive documentation on data integrity issues related to reporting of these services which was conducted by the *Encounter Reporting and Financial Work Group's Data Integrity Effort*.  Users should also familiarize themselves with the changes to reporting requirements implemented in FY2016 for the following services:
+
+- Community Living Support (H2016) and Personal Care (T1020)
+- Community Living Support in an Unlicensed In-Home Setting (H0043 and H2015)
+- Community Living Support for Daytime Activity (H2015)
+
+While the changes to the reporting requirements impact the years following 2016, CMHSPs have reported that the rate at which they were able to implement these changes within their electronic medical records and billing systems varied, and likely did not impact cost and resource use reporting uniformly during this timeframe.
+
 ## Additional Considerations
 
 The following considerations should be kept in mind when interpreting this data:
@@ -140,6 +159,6 @@ The following considerations should be kept in mind when interpreting this data:
 The following resources are referenced here or may otherwise be relevant for the interpretation of the 904/404 SECR dataset:
 
 - [MDHHS BHDDA Reporting Requirements](https://www.michigan.gov/documents/mdhhs/MHCodeChart_554443_7.pdf)
-- [MDHHS BHDDA Reporting Requirements: PIHP/CMHSP Reporting Cost Per Code and Code Chart; Appendix: Encounter Reporting and Financial Work Group, Data Integrity Effort, Psychiatric Inpatient in a Local Hospital. 2016. p. 83](https://www.michigan.gov/documents/mdhhs/MHCodeChart_October12016_EDIT_WG_Decisions_536182_7.pdf)
+- [MDHHS BHDDA Reporting Requirements: PIHP/CMHSP Reporting Cost Per Code and Code Chart; Appendix: Encounter Reporting and Financial Work Group, Data Integrity Effort. 2016. p. 58 - 83](https://www.michigan.gov/documents/mdhhs/MHCodeChart_October12016_EDIT_WG_Decisions_536182_7.pdf)
 - Culley, B., et al. *Milliman Client Report: Behavioral Health Fee Schedule Development - Project Status and Standard Cost Allocation Process*.  State of Michigan, Department of Health and Human Services: August 21, 2019.
 - [MDHHS 904/404 site](http://www.michigan.gov/mdch/0,4612,7-132-2941_4868_4902-256889--,00.html)
