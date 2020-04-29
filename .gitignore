@@ -238,6 +238,6 @@ pip-log.txt
 
 # Data files
 
-
+*.docx
 *.zip
 

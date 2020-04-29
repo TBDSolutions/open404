@@ -11,7 +11,7 @@ The [code provided here](https://github.com/j-hagedorn/open404/tree/master/404co
 * Calculation of the following variables related to each distinct service code for analysis: 
 _Service cost as % of CMH Total Cost_, _Cost per 1,000 persons served_, _Percent of beneficiaries receiving service_
 
-For details on the data elements in this dataset, please refer to the [data dictionary](https://github.com/j-hagedorn/open404/blob/master/data/clean/404DataDictionary.md).
+For details on the data elements in this dataset, please refer to the [data dictionary](https://github.com/j-hagedorn/open404/blob/master/data/clean/404_dictionary.md).
 
 You can read the code into R with a simple:
 
