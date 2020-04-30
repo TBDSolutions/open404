@@ -1,9 +1,10 @@
 svc_type,svc_grp,code,unit_type,unit_hrs,short_desc,long_desc
-Hospital Based Services,Inpatient Psychiatric Hospital,100,Per Diem,24,Inpatient Psychiatric Hospital,NA
+Hospital Based Services,Inpatient Psychiatric Hospital,1X4,Per Diem,24,"Inpatient Psychiatric Hospital, excludes Physician costs","All inclusive room and board with ancillary, excludes physician costs"
+Hospital Based Services,Inpatient Psychiatric Hospital,100,Per Diem,24,"Inpatient Psychiatric Hospital, includes Physician costs","All inclusive room and board with ancillary, includes physician costs"
 Hospital Based Services,Ancillary Hospital Services,104,Minutes,0.01,Ancillary Hospital Services,NA
 Hospital Based Services,Inpatient Psychiatric Hospital,113,Per Diem,24,Inpatient Psychiatric Hospital,NA
-Hospital Based Services,Inpatient Psychiatric Hospital,114,Per Diem,24,Inpatient Psychiatric Hospital,NA
-Hospital Based Services,Inpatient Psychiatric Hospital,124,Per Diem,24,Inpatient Psychiatric Hospital,NA
+Hospital Based Services,Inpatient Psychiatric Hospital,114,Per Diem,24,"Inpatient Psychiatric Hospital, excludes Physician costs",NA
+Hospital Based Services,Inpatient Psychiatric Hospital,124,Per Diem,24,"Inpatient Psychiatric Hospital, excludes Physician costs",NA
 Hospital Based Services,Ancillary Hospital Services,144,Encounter,NA,Inpatient Hospital Ancillary Services - Room and Board,NA
 Hospital Based Services,Ancillary Hospital Services,250,Encounter,NA,Pharmacy - General Classification,NA
 Hospital Based Services,Ancillary Hospital Services,270,Encounter,NA,Medical/Surgical Supplies and Devices - General Classification,NA
@@ -375,5 +376,7 @@ Other,Other,xxxxx,NA,NA,Other,NA
 Psychiatric and Medication Services,Medication Administration,Jxxxx,Item,NA,Aggregate injection codes,NA
 Psychiatric and Medication Services,Pharmaceuticals,phxxx,Item,NA,Pharmacy (Drugs and Other Biologicals),NA
 Peer Services,Peer Support,prxxx,Encounter,NA,Peer Directed and Operated Support Services,NA
-Hospital Based Services,Inpatient Psychiatric Hospital,PT68,Per Diem,24,Local Psychiatric Hospital/IMD,NA
-Hospital Based Services,Inpatient Psychiatric Hospital,PT73,Per Diem,24,Local Psychiatric Hospital/Acute Community,NA
+Hospital Based Services,Inpatient Psychiatric Hospital,PT68,Per Diem,24,Private Mental Hospital - Inpt (IMD),NA
+Hospital Based Services,Inpatient Psychiatric Hospital,PT73,Per Diem,24,Hospital - Inpt Psychiatric Unit (Community Hospital),NA
+Hospital Based Services,Inpatient Psychiatric Hospital,PT22,Per Diem,24,State Psychiatric Hospital - Inpt (State Hospital),NA
+Hospital Based Services,Inpatient Psychiatric Hospital,PT65,Per Diem,24,State Mental Retardation Facility - Inpt (ICF/MR),NA
