@@ -99,55 +99,68 @@ clean404 <- function(df) {
       cases > 0 | units > 0 | cost > 0, # Must be used # 99,175
       ibnr_record != 1 # Exclude IBNR records (Inpatient Psychiatric) # 98,555
     ) %>%
-    mutate(
-      hcpcs_code = str_replace(hcpcs_code,"[[:punct:]].*",""),
-      hcpcs_code = case_when(
-        hcpcs_code == "00104" ~ "104", 
-        hcpcs_code == "ALL"   ~ "Jxxxx",
-        is.na(hcpcs_code) & str_detect(service_description,"^Peer") ~ "prxxx",
-        is.na(hcpcs_code) & str_detect(service_description,"^Pharmacy") ~ "phxxx",
-        is.na(hcpcs_code) & service_description == "Other" ~ "xxxxx",
-        TRUE ~ hcpcs_code
-      ),
-      modifier = case_when(
-        # Make services with separate SUD reporting identifiable via modifier
-        str_detect(tolower(service_description), "^substance abuse") ~ "SUD",
-        TRUE ~ modifier
-      ),
-      revenue_code = case_when(
-        revenue_code == "0114, 0124, 0134, 0154" ~ "01X4", # format Psychiatric Inpatient post-FY15
-        TRUE ~ revenue_code
-      ),
-      revenue_code = str_replace(revenue_code,"[[:punct:]].*",""),
-      revenue_code = case_when(
-        # Make 4 digit revenue codes into 3 digits
-        str_length(revenue_code) == 4 & str_detect(revenue_code,"^0") ~ str_sub(revenue_code,2,4),
-        TRUE ~ revenue_code
-      ),
-      code = case_when(
-        modifier == "PT22"   ~ "PT22",
-        modifier == "PT65"   ~ "PT65",
-        modifier == "PT68" & 
-          fy %in% c("2006","2007","2008","2009","2010","2011","2012","2013","2014","2015") ~ "PT68",
-        modifier == "PT73" &
-          fy %in% c("2006","2007","2008","2009","2010","2011","2012","2013","2014","2015") ~ "PT73",
-        !is.na(hcpcs_code)   ~ hcpcs_code,
-        !is.na(revenue_code) ~ revenue_code,
-        !is.na(modifier) ~ modifier
-      ),
-      # Remove pesky carriage returns
-      code = str_replace_all(code,"\n|\r","")
-    ) %>%
-    ## Standardize CMHSP names
-    mutate(
-      cmhsp = recode(
-        cmhsp,
-        `LifeWays` = 'Lifeways',
-        `Manistee-Benzie (Centra Wellness)` = 'Manistee-Benzie',
-        `Muskegon (HealthWest)` = 'Muskegon'
-      )
-    ) %>%
-    select(-ibnr_record)
+  mutate(
+    hcpcs_code = str_replace(hcpcs_code,"[[:punct:]].*",""),
+    hcpcs_code = case_when(
+      hcpcs_code == "00104" ~ "104",
+      hcpcs_code == "ALL"   ~ "Jxxxx",
+      is.na(hcpcs_code) & str_detect(service_description,"^Peer") ~ "prxxx",
+      is.na(hcpcs_code) & str_detect(service_description,"^Pharmacy") ~ "phxxx",
+      is.na(hcpcs_code) & service_description == "Other" ~ "xxxxx",
+      TRUE ~ hcpcs_code
+    ),
+    modifier = case_when(
+      # Make services with separate SUD reporting identifiable via modifier
+      str_detect(tolower(service_description), "^substance abuse") ~ "SUD",
+      TRUE ~ modifier
+    ),
+    revenue_code = case_when(
+      revenue_code == "0114, 0124, 0134, 0154" ~ "01X4", # Psychiatric Inpatient post-FY15
+      revenue_code == "0250-0254, 0257-0258"   ~ "025X", # Pharmacy
+      revenue_code == "0270-0272" ~ "027X", # Medical/Surgical Supplies and Devices
+      revenue_code == "0300-0302, 0305-0307" ~ "030X", # Laboratory
+      revenue_code == "0420-0424"  ~ "042X", # Physical Therapy
+      revenue_code == "0430-0434" ~ "043X", # Occupational Therapy
+      revenue_code == "0440-0444" ~ "044X", # Speech Therapy – Language Pathology
+      revenue_code == "0470-0472" ~ "047X", # Audiology
+      revenue_code == "0610-0611" ~ "061X", # Magnetic Resonance Imaging (MRI)
+      revenue_code == "0730-0731" ~ "073X", # EKG/ECG (Electrocardiogram)
+      revenue_code %in% c("0900, 0902-0904, 0911, 0914-0919",
+                          "0900, 0914, 0915, 0916, 0919",
+                          "0900, 0906, 0914, 0915, 0916, 0919") ~ "09XX", # Behavioral Health Treatment
+      revenue_code == "0940-0942" ~ "094X", # Other Therapeutic Services
+      TRUE ~ revenue_code
+    ),
+    revenue_code = str_replace(revenue_code,"[[:punct:]].*",""),
+    revenue_code = case_when(
+      # Make 4 digit revenue codes into 3 digits
+      str_length(revenue_code) == 4 & str_detect(revenue_code,"^0") ~ str_sub(revenue_code,2,4),
+      TRUE ~ revenue_code
+    ),
+    code = case_when(
+      modifier == "PT22"   ~ "PT22",
+      modifier == "PT65"   ~ "PT65",
+      modifier == "PT68" &
+        fy %in% c("2006","2007","2008","2009","2010","2011","2012","2013","2014","2015") ~ "PT68",
+      modifier == "PT73" &
+        fy %in% c("2006","2007","2008","2009","2010","2011","2012","2013","2014","2015") ~ "PT73",
+      !is.na(hcpcs_code)   ~ hcpcs_code,
+      !is.na(revenue_code) ~ revenue_code,
+      !is.na(modifier) ~ modifier
+    ),
+    # Remove pesky carriage returns
+    code = str_replace_all(code,"\n|\r","")
+  ) %>%
+  ## Standardize CMHSP names
+  mutate(
+    cmhsp = recode(
+      cmhsp,
+      `LifeWays` = 'Lifeways',
+      `Manistee-Benzie (Centra Wellness)` = 'Manistee-Benzie',
+      `Muskegon (HealthWest)` = 'Muskegon'
+    )
+  ) %>%
+  select(-ibnr_record)
   
   return(df)
   
