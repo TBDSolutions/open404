@@ -5,6 +5,17 @@ Hospital Based Services,Ancillary Hospital Services,104,Minutes,0.01,Ancillary H
 Hospital Based Services,Inpatient Psychiatric Hospital,113,Per Diem,24,Inpatient Psychiatric Hospital,NA
 Hospital Based Services,Inpatient Psychiatric Hospital,114,Per Diem,24,"Inpatient Psychiatric Hospital, excludes Physician costs",NA
 Hospital Based Services,Inpatient Psychiatric Hospital,124,Per Diem,24,"Inpatient Psychiatric Hospital, excludes Physician costs",NA
+Hospital Based Services,Ancillary Hospital Services,25X,Encounter,NA,Pharmacy - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,27X,Encounter,NA,Medical/Surgical Supplies and Devices - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,30X,Encounter,NA,Laboratory - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,42X,Encounter,NA,Physical Therapy - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,43X,Encounter,NA,Occupational Therapy - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,44X,Encounter,NA,Speech Therapy – Language Pathology - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,47X,Encounter,NA,Audiology - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,61X,Encounter,NA,Magnetic Resonance Imaging (MRI) - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,73X,Encounter,NA,EKG/ECG (Electrocardiogram) - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,9XX,Encounter,NA,Behavioral Health Treatment - General Classification,NA
+Hospital Based Services,Ancillary Hospital Services,94X,Encounter,NA,Other Therapeutic Services - General Classification,NA
 Hospital Based Services,Ancillary Hospital Services,144,Encounter,NA,Inpatient Hospital Ancillary Services - Room and Board,NA
 Hospital Based Services,Ancillary Hospital Services,250,Encounter,NA,Pharmacy - General Classification,NA
 Hospital Based Services,Ancillary Hospital Services,270,Encounter,NA,Medical/Surgical Supplies and Devices - General Classification,NA
