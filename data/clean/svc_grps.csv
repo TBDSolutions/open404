@@ -391,3 +391,6 @@ Hospital Based Services,Inpatient Psychiatric Hospital,PT68,Per Diem,24,Private 
 Hospital Based Services,Inpatient Psychiatric Hospital,PT73,Per Diem,24,Hospital - Inpt Psychiatric Unit (Community Hospital),NA
 Hospital Based Services,Inpatient Psychiatric Hospital,PT22,Per Diem,24,State Psychiatric Hospital - Inpt (State Hospital),NA
 Hospital Based Services,Inpatient Psychiatric Hospital,PT65,Per Diem,24,State Mental Retardation Facility - Inpt (ICF/MR),NA
+Screening & Assessment,Developmental Screen,96112,Encounter,NA,Assessments-Other,NA
+Screening & Assessment,Developmental Screen,96113,30 min,0.5,Assessments-Other,NA
+Psychiatric and Medication Services,Psychiatric visit (out of office),99343,Encounter,NA,Assessment,NA
