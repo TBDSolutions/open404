@@ -7,15 +7,21 @@ library(tidyverse)
 
 read404 <- function(path, fy, pop = c("DD", "MIA", "MIC")) {
   
-  df <- 
-    read_csv(
-      path, 
-      col_names = c(
-        "CMHSP","FirstofService.Description","FirstOfRevenue.Code","FirstOfHCPCS.Code","FirstOfModifier",
-        "UnitType","SumOfCases","SumOfUnits","SumOfCost","SumOfOtherCost"
-      )
-    ) %>%
-    slice(-1) # remove former header column
+  df <- read_csv(path) %>%
+    select(1, # CMH Name (column name not always present)
+           contains("Service"), # Service Descriptoin
+           contains("Revenue"), # Revenue Code
+           contains("HCPCS"), # HCPC Code
+           contains("Modifier"), # Code Modifier
+           contains("Unit") & contains("Type"), # Unit Type
+           ends_with("Cases"), # Sum of Cases
+           ends_with("Units"), # Sum of Units
+           ends_with("Cost") & !contains("Other") # Sum of Cost
+    )
+  
+  colnames(df) <- c("CMHSP","FirstofService.Description","FirstOfRevenue.Code",
+                    "FirstOfHCPCS.Code","FirstOfModifier","UnitType",
+                    "SumOfCases","SumOfUnits","SumOfCost")
   
   df <-
     df %>%

@@ -12,7 +12,7 @@ source("404code/function_group404.R")
 df_404 <- group404(df_404) %>% select(-n_row)
 
 # Add rates per 1,000 served
-source("function_calc404rates.R")
+source("404code/function_calc404rates.R")
 df_404 <- calc404rates(df_404) 
 
 # Add rates per 1,000 population (census)

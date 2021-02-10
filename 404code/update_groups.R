@@ -80,7 +80,7 @@ rm(list = c("ref_404", "hcpc_ref", "rev_ref", "tst"))
 # Create ref for CMHs
 
 cmhsps <-
-  df %>%
+  df_404 %>%
   group_by(cmhsp) %>%
   summarize() %>% ungroup() %>%
   mutate(
