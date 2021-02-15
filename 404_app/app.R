@@ -457,8 +457,7 @@ server <- function(input, output, session) {
       label =   paste("Which ",org,"are you interested in viewing?"),
       choices =  prov_options,
     #  selected = prov_options,
-       selected = c("Ottawa","Lapeer","Network180",
-                    "Kalamazoo","Clinton Eaton Ingham","Allegan","Washtenaw"),
+       selected = c("Genesee","St. Clair","Lapeer",'Sanilac',prov_options[1:12]),
       
       multiple = TRUE,
       options =  list( placeholder = 'Search or Select'))
@@ -1191,8 +1190,7 @@ output$byYearSelection_org <- renderUI({
     label =   paste("Which ",org,"are you interested in viewing?"),
     choices =  prov_options,
    # selected = prov_options[1:5],
-   selected = c("Ottawa","Lapeer","Network180",
-                "Kalamazoo","Clinton Eaton Ingham","Allegan","Washtenaw"),
+   selected = c("Genesee","St. Clair","Lapeer",'Sanilac'),
     multiple = TRUE,
     options =  list( placeholder = 'Search or Select'))
   
@@ -1840,7 +1838,7 @@ output$cost_driver_fy<-renderUI({
     inputId = "cost_driver_fy",
     label = "Choose year", 
     choices = levels(as.factor(data404$fy)),
-    selected = "2018",
+    selected = "2019",
     multiple = F
   )
   
@@ -1850,12 +1848,18 @@ output$cost_driver_fy<-renderUI({
 
 output$target_cmh <-renderUI({
   
+  
+  rand_sel<-as_tibble(levels(data404$cmhsp))%>%
+    sample_n(1) %>%
+    pull()
+  
+  
   selectizeInput(
     inputId = 'target_cmh',
     label = "Target CMH",
     choices = levels(data404$cmhsp),
     multiple = F,
-    selected = "Washtenaw")
+    selected = rand_sel)
 })
 
 output$peer_cmh <-renderUI({
@@ -1869,13 +1873,16 @@ output$peer_cmh <-renderUI({
   
   options<-options[!(options %in% target)]
   
+  rand_sel<-as_tibble(options)%>%
+    sample_n(8) %>%
+    pull()
+  
   selectizeInput(
     inputId = 'peer_cmh',
     label = paste("Benchmark CMH's (avg. is taken)"),
     choices = levels(as.factor(options)),
     multiple = T,
-    selected = c("Ottawa","Lapeer","Network180",
-                 "Kalamazoo","Clinton Eaton Ingham","Allegan"))
+    selected = rand_sel)
   
   
 })
