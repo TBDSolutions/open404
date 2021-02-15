@@ -612,7 +612,7 @@ server <- function(input, output, session) {
       inputId = 'fy_filter',
       label = 'Fiscal Year',
       choices = c(levels(data404$fy)),
-      selected = "2018")
+      selected = "2019")
 }
     
     
@@ -820,7 +820,7 @@ selectedDS<-reactive({
   pct_change<- data404%>%
     filter(
       !!as.symbol(org_type()) %in% input$provider,
-   #   fy %in% c('2016','2018'),
+   #   fy %in% c('2016','2019'),
        fy %in% c(start - 1, as.numeric(fy_filter())),
       (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$compareAcross,
       population %in% pop_filter()
@@ -1169,7 +1169,7 @@ output$byYearSelection_end <-renderUI({
             choices = seq(as.numeric(input$byYearSelection_star) + 1
                           ,(max(as.numeric(as.character(data404$fy)))),
                           by = 1),
-            selected = 2018)
+            selected = 2019)
   
 
 })
