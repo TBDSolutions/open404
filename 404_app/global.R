@@ -6,25 +6,34 @@ scale_fun <- function(x) as.vector(scale(x))
 
 #font_import()
 library(shiny)
-#library(rlang)
 library(DT)
 library(shinythemes)
-#library(shiny)
+
 
 #### Load packages ####
 library(scales)
 library(tidyverse)
+#library(hrbrthemes)
 
-library(hrbrthemes)
-#library(gcookbook)
 library(stringi)
 #library(extrafont)
-library(rsconnect)
+
 library(plotly)
 library(viridis)
 library(grid)
 library(gtable)
+library(shinycssloaders)
+
+
+#library(extrafont)
+library(hrbrthemes)
 #hrbrthemes::import_roboto_condensed()
+
+#loadfonts(device="win")
+
+#extrafont::fonttable() %>%
+#  filter(FullName %in% c("Gill Sans MT", "Segoe UI"))
+
 
 #### Read datasets ####
 
@@ -72,7 +81,11 @@ state_data<-read_csv("datafiles/TotalServedAnnual.csv")%>%
   
 
 
-### New code modifers 
+### code referecne table 
+
+code_ref<-data404%>%
+          select(code,code_shortDesc)%>%
+          distinct()
 
 
 

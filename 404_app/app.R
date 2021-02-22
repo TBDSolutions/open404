@@ -2,7 +2,7 @@ source('global.R')
 
 
 # Define UI for application that draws a histogram
-ui <- function(requests){ navbarPage("Explore 404 Data",
+ui <- function(requests){ navbarPage("Explore 404 Data",#id = 'tab',
                                      
   theme = shinytheme("cerulean"),
    navbarMenu(
@@ -17,13 +17,13 @@ ui <- function(requests){ navbarPage("Explore 404 Data",
            br(),
            p(
              "The cost and utilization data is collected by the Michigan 
-Department of Health and Human Services' (MDHHS) Behavioral 
-Health and Developmental Disabilities Administration (BHDDA) 
-and reported annually to the Michigan legislature. Given the 
-ongoing changes to Michigan’s public health system, this data 
-can be used to understand service use, cost trends and 
-variation across the state for vulnerable populations.  This 
-application has been developed by"
+              Department of Health and Human Services' (MDHHS) Behavioral 
+              Health and Developmental Disabilities Administration (BHDDA) 
+              and reported annually to the Michigan legislature. Given the 
+              ongoing changes to Michigan’s public health system, this data 
+              can be used to understand service use, cost trends and 
+              variation across the state for vulnerable populations.  This 
+              application has been developed by"
 
            ),#tags$img(src = "www.rstudio.com", width = "100px", height = "100px"),
            tags$img(src = 'tbd_logo.png', width = "200px", align = "left"),p(tags$sub(a(href = "https://www.tbdsolutions.com/","©2020"))),
@@ -130,7 +130,7 @@ includes data visualizations that can be used to explore the data."
        )
      )
    )
-  ),
+  ),id = 'tab',
    navbarMenu("Analysis",
  # Application title
  tabPanel("Graphs and Tables",
@@ -142,7 +142,18 @@ includes data visualizations that can be used to explore the data."
           ),
           
           
-          fluidRow(column(6,bookmarkButton())),
+          fluidRow(column(12,
+                          
+                          bookmarkButton(id = "barchart_bm",
+                                         label = "Bookmark to Save Filters",
+                                         style = "color: black; 
+                       background-color: #E1E8ED;") 
+                          
+                          
+                          
+                          
+                          
+                          )),
           # Sidebar with a slider input for number of bins 
           fluidRow(
             column(3,
@@ -156,18 +167,11 @@ includes data visualizations that can be used to explore the data."
                    uiOutput("compareAcross"),
                    br(),
                    uiOutput('metric'),
-                #   uiOutput('servGrp'),
-                #   uiOutput('code'),
                    uiOutput("popType"),
                    uiOutput("fiscalYear"),
                   style = 'background:#CCD6DD')
             ),#---
     column(9,
-      #     fluidRow(
-      #column(2,uiOutput("mean")),
-      #column(4,uiOutput("PctChange")),
-      #column(3, uiOutput("shade")),
-      #column(3,uiOutput('shadeOptions'))),
       
       ##########################################################################                   
       tabsetPanel(id = "tabs",
@@ -186,7 +190,7 @@ includes data visualizations that can be used to explore the data."
                  tabPanel("Table",
                  #tags$b((("Barchart Data"))),
                 # br(),
-                 DT::dataTableOutput("barTable")),
+                DT::dataTableOutput("barTable")),
                 fluidRow(column(8,
                                 downloadButton("Barchart", "Barchart Data"),
                                 downloadButton('plot','Barchart Image'))
@@ -235,11 +239,108 @@ includes data visualizations that can be used to explore the data."
         
         
         
-      ), # closure for tabsetpannl
-      #################################################################################
+      ), 
     ),
   )
-), # Tabpannel for barchart 
+), # Closure for 'Graphs and Tables' tabpannel
+###############################################
+tabPanel("CMH Cost Drivers Report",
+         fluidRow(
+           column(3,wellPanel(
+             uiOutput("cost_driver_fy"),
+             uiOutput("target_cmh"),
+             uiOutput("peer_cmh"),
+             uiOutput("target_codes"),
+             uiOutput("exclude_codes"),
+             actionButton("button","Press to Build Report",icon = icon("arrow-circle-up"),
+                          style =   "color: black; 
+                                      background-color: #E1E8ED; 
+                                      position: relative;")
+           ),
+           wellPanel(
+             uiOutput('code_highlight'),
+             uiOutput('cost_impact'))
+
+
+           ),
+          
+             column(9,
+                    tabsetPanel(
+                      tabPanel("DD Population",
+                               
+                           plotlyOutput("dd_pop")
+                          #     tableOutput("test_table")
+                               ),
+                      tabPanel("MIA Population", 
+                               plotlyOutput("mia_pop")),
+                      tabPanel("MIC Population",
+                               plotlyOutput("mic_pop")),
+                      tabPanel("About the Report",
+                               fluidRow(column(3,offset = 0,
+                                               tags$strong("Data & Metrics", style = "font-size: 125%;"))),
+                               br(),
+                               fluidRow(column(8,tags$h5("The Main Graphs")),
+                                        column(12,offset = 0,
+                                               tags$ul(tags$li(paste0(
+                                "Unlike the ‘Graphs and Tables’ tab, which is more exploratory in nature, the
+                                ‘Cost Drivers’ report is presented with a particular formula at its center. The
+                                formula brings to light codes that are different from their peers, but also gives
+                                a rough estimate of the potential cost impact of peer alignment. Each bar on the
+                                graph represents the Cost-Per-Case difference between the target CMH and the average
+                                of the peer group. To get a sense of magnitude we multiply the Cost-Per-Case 
+                                difference by the number of cases for the target CMH for that code/population. In 
+                                other words, had the target CMH’s average Cost-Per-Case been in-line with their 
+                                peers and that amount was applied to all cases for the year, what would've been 
+                                the net impact of alignment. Bars above 0 would be the potential cost savings for 
+                                the target CMH when alignment with peers is achieved. On the other hand, bars 
+                                below 0 are what it might cost the target CMH to be in alignment with it’s peers."))
+                                       )),
+                                   column(8,tags$h5("Above Peer Svc.Type - Cost/1K cases")),
+                                   column(12,offset = 0,
+                                          tags$ul(tags$li(paste0(
+                                            "It’s entirely possible different codes can be used to address the same
+                                            need. How often one code gets used over another can vary between CMH’s. 
+                                            This known fact can account for cost differences in any singular code 
+                                            comparison. We attempt to control for this by looking at the parent 
+                                            service type of which the code is a part. Each HCPC code belongs to a 
+                                            service type that groups together codes with the same clinical intent. 
+                                            The highlight metric - Above Svc.Type - Cost/1K cases - takes the entire
+                                            group of codes in each service type and calculates a global cost per 1K cases
+                                            and compares the cost to its peers. When a code is 
+                                            above its peer group, it provides rough evidence against 
+                                            any claims that resource use differences can be explained away by 
+                                            different HCPC code use practices by other CMH's."))
+                                          )),
+                                   column(8,tags$h5("Drivers")),
+                                   column(12,offset = 0,
+                                          tags$ul(tags$li(paste0(
+                                   "The primary metric of focus is cost-per-case. The Drivers highlight 
+                                   goes one step further to categorize what’s potentially behind the cost 
+                                   differential. A higher cost-per-case may be driven by a higher average 
+                                   unit cost, more units provided per case on average or both"))
+                                          )),
+                                   column(8,tags$h5("80/20 or the Pareto Effect")),
+                                   column(12,offset = 0,
+                                          tags$ul(tags$li(paste0(
+                                            "The 80/20 rule, also known as the Pareto Effect, highlights those 
+                                            services for the target CMH that account for 80% of its cumulative 
+                                            resource usage. The number of services highlighted may vary, but they 
+                                            will always account for at least 80% of the target CMH’s resource usage for 
+                                            the selected year.
+                                            "))
+                                          )),
+                                   br(),br(),br()
+                                   )
+                    )),
+                  #  tags$b("Search and Click on the row to highlight the selected code"),
+                    withSpinner(dataTableOutput("code_table"), type = 4, color = "#92a8d1")
+                   #,tableOutput("code_table_selected")
+          
+           ))
+         
+         
+), # Closure for 'CMH Cost Drivers Tab' tabpannel
+###############################################         
 tabPanel(
   "Data Limitations",
   fluidRow(column(3,offset = 0,
@@ -317,9 +418,8 @@ tabPanel("Service Groupings Search",
 
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
-  
-source('global.R')
+server <- function(input, output, session) {
+
   
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Analysis Tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -345,7 +445,7 @@ source('global.R')
     org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
     
     
-    # Conditinal statements to populate the list
+    # Conditional statements to populate the list
     prov_options<- if(input$CMHorPIHP == "cmhsp"){
       levels(data404$cmhsp)}
     else if(input$CMHorPIHP == "pihp_name"){levels(data404$pihp_name)}
@@ -356,7 +456,9 @@ source('global.R')
       inputId = "provider",
       label =   paste("Which ",org,"are you interested in viewing?"),
       choices =  prov_options,
-      selected = prov_options,
+    #  selected = prov_options,
+       selected = c("Genesee","St. Clair","Lapeer",'Sanilac',prov_options[1:12]),
+      
       multiple = TRUE,
       options =  list( placeholder = 'Search or Select'))
     
@@ -380,8 +482,8 @@ source('global.R')
     
     radioButtons(
       inputId = "groupOrHcpcsOrMod_",
-      label = "Service Group, HCPCS Code or Modifier",
-      choices = c("Service Group" = "svc_grp", "HCPCS" = "code_shortDesc","Code Mod" = 'codeM_shortDesc' ),
+      label = "Service Type, HCPCS Code or Modifier",
+      choices = c("Service Type" = "svc_type", "HCPCS" = "code_shortDesc","Code Mod" = 'codeM_shortDesc' ),
       selected = c("code_shortDesc"),
       inline = TRUE)
     
@@ -400,16 +502,18 @@ source('global.R')
     else{
 
     
-    type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
+    type<-as.symbol(if(input$groupOrHcpcsOrMod_ == "svc_type"){"svc_type"}
                   else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
                   else{"code_shortDesc"})
     
     org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
     
-    grps<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){"Service Group"}
+    grps<-if(input$groupOrHcpcsOrMod_ == "svc_type"){"Service Type"}
              else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'Code Modifier'}
              else{"HCPC Code"}
     
+    
+    #type<-as.symbol("svc_type")
     
     options<-data404%>%
       filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
@@ -418,14 +522,14 @@ source('global.R')
       pull(!!type)
     
     
-    if(input$groupOrHcpcsOrMod_ == "svc_grp"){
-      tags$h6("will")
+    if(input$groupOrHcpcsOrMod_ == "svc_type"){
+     # tags$h6("will")
       selectizeInput(
         inputId = 'compareAcross',
         label = paste('Compare ',org," across this ",grps,sep = ""),
         choices = options,
         multiple = FALSE,
-        selected = "Case Management")
+        selected = "Home & Community Based Services")
       
     } else if(input$groupOrHcpcsOrMod_ == "code_shortDesc") {
       
@@ -785,7 +889,7 @@ selectedDS_download<-reactive({
   
 })
 
-# need to make barchart reactive for download later
+# need to make bar chart reactive for download later
 plotInput<-reactive({ 
   
   #output$barchart<-renderPlot({
@@ -872,7 +976,7 @@ plotInput<-reactive({
                                  .desc = TRUE),
                  y = !!as.symbol(metric()),
                  fill = PIHP)) +
-      geom_bar(stat="identity", position=position_dodge(), alpha = .5,
+      geom_bar(stat="identity", position=position_dodge(), alpha = .7,
                color="black")+
       scale_y_continuous(label = number_format(big.mark = ","),
                          limits = c(0,y_max))+
@@ -893,13 +997,15 @@ plotInput<-reactive({
                   axis_text_size = 11,
                   axis_title_size = 13,
                   ticks = TRUE
-                  #    base_family = "IBMPlexSans"
+                  #   base_family = "IBMPlexSans"
       )+
       theme(axis.text.x=element_text(angle=45, hjust=1)
             ,plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5)
+             plot.subtitle = element_text(hjust = 0.5)
+          #  text=element_text(size=14 #, family="Gill Sans MT"
+           )
             
-            )
+  
 
     
     
@@ -910,7 +1016,7 @@ plotInput<-reactive({
       ggplot(aes(x = fct_reorder(as.factor(!!as.symbol(org_type())),!!as.symbol(metric()),
                                  .desc = TRUE),
                  y = !!as.symbol(metric()))) +
-      geom_bar(stat="identity", position=position_dodge(), alpha = .5,
+      geom_bar(stat="identity", position=position_dodge(), alpha = .7,
                color="black")+
       scale_y_continuous(label = number_format(big.mark = ","),
                          limits = c(0,y_max))+
@@ -923,7 +1029,7 @@ plotInput<-reactive({
               subtitle =  paste("Fiscal Year ",input$fy_filter,sep = ""))+
       labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))+
       theme_ipsum(grid = 'FALSE',
-                  plot_title_size = 15,
+                 plot_title_size = 15,
                   axis_text_size = 11,
                   axis_title_size = 13,
                   ticks = TRUE
@@ -931,9 +1037,11 @@ plotInput<-reactive({
       )+
       theme(axis.text.x=element_text(angle=45, hjust=1)
             ,plot.title = element_text(hjust = 0.5),
-             plot.subtitle = element_text(hjust = 0.5)
+            plot.subtitle = element_text(hjust = 0.5))
+    #        text=element_text(size=14 #, family="Gill Sans MT"
+    #        ))
             
-      )
+    
   } 
   
  if(input$includeMean == 'Yes' & input$includePctChange == "Yes"){
@@ -1027,6 +1135,14 @@ output$Barchart <- downloadHandler(
     write.csv(selectedDS_download(), file, row.names = FALSE)
   }
 )
+  
+  
+  setBookmarkExclude(c("barchart_bm"))
+  
+  observeEvent(input$barchart_bm, {
+    session$doBookmark()
+  })
+  
 
 }
 
@@ -1062,7 +1178,7 @@ output$byYearSelection_org <- renderUI({
   org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
   
   
-  # Conditinal statements to populate the list
+  # Conditional statements to populate the list
   prov_options<- if(input$CMHorPIHP == "cmhsp"){
     levels(data404$cmhsp)}
   else if(input$CMHorPIHP == "pihp_name"){levels(data404$pihp_name)}
@@ -1073,7 +1189,8 @@ output$byYearSelection_org <- renderUI({
     inputId = "provider_byYear",
     label =   paste("Which ",org,"are you interested in viewing?"),
     choices =  prov_options,
-    selected = prov_options[1:5],
+   # selected = prov_options[1:5],
+   selected = c("Genesee","St. Clair","Lapeer",'Sanilac'),
     multiple = TRUE,
     options =  list( placeholder = 'Search or Select'))
   
@@ -1088,7 +1205,7 @@ output$byYearSelection_org <- renderUI({
 
 provider_byYear_input<-reactive({input$provider_byYear})
 
-### Reatctive datasets 
+### Reactive data sets 
 
 selectedDS_byYear<-reactive({
   
@@ -1181,7 +1298,6 @@ line_plot_image<-reactive({
     pull(popType)
   
   
-  
   df<-if(input$CMHorPIHP == 'cmhsp'){
     
     
@@ -1192,12 +1308,13 @@ line_plot_image<-reactive({
       geom_line(aes(y = !!as.symbol(metric()),color = CMH),size=1.2)+
       theme_minimal()+
     #  scale_color_hue(l=50, c=100 ,h=c(0, 360), na.value = "black")+
-   #   scale_color_viridis(discrete=TRUE) +
+      scale_color_viridis(discrete=TRUE) +
       #  scale_color_brewer(palette="Dark2")+
     #  scale_fill_manual(values = c("blue","orange","green","purple"))+
+  #    paletteer_c("gameofthrones::baratheon", n = 5)+
       xlab("Fiscal Year")+
       ylab(stri_trans_totitle(str_replace_all(input$metric,pattern = "_"," ")))+
-      ggtitle(paste("Comparing ", str_replace_all(input$metric,pattern = "_"," ")," by ",
+      ggtitle(paste("Comparing peer group ", str_replace_all(input$metric,pattern = "_"," ")," by ",
                     org_lab," for ",paste(group,collapse = ","),sep = ""),
               subtitle = paste("Fiscal Years",input$byYearSelection_star,
                                "-",input$byYearSelection_end, sep = " "))+
@@ -1307,14 +1424,16 @@ output$byYearPlot <-renderPlot({
   output$LineplotImage <- downloadHandler(
     filename = function() { paste("line_chart_image", '.png', sep='') },
     content = function(file) {
-      ggsave(file, plot = line_plot_image(),device = "png", width = 12 , height = 6
+      ggsave(file, plot = line_plot_image(),
+             device = "png", width = 12 ,
+             height = 6,dpi = 500
       )
     }
   )
 } 
   
 
-############# By year heatmap tab 
+############# By year heat map tab 
 
 ### Reactive datasets 
 selectedDS_byYear<-reactive({
@@ -1703,6 +1822,1377 @@ output$plot <- downloadHandler(
   }
 )
 
+
+
+
+
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CMH Cost Drivers Tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+### UI Components
+
+output$cost_driver_fy<-renderUI({
+  
+  
+  selectInput(
+    inputId = "cost_driver_fy",
+    label = "Choose year", 
+    choices = levels(as.factor(data404$fy)),
+    selected = "2019",
+    multiple = F
+  )
+  
+  
+  
+})
+
+output$target_cmh <-renderUI({
+  
+  
+  rand_sel<-as_tibble(levels(data404$cmhsp))%>%
+    sample_n(1) %>%
+    pull()
+  
+  
+  selectizeInput(
+    inputId = 'target_cmh',
+    label = "Target CMH",
+    choices = levels(data404$cmhsp),
+    multiple = F,
+    selected = rand_sel)
+})
+
+output$peer_cmh <-renderUI({
+  
+  
+  target<-input$target_cmh
+  
+ # target<-"Washtenaw"
+  
+  options<-levels(data404$cmhsp)
+  
+  options<-options[!(options %in% target)]
+  
+  rand_sel<-as_tibble(options)%>%
+    sample_n(8) %>%
+    pull()
+  
+  selectizeInput(
+    inputId = 'peer_cmh',
+    label = paste("Benchmark CMH's (avg. is taken)"),
+    choices = levels(as.factor(options)),
+    multiple = T,
+    selected = rand_sel)
+  
+  
+})
+
+output$exclude_codes <- renderUI({
+  
+  selectizeInput(
+    inputId = 'exclude_codes',
+    label = paste("Codes that should be removed?"),
+    choices = levels(as.factor(data404$code)),
+    multiple = T,
+    selected = c("H0043","H2015")
+    
+    )
+  
+  
+  
+})
+
+output$target_codes <-renderUI({
+  
+  selectizeInput(
+    inputId = 'target_codes',
+    label = "HCPC code bundle to be included?",
+    choices = c("Only codes used by Target" = 'target', 
+                "Only codes used by Target or Peers" = 'peer', 
+                "Include all codes" = 'all'),
+    multiple = F,
+    selected = "peer")
+})
+
+##----
+output$cost_impact<-renderUI({
+  
+  radioButtons(
+    
+    inputId = "cost_impact",
+    label = "Cost Per Case impact based on difference between Target CMH and..",
+    choices = c("Peer group Avg." = 'potential_savings_peer',"State Avg." = 'potential_savings_state'
+                #,"Average of the Two" = '(potential_savings_peer + potential_savings_state)/2 '
+                ),
+    selected = 'potential_savings_peer',
+    inline = T
+  )
+
+})
+
+output$code_highlight<-renderUI({
+  
+  selectizeInput(
+    inputId = 'code_highlight',
+    label = "Highlight bars based on...",
+    choices = c("80/20","Alignment Impact","Drivers", "Above Svc.Type - Cost/1K cases" = "peer_svc_grp"),
+    multiple = F,
+    selected = c("Alignment Impact"))
+  
+  
+})
+
+output$service_group_filter<-renderUI({
+  
+  radioButtons(
+    inputId = "service_group_filter",
+    label = "Only include HCPC codes whose parent service group
+             was above thier peers in cost/10K cases?",
+    choices = c("No, include all HCPC Codes" = 'no',"Yes, focus on the outliers" = 'yes'),
+    select = 'no'
+  )
+  
+  
+})
+
+
+
+### Reactive inputs 
+cost_impact<-reactive({input$cost_impact})
+exclude_codes<-reactive({input$exclude_codes})
+code_highlight<-reactive({input$code_highlight})
+service_group_filter<-reactive({input$service_group_filter})
+target_codes <-reactive({input$target_codes})
+cost_driver_fy<-reactive({input$cost_driver_fy})
+
+### Reactive Datasets 
+data404_pivot_compare<-eventReactive(input$button,{
+  
+#==========================================
+# applying first set of global filters 
+# to tag peer and target groups
+#==========================================
+  
+
+  data404_group<-data404%>%
+    filter(!code %in% input$exclude_codes,
+           fy == cost_driver_fy())%>%
+    mutate(cmh = cmhsp,
+           group = case_when(cmh %in% input$peer_cmh ~ "peer",
+                             cmh %in% input$target_cmh ~"target",
+                             T ~ NA_character_),
+           state = case_when(cmh %in% input$target_cmh ~ "target",
+                             T ~ "state")
+    )%>%
+    select(fy,cmh,svc_type,population,code,code_shortDesc,code_mod,codeM_shortDesc,
+           cases,units,cost,cost_pct_tot,pct_cmh_served,group,state
+    )%>%
+    distinct()#%>%
+   # filter(cmh == input$target_cmh)
+  
+  #==========================================
+  # creating the metrics for each group
+  # then joining back together so I can see 
+  # each group side-by-side
+  #==========================================
+
+#target table  
+   target<-data404_group%>%
+    filter(fy == cost_driver_fy(),
+           group == 'target')%>%
+    group_by(svc_type,population, code)%>%
+    summarise_at(
+      vars(cases,units,cost,cost_pct_tot),
+      list(~sum(., na.rm = T))
+    )%>%
+    mutate(
+      cost_per_case = round(cost/cases,digits = 2),
+      cost_per_unit = round(cost/units,digits = 2),
+      unit_per_case = round(units/cases,digits = 1),
+      group = 'target'
+    )%>%
+    ungroup()
+  
+# peer group table 
+   peer<-data404_group%>%
+     filter(fy == cost_driver_fy(),
+            group == 'peer')%>%
+     group_by(population,svc_type,cmh,code)%>%
+     summarise_at(
+       vars(cases,units,cost,cost_pct_tot),
+       list(~sum(.,na.rm = T))
+     )%>%
+     mutate(
+       cost_per_case = round(cost/cases,digits = 2),
+       cost_per_unit = round(cost/units,digits = 2),
+       unit_per_case = round(units/cases,digits = 1),
+       group = 'peer'
+     )%>%
+     mutate(cost_per_case = na_if(cost_per_case,"Inf"),
+            unit_per_case = na_if(unit_per_case,"Inf"))%>%
+     ungroup()%>%
+     group_by(population,svc_type,code)%>%
+     summarise_at(
+       vars(cases,units,cost,cost_pct_tot,
+            cost_per_case,cost_per_unit, unit_per_case
+       ),
+       list(~round(mean(., na.rm = T),2))
+     )%>%
+     mutate( group = 'peer'
+     )%>%
+     ungroup()  
+  
+   # State average table  
+   state<-data404_group%>%
+     filter(fy == cost_driver_fy()
+            #,state == 'state'
+     )%>%
+     group_by(fy,population,svc_type,cmh, code)%>%
+     summarise_at(
+       vars(cases,units,cost,cost_pct_tot),
+       list(~sum(., na.rm = T))
+     )%>%
+     mutate(
+       cost_per_case = round(cost/cases,digits = 2),
+       cost_per_unit = round(cost/units,digits = 2),
+       unit_per_case = round(units/cases,digits = 1),
+       group = 'state'
+     )%>%
+     mutate(cost_per_case = na_if(cost_per_case,"Inf"),
+            unit_per_case = na_if(unit_per_case,"Inf"))%>%
+     ungroup()%>%
+     filter_if( #remove INF values from dividing by zero
+       ~is.numeric(.), all_vars(!is.infinite(.))
+     )%>%
+     # calulating each CMH (pop/code), 
+     # then averaging
+     group_by(population,svc_type,code)%>%
+     summarise_at(
+       vars(cases,units,cost,cost_pct_tot,
+            cost_per_case,cost_per_unit, unit_per_case
+       ),
+       list(~ round(mean(., na.rm = T),2))
+     )%>%
+     mutate( group = as.character('state')
+     )%>%
+     ungroup()
+   
+   
+df<-rbind(target,peer,state)  
+
+
+
+#==================================
+# Creating the variables for 
+# comparision 
+#==================================
+
+
+df<-df%>%
+  pivot_wider(id_cols = c(svc_type,population,code),
+              values_from = c(cases,
+                              cost_pct_tot,
+                              cost_per_case,cost_per_unit,
+                              unit_per_case),
+              names_from = group)
+
+#replace all zeros with NA  
+df <-df %>% replace(is.na(.), 0)%>%
+   mutate(
+    cost_per_case_diff_peer = cost_per_case_target - cost_per_case_peer,
+    cost_per_case_diff_state = cost_per_case_target - cost_per_case_state,
+    cost_pct_tot_diff_peer = cost_pct_tot_target - cost_pct_tot_peer,
+    cost_pct_tot_diff_state = cost_pct_tot_target - cost_pct_tot_state,
+    cost_per_unit_diff_peer = cost_per_unit_target - cost_per_unit_peer,
+    cost_per_unit_diff_state = cost_per_unit_target - cost_per_unit_state,
+    units_per_case_diff_peer = unit_per_case_target - unit_per_case_peer,
+    units_per_case_diff_state = unit_per_case_target - unit_per_case_state,
+    
+    
+    potential_savings_peer = cost_per_case_diff_peer * cases_target, 
+    potential_savings_state = cost_per_case_diff_state * cases_target,
+    savings_peer_and_state = case_when(potential_savings_peer > 0 & 
+                                         potential_savings_state > 0 ~ 1,
+                                       TRUE ~ 0),
+    
+    
+    code_pop = as.factor(paste(code,population,sep = "-")),
+    
+    rule_sets_peer = case_when(   
+                                  units_per_case_diff_peer > 0 &
+                                  cost_per_unit_diff_peer > 0 ~ "High units/case & cost/unit",
+      
+                                  units_per_case_diff_peer <= 0 &
+                                  cost_per_unit_diff_peer > 0 ~ "High cost per unit",
+                                  
+                                  units_per_case_diff_peer > 0 &
+                                  cost_per_unit_diff_peer <= 0 ~ "High units per case",
+                                  
+                               #   cases_target > cases_peer ~ 'larger number of cases',
+                                  
+                                  TRUE ~ "unclassified"),
+    
+    rule_sets_state = case_when( units_per_case_diff_state > 0 &
+                                   cost_per_unit_diff_state > 0 ~ "High units/case & cost/unit",
+                                 
+                                 units_per_case_diff_state <= 0 &
+                                   cost_per_unit_diff_state > 0 ~ "High cost per unit",
+                                 
+                                 units_per_case_diff_state > 0 &
+                                   cost_per_unit_diff_state <= 0 ~ "High units per case",
+                                 
+                               #  cases_target > cases_state ~ 'larger number of cases',
+                                 
+                                 TRUE ~ "unclassified"))
+
+  
+
+#====================================
+# Attaching service type cost 
+# compared to peer group as a check
+#====================================
+
+
+# target table 
+target_svc_type<-data404_group%>%
+  filter(fy == cost_driver_fy(),
+         group == 'target')%>%
+  left_join(
+    state_data%>%mutate(cmh = cmhsp),by = c('cmh',"fy")
+  )%>%
+  group_by(population,svc_type)%>%
+  summarise(
+    cost = sum(cost,na.rm = T),
+    TotalServed = max(TotalServed,na.rm = T)
+  )%>%
+  mutate(
+    group = 'target',
+    cost_per_1K_served = round((cost/TotalServed)*1000,0)
+  )%>%
+  ungroup()%>%
+  select(-cost,- TotalServed)
+
+
+# peer group table 
+peer_svc_type<-data404_group%>%
+  filter(fy == cost_driver_fy(),
+         group == 'peer')%>%
+  left_join(
+    state_data%>%mutate(cmh = cmhsp),by = c('cmh',"fy")
+  )%>%
+  group_by(population,svc_type,cmh)%>%
+  summarise(
+    cost = sum(cost,na.rm = T),
+    TotalServed = max(TotalServed,na.rm = T)
+  )%>%
+  mutate(
+    group = 'peer',
+    cost_per_1K_served = round((cost/TotalServed)*1000,0),
+  )%>%
+  ungroup()%>%
+  # select(-cost,- TotalServed)%>%
+  group_by(population,svc_type,group)%>%
+  summarise(cost_per_1K_served = round( mean(cost_per_1K_served,na.rm = T) , 2))%>%
+  ungroup()
+
+# state average scv cost table 
+state_svc_type<-data404_group%>%
+  filter(fy == cost_driver_fy(),
+  )%>%
+  left_join(
+    state_data%>%mutate(cmh = cmhsp),by = c('cmh',"fy")
+  )%>%
+  group_by(population,svc_type,cmh)%>%
+  summarise(
+    cost = sum(cost,na.rm = T),
+    TotalServed = max(TotalServed,na.rm = T)
+  )%>%
+  mutate(
+    group = 'state',
+    cost_per_1K_served = round((cost/TotalServed)*1000,0),
+  )%>%
+  ungroup()%>%
+  # select(-cost,- TotalServed)%>%
+  group_by(population,svc_type,group)%>%
+  summarise(cost_per_1K_served = round( mean(cost_per_1K_served,na.rm = T) , 2))%>%
+  ungroup()
+
+
+
+svc_type_costs<-rbind(target_svc_type,peer_svc_type,state_svc_type)%>%
+  pivot_wider(id_cols = c(population,svc_type), 
+              values_from = c(cost_per_1K_served),
+              names_from = group) %>%
+  mutate(cost_per_1K_served_svc_type_diff_peer = target - peer,
+         cost_per_1K_served_svc_type_diff_state = target - state)%>%
+  select(-target,-peer,-state)
+
+
+
+
+df<-df%>%
+  left_join(svc_type_costs, by = c("population","svc_type"))
+
+
+
+#======================================
+# Attaching pareto by popoulation/code 
+# for Washtenaw to dataframe
+#======================================
+
+
+pareto_by_population<-data404_group%>%
+  filter(fy %in% cost_driver_fy())%>%
+  filter(group == 'target')%>%
+  group_by(population,code,code_shortDesc)%>%
+  summarise(cost = sum(cost,na.rm = T))%>%
+  ungroup()%>%
+  group_by(population)%>%
+  arrange(desc(cost), .by_group = TRUE)%>%  
+  mutate( total = sum(cost),
+          pct_to_total = round(cost/sum(cost) * 100,2),
+          running_total = cumsum(pct_to_total),
+          `80/20` = case_when(running_total < 85 ~ "yes",
+                              TRUE ~ 'no')
+)%>%
+select(population,code,`80/20`,cost_pct_to_ttl = pct_to_total)
+
+
+df<-df%>%
+  left_join(pareto_by_population, c("population","code"))%>%
+  left_join(code_ref,by = c("code"))
+
+
+
+df<-if(target_codes() == "peer"){
+        df<-df%>%
+        filter(cases_target>0 | cases_peer>0)
+}else if(target_codes() == 'target'){
+        df<-df%>%
+          filter(cases_target>0)}
+
+else{
+  
+  df<-df
+ 
+} 
+  
+})
+
+### Graphs and Tables 
+
+output$code_table = DT::renderDataTable({
+  
+  df<-as.data.frame(data404_pivot_compare())%>%
+    select(code,code_shortDesc,svc_type)%>%
+    mutate(code = as.character(code))%>%
+    distinct()%>%
+    rename(`HCPC Code` = code,`Code Desc` = code_shortDesc,
+           `Service Type` = svc_type)
+  
+  DT::datatable(df, 
+                selection = 'single',
+                caption = "Search and Click on the row to highlight the selected code",
+                rownames = F, 
+                options = list(pageLength = 4,searching = T,ordering=F,dom = 'ft' 
+                              # columnDefs = list(list(className = 'dt-center', targets = 0:4))
+                               ))
+  
+})
+
+output$code_table_selected  = renderTable({
+  
+  ds<-as.data.frame(data404_pivot_compare())%>%
+    filter(
+      !is.infinite(potential_savings_peer),
+      !is.na(cost_pct_tot_diff_peer)
+    )%>%
+    filter( population == 'DD',
+            code == 'H0038')
+  
+  
+})
+
+ # Same exact graphs and functionality. The filter for population is
+ # the only difference. When making a change, focus on the dd_pop. When that is working
+ # simply copy and paste the plot function (renderPlotly) into MIA and MIC. The only 
+ # thing you need to change in the mic/mia renderPlotly would be the 3 times the population 
+ # is filtered. Simply change from DD to MIA or MIC
+output$dd_pop<-renderPlotly({
+  
+  req(cost_impact())
+  req(code_highlight())
+  
+  drivers_based_on_costimpact_selection<-if(cost_impact() == 'potential_savings_peer'){
+                                            "rule_sets_peer"}
+                                         else{"rule_sets_state"}
+  
+  svc_type_cost_on_costimpact_selection<-if(cost_impact() == 'potential_savings_peer'){
+                                             "cost_per_1K_served_svc_type_diff_peer"}else{
+                                            "cost_per_1K_served_svc_type_diff_state"
+                                             }
+  
+  
+  
+  df<-as.data.frame(data404_pivot_compare())%>%
+       filter(population == 'DD')
+  
+  
+
+
+df<-df%>%
+    filter(
+        !is.infinite(potential_savings_peer),
+        !is.na(cost_pct_tot_diff_peer)
+    )%>%
+    mutate( 
+         savings =  round( !!as.symbol(cost_impact()) /2,2),
+         code_pop = fct_reorder(code_pop,savings),
+         `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                     "High units/case & cost/unit","High cost per unit",
+                                            "High units per case","unclassified"),
+         `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                           TRUE ~ "Negative Cost Impact"),
+         peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                   !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                   TRUE ~ "No Comparison Available"),
+                                   
+                                
+         `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                             TRUE ~ `80/20`),
+         `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+         )
+
+
+# Getting click information from table selction 
+table_click<-if(is.null(input$code_table_rows_selected) == TRUE){
+  
+  ds<-as.data.frame(data404_pivot_compare())%>%
+    filter(
+      !is.infinite(potential_savings_peer),
+      !is.na(cost_pct_tot_diff_peer)
+    )%>%
+    filter(population == 'DD')%>%
+    mutate( 
+      savings =  round( !!as.symbol(cost_impact()) /2,2),
+      code_pop = fct_reorder(code_pop,savings),
+      `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                  "High units/case & cost/unit","High cost per unit",
+                                  "High units per case","unclassified"),
+      `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                     TRUE ~ "Negative Cost Impact"),
+      peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                TRUE ~ "No Comparison Available"),
+      
+      
+      `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                          TRUE ~ `80/20`),
+      `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+    )
+  
+  
+  
+  table_click<-ds%>%
+               slice(1)%>%
+               mutate(savings = 0)
+  
+  
+}else{
+  
+     ds<-as.data.frame(data404_pivot_compare())%>%
+           filter(population == 'DD')%>%
+       filter(
+         !is.infinite(potential_savings_peer),
+         !is.na(cost_pct_tot_diff_peer)
+       )
+
+     # Selecting the specific row being clicked from the table     
+     row <-input$code_table_rows_selected
+     
+     code_sel<-as.data.frame(data404_pivot_compare())%>%
+             select(code,svc_type)%>%
+             mutate(code_sel = as.character(code))%>%
+             distinct()%>%
+             slice(row)%>%
+             select(code_sel)%>%
+             pull()
+     
+     
+    table_click<- ds%>%
+                  filter(code == code_sel)%>%
+      mutate( 
+        savings =  round( !!as.symbol(cost_impact()) /2,2),
+        code_pop = fct_reorder(code_pop,savings),
+        `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                    "High units/case & cost/unit","High cost per unit",
+                                    "High units per case","unclassified"),
+        `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                       TRUE ~ "Negative Cost Impact"),
+        peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                  !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                  TRUE ~ "No Comparison Available"),
+        
+        
+        `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                            TRUE ~ `80/20`),
+        `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+      )
+    
+    
+    
+
+  
+}
+
+
+title_group<-if(cost_impact() == 'potential_savings_peer'){
+              "Peer Avg."}
+              else{"State Avg."}
+
+
+#===============================================================
+# If statement based on which color the bar highlights 
+#===============================================================      
+        
+p<-if(code_highlight() == "Alignment Impact"){
+  
+  p<-  ggplot(df,aes( x = code_pop, 
+                y = savings,
+                text = paste(
+                  "HCPC Code:",code_shortDesc,
+                  "\n",
+                  "Population:",population,
+                  "\n",
+                  "Cost Impact",savings,
+                  "\n",
+                  "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill = `Alignment Impact`))+
+    geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())+
+    scale_fill_manual(values = c("grey","#92a8d1"))+
+    scale_y_continuous(label = number_format(big.mark = ","))+
+    theme_minimal()+
+    xlab("HCPC Code")+
+    ylab("Potential Cost Impact")
+  
+  ggplotly(p,tooltip = 'text')%>%
+    layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+           yaxis = list(showgrid = F),
+           title = list(text = 
+                          paste0('<br>',
+                                 'Potential Cost Impact of Service Alignment with ',
+                                 title_group,
+                                 '<br>',
+                                 '<sup>',
+                                 'Cost per case difference X number of cases for target'
+                                 
+                                 )))
+}else if(code_highlight() == "80/20"){
+  
+  p<-  ggplot(df,aes( x = code_pop, 
+                      y = savings,
+                      text = paste(
+                        "HCPC Code:",code_shortDesc,
+                        "\n",
+                        "Population:",population,
+                        "\n",
+                        "Cost Impact",savings,
+                        "\n",
+                        "Potential Cost Driver:",`Cost Driver`))
+  )+geom_bar(stat = "identity", aes(fill = `80/20`))+
+    geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())+
+    scale_fill_manual(values = c("#92a8d1","grey",'white'))+
+   # paletteer_d("awtools::b_palette")
+    scale_y_continuous(label = number_format(big.mark = ","))+
+    theme_minimal()+
+    xlab("HCPC Code")+
+    ylab("Potential Cost Impact")
+  
+  ggplotly(p,tooltip = 'text')%>%
+    layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+           yaxis = list(showgrid = F),
+           title = list(text = 
+                          paste0('<br>',
+                                 'Potential Cost Impact of Service Alignment with ',
+                                 title_group,
+                                 '<br>',
+                                 '<sup>',
+                                 'Cost per case difference X number of cases for target')))
+
+
+
+}else if(code_highlight() == "Drivers"){
+  
+  p<-  ggplot(df,aes( x = code_pop, 
+                      y = savings,
+                      text = paste(
+                        "HCPC Code:",code_shortDesc,
+                        "\n",
+                        "Population:",population,
+                        "\n",
+                        "Cost Impact",savings,
+                        "\n",
+                        "Potential Cost Driver:",`Cost Driver`))
+  )+geom_bar(stat = "identity", aes(fill =  `Cost Driver`))+
+    geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())+
+    scale_fill_manual(values = c("#50394c","#c94c4c",'#618685','grey'))+
+    # paletteer_d("awtools::b_palette")
+    scale_y_continuous(label = number_format(big.mark = ","))+
+    theme_minimal()+
+    xlab("HCPC Code")+
+    ylab("Potential Cost Impact")
+  
+  ggplotly(p,tooltip = 'text')%>%
+    layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+           yaxis = list(showgrid = F),
+           title = list(text = 
+                          paste0('<br>',
+                                 'Potential Cost Impact of Service Alignment with ',
+                                 title_group,
+                                 '<br>',
+                                 '<sup>',
+                                 'Cost per case difference X number of cases for target')))
+
+}else{
+  
+
+  
+  p<-  ggplot(df%>%mutate(`Peer Svc Group` = peer_svc_type),aes( x = code_pop, 
+                      y = savings,
+                      text = paste(
+                        "HCPC Code:",code_shortDesc,
+                        "\n",
+                        "Population:",population,
+                        "\n",
+                        "Cost Impact",savings,
+                        "\n",
+                        "Potential Cost Driver:",`Cost Driver`))
+  )+geom_bar(stat = "identity", aes(fill = `Peer Svc Group`))+
+    geom_bar(data = table_click,stat ="identity",aes( y = savings),fill = "#292F33")+
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())+
+    scale_fill_manual(values = c("#92a8d1","grey","salmon"))+
+    #scale_fill_discrete()+
+    scale_y_continuous(label = number_format(big.mark = ","))+
+    theme_minimal()+
+    xlab("HCPC Code/ Population")+
+    ylab("Potential Cost Impact")
+  
+  ggplotly(p,tooltip = 'text')%>%
+    layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+           yaxis = list(showgrid = F),
+           title = list(text = 
+                          paste0('<br>',
+                                 'Potential Cost Impact of Service Alignment with ',
+                                 title_group,
+                                 '<br>',
+                                 '<sup>',
+                                 'Cost per case difference X number of cases for target')))
+                                 
+  
+}
+  
+
+p
+  
+
+  
+  
+})
+
+output$mia_pop<-renderPlotly({
+  
+  req(cost_impact())
+  req(code_highlight())
+  
+  drivers_based_on_costimpact_selection<-if(cost_impact() == 'potential_savings_peer'){
+    "rule_sets_peer"}
+  else{"rule_sets_state"}
+  
+  svc_type_cost_on_costimpact_selection<-if(cost_impact() == 'potential_savings_peer'){
+    "cost_per_1K_served_svc_type_diff_peer"}else{
+      "cost_per_1K_served_svc_type_diff_state"
+    }
+  
+  
+  
+  df<-as.data.frame(data404_pivot_compare())%>%
+    filter(population == 'MIA')
+  
+  
+  
+  
+  df<-df%>%
+    filter(
+      !is.infinite(potential_savings_peer),
+      !is.na(cost_pct_tot_diff_peer)
+    )%>%
+    mutate( 
+      savings =  round( !!as.symbol(cost_impact()) /2,2),
+      code_pop = fct_reorder(code_pop,savings),
+      `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                  "High units/case & cost/unit","High cost per unit",
+                                  "High units per case","unclassified"),
+      `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                     TRUE ~ "Negative Cost Impact"),
+      peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                TRUE ~ "No Comparison Available"),
+      
+      
+      `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                          TRUE ~ `80/20`),
+      `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+    )
+  
+  
+  # Getting click information from table selction 
+  table_click<-if(is.null(input$code_table_rows_selected) == TRUE){
+    
+    ds<-as.data.frame(data404_pivot_compare())%>%
+      filter(
+        !is.infinite(potential_savings_peer),
+        !is.na(cost_pct_tot_diff_peer)
+      )%>%
+      filter(population == 'MIA')%>%
+      mutate( 
+        savings =  round( !!as.symbol(cost_impact()) /2,2),
+        code_pop = fct_reorder(code_pop,savings),
+        `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                    "High units/case & cost/unit","High cost per unit",
+                                    "High units per case","unclassified"),
+        `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                       TRUE ~ "Negative Cost Impact"),
+        peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                  !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                  TRUE ~ "No Comparison Available"),
+        
+        
+        `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                            TRUE ~ `80/20`),
+        `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+      )
+    
+    
+    
+    table_click<-ds%>%
+      slice(1)%>%
+      mutate(savings = 0)
+    
+    
+  }else{
+    
+    ds<-as.data.frame(data404_pivot_compare())%>%
+      filter(population == 'MIA')%>%
+      filter(
+        !is.infinite(potential_savings_peer),
+        !is.na(cost_pct_tot_diff_peer)
+      )
+    
+    # Selecting the specific row being clicked from the table     
+    row <-input$code_table_rows_selected
+    
+    code_sel<-as.data.frame(data404_pivot_compare())%>%
+      select(code,svc_type)%>%
+      mutate(code_sel = as.character(code))%>%
+      distinct()%>%
+      slice(row)%>%
+      select(code_sel)%>%
+      pull()
+    
+    
+    table_click<- ds%>%
+      filter(code == code_sel)%>%
+      mutate( 
+        savings =  round( !!as.symbol(cost_impact()) /2,2),
+        code_pop = fct_reorder(code_pop,savings),
+        `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                    "High units/case & cost/unit","High cost per unit",
+                                    "High units per case","unclassified"),
+        `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                       TRUE ~ "Negative Cost Impact"),
+        peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                  !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                  TRUE ~ "No Comparison Available"),
+        
+        
+        `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                            TRUE ~ `80/20`),
+        `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+      )
+    
+    
+    
+    
+    
+  }
+  
+  
+  title_group<-if(cost_impact() == 'potential_savings_peer'){
+    "Peer Avg."}
+  else{"State Avg."}
+  
+  
+  #===============================================================
+  # If statement based on which color the bar highlights 
+  #===============================================================      
+  
+  p<-if(code_highlight() == "Alignment Impact"){
+    
+    p<-  ggplot(df,aes( x = code_pop, 
+                        y = savings,
+                        text = paste(
+                          "HCPC Code:",code_shortDesc,
+                          "\n",
+                          "Population:",population,
+                          "\n",
+                          "Cost Impact",savings,
+                          "\n",
+                          "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill = `Alignment Impact`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("grey","#92a8d1"))+
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target'
+                                   
+                            )))
+  }else if(code_highlight() == "80/20"){
+    
+    p<-  ggplot(df,aes( x = code_pop, 
+                        y = savings,
+                        text = paste(
+                          "HCPC Code:",code_shortDesc,
+                          "\n",
+                          "Population:",population,
+                          "\n",
+                          "Cost Impact",savings,
+                          "\n",
+                          "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill = `80/20`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("#92a8d1","grey",'white'))+
+      # paletteer_d("awtools::b_palette")
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target')))
+    
+    
+    
+  }else if(code_highlight() == "Drivers"){
+    
+    p<-  ggplot(df,aes( x = code_pop, 
+                        y = savings,
+                        text = paste(
+                          "HCPC Code:",code_shortDesc,
+                          "\n",
+                          "Population:",population,
+                          "\n",
+                          "Cost Impact",savings,
+                          "\n",
+                          "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill =  `Cost Driver`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("#50394c","#c94c4c",'#618685','grey'))+
+      # paletteer_d("awtools::b_palette")
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target')))
+    
+  }else{
+    
+    
+    
+    p<-  ggplot(df%>%mutate(`Peer Svc Group` = peer_svc_type),aes( x = code_pop, 
+                                                                   y = savings,
+                                                                   text = paste(
+                                                                     "HCPC Code:",code_shortDesc,
+                                                                     "\n",
+                                                                     "Population:",population,
+                                                                     "\n",
+                                                                     "Cost Impact",savings,
+                                                                     "\n",
+                                                                     "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill = `Peer Svc Group`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),fill = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("#92a8d1","grey","salmon"))+
+      #scale_fill_discrete()+
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code/ Population")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target')))
+    
+    
+  }
+  
+  
+  p
+  
+  
+  
+  
+})
+
+output$mic_pop<-renderPlotly({
+  
+  req(cost_impact())
+  req(code_highlight())
+  
+  drivers_based_on_costimpact_selection<-if(cost_impact() == 'potential_savings_peer'){
+    "rule_sets_peer"}
+  else{"rule_sets_state"}
+  
+  svc_type_cost_on_costimpact_selection<-if(cost_impact() == 'potential_savings_peer'){
+    "cost_per_1K_served_svc_type_diff_peer"}else{
+      "cost_per_1K_served_svc_type_diff_state"
+    }
+  
+  
+  
+  df<-as.data.frame(data404_pivot_compare())%>%
+    filter(population == 'MIC')
+  
+  
+  
+  
+  df<-df%>%
+    filter(
+      !is.infinite(potential_savings_peer),
+      !is.na(cost_pct_tot_diff_peer)
+    )%>%
+    mutate( 
+      savings =  round( !!as.symbol(cost_impact()) /2,2),
+      code_pop = fct_reorder(code_pop,savings),
+      `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                  "High units/case & cost/unit","High cost per unit",
+                                  "High units per case","unclassified"),
+      `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                     TRUE ~ "Negative Cost Impact"),
+      peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                TRUE ~ "No Comparison Available"),
+      
+      
+      `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                          TRUE ~ `80/20`),
+      `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+    )
+  
+  
+  # Getting click information from table selction 
+  table_click<-if(is.null(input$code_table_rows_selected) == TRUE){
+    
+    ds<-as.data.frame(data404_pivot_compare())%>%
+      filter(
+        !is.infinite(potential_savings_peer),
+        !is.na(cost_pct_tot_diff_peer)
+      )%>%
+      filter(population == 'MIC')%>%
+      mutate( 
+        savings =  round( !!as.symbol(cost_impact()) /2,2),
+        code_pop = fct_reorder(code_pop,savings),
+        `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                    "High units/case & cost/unit","High cost per unit",
+                                    "High units per case","unclassified"),
+        `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                       TRUE ~ "Negative Cost Impact"),
+        peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                  !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                  TRUE ~ "No Comparison Available"),
+        
+        
+        `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                            TRUE ~ `80/20`),
+        `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+      )
+    
+    
+    
+    table_click<-ds%>%
+      slice(1)%>%
+      mutate(savings = 0)
+    
+    
+  }else{
+    
+    ds<-as.data.frame(data404_pivot_compare())%>%
+      filter(population == 'MIC')%>%
+      filter(
+        !is.infinite(potential_savings_peer),
+        !is.na(cost_pct_tot_diff_peer)
+      )
+    
+    # Selecting the specific row being clicked from the table     
+    row <-input$code_table_rows_selected
+    
+    code_sel<-as.data.frame(data404_pivot_compare())%>%
+      select(code,svc_type)%>%
+      mutate(code_sel = as.character(code))%>%
+      distinct()%>%
+      slice(row)%>%
+      select(code_sel)%>%
+      pull()
+    
+    
+    table_click<- ds%>%
+      filter(code == code_sel)%>%
+      mutate( 
+        savings =  round( !!as.symbol(cost_impact()) /2,2),
+        code_pop = fct_reorder(code_pop,savings),
+        `Cost Driver` = fct_relevel(!!as.symbol(drivers_based_on_costimpact_selection),
+                                    "High units/case & cost/unit","High cost per unit",
+                                    "High units per case","unclassified"),
+        `Alignment Impact` = case_when(savings > 0 ~ "Positive Cost Impact",
+                                       TRUE ~ "Negative Cost Impact"),
+        peer_svc_type = case_when(!!as.symbol(svc_type_cost_on_costimpact_selection) > 0 ~"Above Svc.Type Cost/1K Cases", 
+                                  !!as.symbol(svc_type_cost_on_costimpact_selection) < 0 ~ 'Below Svc.Type Cost/1K Cases',
+                                  TRUE ~ "No Comparison Available"),
+        
+        
+        `80/20` = case_when(is.na(`80/20`)==TRUE ~ 'unknown',
+                            TRUE ~ `80/20`),
+        `80/20` = fct_relevel(`80/20`,'yes','no','unknown')
+      )
+    
+    
+    
+    
+    
+  }
+  
+  
+  title_group<-if(cost_impact() == 'potential_savings_peer'){
+    "Peer Avg."}
+  else{"State Avg."}
+  
+  
+  #===============================================================
+  # If statement based on which color the bar highlights 
+  #===============================================================      
+  
+  p<-if(code_highlight() == "Alignment Impact"){
+    
+    p<-  ggplot(df,aes( x = code_pop, 
+                        y = savings,
+                        text = paste(
+                          "HCPC Code:",code_shortDesc,
+                          "\n",
+                          "Population:",population,
+                          "\n",
+                          "Cost Impact",savings,
+                          "\n",
+                          "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill = `Alignment Impact`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("grey","#92a8d1"))+
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target'
+                                   
+                            )))
+  }else if(code_highlight() == "80/20"){
+    
+    p<-  ggplot(df,aes( x = code_pop, 
+                        y = savings,
+                        text = paste(
+                          "HCPC Code:",code_shortDesc,
+                          "\n",
+                          "Population:",population,
+                          "\n",
+                          "Cost Impact",savings,
+                          "\n",
+                          "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill = `80/20`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("#92a8d1","grey",'white'))+
+      # paletteer_d("awtools::b_palette")
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target')))
+    
+    
+    
+  }else if(code_highlight() == "Drivers"){
+    
+    p<-  ggplot(df,aes( x = code_pop, 
+                        y = savings,
+                        text = paste(
+                          "HCPC Code:",code_shortDesc,
+                          "\n",
+                          "Population:",population,
+                          "\n",
+                          "Cost Impact",savings,
+                          "\n",
+                          "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill =  `Cost Driver`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),color = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("#50394c","#c94c4c",'#618685','grey'))+
+      # paletteer_d("awtools::b_palette")
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target')))
+    
+  }else{
+    
+    
+    
+    p<-  ggplot(df%>%mutate(`Peer Svc Group` = peer_svc_type),aes( x = code_pop, 
+                                                                   y = savings,
+                                                                   text = paste(
+                                                                     "HCPC Code:",code_shortDesc,
+                                                                     "\n",
+                                                                     "Population:",population,
+                                                                     "\n",
+                                                                     "Cost Impact",savings,
+                                                                     "\n",
+                                                                     "Potential Cost Driver:",`Cost Driver`))
+    )+geom_bar(stat = "identity", aes(fill = `Peer Svc Group`))+
+      geom_bar(data = table_click,stat ="identity",aes( y = savings),fill = "#292F33")+
+      theme(axis.title.x=element_blank(),
+            axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())+
+      scale_fill_manual(values = c("#92a8d1","grey","salmon"))+
+      #scale_fill_discrete()+
+      scale_y_continuous(label = number_format(big.mark = ","))+
+      theme_minimal()+
+      xlab("HCPC Code/ Population")+
+      ylab("Potential Cost Impact")
+    
+    ggplotly(p,tooltip = 'text')%>%
+      layout(xaxis = list(showgrid = F, titlefont = F, showticklabels = FALSE),
+             yaxis = list(showgrid = F),
+             title = list(text = 
+                            paste0('<br>',
+                                   'Potential Cost Impact of Service Alignment with ',
+                                   title_group,
+                                   '<br>',
+                                   '<sup>',
+                                   'Cost per case difference X number of cases for target')))
+    
+    
+  }
+  
+  
+  p
+  
+  
+  
+  
+})
 
 
 }
