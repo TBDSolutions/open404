@@ -223,10 +223,24 @@ includes data visualizations that can be used to explore the data."
         
         tabPanel("Distribution Heatmap",id = "dist_heatmap",
                  tabsetPanel(
-                   tabPanel("Line Plot",
+                   tabPanel("Heatmap Plot",
+    
                  fluidRow(column(12,
                                plotOutput('heatmap'),
-                             ))),
+                             )),
+                 
+                 
+                 fluidRow(
+                   
+                   column(5,
+                          "sort",  
+                          uiOutput('sort_heatmap')
+                          
+                          
+                          
+                   ))
+                 
+                 ),
                  tabPanel("Table",
                                  DT::dataTableOutput('dt'),
                           downloadButton("heatData", "Download Heat Map Table")),
@@ -675,6 +689,64 @@ server <- function(input, output, session) {
     
   })
   
+  output$sort_heatmap<-renderUI({
+    
+    
+    if(input$CMHorPIHP == 'cmhsp'){
+      
+ 
+    dropdownButton(
+      label = "Sort by a CMH?",
+      tags$h3("Choose an CMH to sort."),
+      
+      selectInput(inputId = 'sort_heatmap',
+                  label = 'Which CMH',
+                  choices = levels(data404$cmhsp),
+                  selected = ""), 
+      
+      
+      
+      #  circle = TRUE,
+      status = "info",
+      tooltip = TRUE,
+      icon = icon("gear"),
+      width = "300px"
+      
+      # tooltip = tooltipOptions(title = "Click to see inputs !")
+      
+    )
+    
+   }else{
+     
+     dropdownButton(
+
+       label = "Sort by a PIHP?",
+       tags$h3("Choose an PIHP to sort."),
+       
+       selectInput(
+         inputId = 'sort_heatmap',
+         label = 'Which PIHP',
+         choices = levels(data404$pihp_name),
+         selected = ""), 
+       
+       
+       
+         circle = F,
+       status = "info",
+       tooltip = TRUE,
+       icon = icon("gear"),
+       width = "300px", 
+       size = 'xs'
+     )
+     
+     
+     
+   } 
+    
+    
+    
+    
+  })
 ### Reactive Input 
   
 org_type <- reactive({input$CMHorPIHP})
@@ -1729,6 +1801,16 @@ output$heatmap<-renderPlot({
   
   
   df<-heatmapDS()
+  
+# Sorting the heatmap  -- JOey 
+  
+  sorted <-
+    df%>%
+    filter(!!as.symbol(org_type()) == 'Northcare')
+
+   df$code_shortDesc = factor(df$code_shortDesc, levels = sorted$code_shortDesc[order(sorted$metric)])
+  
+  
   
    ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
     geom_tile(aes(fill = metric), colour = "white") + 
