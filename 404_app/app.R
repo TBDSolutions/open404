@@ -221,26 +221,17 @@ includes data visualizations that can be used to explore the data."
                  )
         )),
         
-        tabPanel("Distribution Heatmap",id = "dist_heatmap",
+        tabPanel("Distribution Heatmap",id = "line_chart",
                  tabsetPanel(
                    tabPanel("Heatmap Plot",
     
-                 fluidRow(column(12,
-                               plotOutput('heatmap'),
-                             )),
-                 
-                 
                  fluidRow(
-                   
-                   column(5,
-                          "sort",  
-                          uiOutput('sort_heatmap')
-                          
-                          
-                          
-                   ))
-                 
-                 ),
+                   br(),
+                   fluidRow(column(5,offset = 9,
+                                   uiOutput('sort_heatmap'))),
+                   column(12,
+                               plotOutput('heatmap'),
+                             ))),
                  tabPanel("Table",
                                  DT::dataTableOutput('dt'),
                           downloadButton("heatData", "Download Heat Map Table")),
@@ -470,8 +461,8 @@ server <- function(input, output, session) {
       inputId = "provider",
       label =   paste("Which ",org,"are you interested in viewing?"),
       choices =  prov_options,
-    #  selected = prov_options,
-       selected = c("Genesee","St. Clair","Lapeer",'Sanilac',prov_options[1:12]),
+      selected = prov_options[1:8],
+    #   selected = c("Genesee","St. Clair","Lapeer",'Sanilac',prov_options[1:12]),
       
       multiple = TRUE,
       options =  list( placeholder = 'Search or Select'))
@@ -573,7 +564,7 @@ server <- function(input, output, session) {
     
     org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
     
-    choices<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){
+    choices<-if(input$groupOrHcpcsOrMod_ == 'svc_type'){
       c("Cost" = "cost",'Units' = 'units',
         #   'Cases' = "cases","Cost Per Case" = 'cost_per_case',
         "Cost Per Unit" = 'cost_per_unit',
@@ -689,64 +680,6 @@ server <- function(input, output, session) {
     
   })
   
-  output$sort_heatmap<-renderUI({
-    
-    
-    if(input$CMHorPIHP == 'cmhsp'){
-      
- 
-    dropdownButton(
-      label = "Sort by a CMH?",
-      tags$h3("Choose an CMH to sort."),
-      
-      selectInput(inputId = 'sort_heatmap',
-                  label = 'Which CMH',
-                  choices = levels(data404$cmhsp),
-                  selected = ""), 
-      
-      
-      
-      #  circle = TRUE,
-      status = "info",
-      tooltip = TRUE,
-      icon = icon("gear"),
-      width = "300px"
-      
-      # tooltip = tooltipOptions(title = "Click to see inputs !")
-      
-    )
-    
-   }else{
-     
-     dropdownButton(
-
-       label = "Sort by a PIHP?",
-       tags$h3("Choose an PIHP to sort."),
-       
-       selectInput(
-         inputId = 'sort_heatmap',
-         label = 'Which PIHP',
-         choices = levels(data404$pihp_name),
-         selected = ""), 
-       
-       
-       
-         circle = F,
-       status = "info",
-       tooltip = TRUE,
-       icon = icon("gear"),
-       width = "300px", 
-       size = 'xs'
-     )
-     
-     
-     
-   } 
-    
-    
-    
-    
-  })
 ### Reactive Input 
   
 org_type <- reactive({input$CMHorPIHP})
@@ -1008,7 +941,7 @@ plotInput<-reactive({
   ############################################
   
   # Set the axis title and ensure all selections of HCPCS codes are included
-  group<-if(input$groupOrHcpcsOrMod_ == "svc_grp"){ paste(compareAcross()," Service Group")}
+  group<-if(input$groupOrHcpcsOrMod_ == "svc_type"){ paste(compareAcross()," Service Type")}
   else{ as.data.frame(list(compareAcross()))%>%
       mutate(code = as.character(.[[1]]))%>%
       pull(code)
@@ -1247,6 +1180,8 @@ output$byYearSelection_end <-renderUI({
 
 output$byYearSelection_org <- renderUI({
   
+  # by year
+  
   org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
   
   
@@ -1357,7 +1292,7 @@ line_plot_image<-reactive({
   ############################################
   
   # Set the axis title and ensure all selections of HCPCS codes are included
-  group<-if(input$groupOrHcpcsOrMod_ == "svc_grp"){ paste(compareAcross()," Service Group")}
+  group<-if(input$groupOrHcpcsOrMod_ == "svc_type"){ paste(compareAcross()," Service Type")}
   else{ as.data.frame(list(compareAcross()))%>%
       mutate(code = as.character(.[[1]]))%>%
       pull(code)
@@ -1582,7 +1517,7 @@ output$byYearHeatmap <- renderPlot({
   ############################################
   
   # Set the axis title and ensure all selections of HCPCS codes are included
-  group<-if(input$groupOrHcpcsOrMod_ == "svc_grp"){ paste(compareAcross()," Service Group")}
+  group<-if(input$groupOrHcpcsOrMod_ == "svc_type"){ paste(compareAcross()," Service Type")}
   else{ as.data.frame(list(compareAcross()))%>%
       mutate(code = as.character(.[[1]]))%>%
       pull(code)
@@ -1684,19 +1619,19 @@ output$trendedHeatmapTable<-renderDataTable({
   
 })
 
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Distribtuion Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Distribution Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ### UI Components
 
 output$yAxisSel<-renderUI({
   
-  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc_grp'}
+  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'svc_type'}
                 else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
                 else{"code_shortDesc"})
   
   org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
   
-  grps<-if(input$groupOrHcpcsOrMod_ == 'svc_grp'){"Service Groups"}
+  grps<-if(input$groupOrHcpcsOrMod_ == 'svc_type'){"Service Type"}
   else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'Code Modifiers'}
   else{"HCPC Codes"}
   
@@ -1707,7 +1642,6 @@ output$yAxisSel<-renderUI({
     distinct(!!type)%>%
     pull(!!type)
   
-  
 
   selectizeInput(
     inputId = 'yAxisSel',
@@ -1715,13 +1649,79 @@ output$yAxisSel<-renderUI({
     choices = options,
     multiple = TRUE,
     selected = options[1:8])
+   # selected = "Peer Services"
+
+  
+  
+  
+})
+
+output$sort_heatmap<-renderUI({
+  
+  
+  if(input$CMHorPIHP == 'cmhsp'){
+    
+    
+    dropdownButton(
+      label = paste("Sort by a CMH"),
+     radioButtons(
+        
+                  inputId = 'sort_heatmap',
+                  label = 'Sort by Which CMH?',
+                  choices = input$provider,
+                  selected = input$provider[1]
+                  
+                  
+                  ), 
+      
+      
+      
+      circle = F,
+      right = F,
+      status = "info",
+      icon = icon("sort-amount-down"),
+      width = "300px",
+      size = 'xs',
+       tooltip = tooltipOptions(title = "Choose a CMH to Sort")
+      
+    )
+    
+  }else{
+    
+    dropdownButton(
+      label = "Sort by a PIHP",
+      
+      radioButtons(
+        
+        inputId = 'sort_heatmap',
+        label = 'Sort by Which PIHP?',
+        choices = input$provider,
+        selected = input$provider[1]
+        
+        
+      ), 
+      
+
+      circle = F,
+      right = F,
+      status = "info",
+      icon = icon("sort-amount-down"),
+      width = "300px",
+      size = 'xs',
+      tooltip = tooltipOptions(title = "Choose a PIHP to Sort")
+      
+    )
+    
+    
+    
+  } 
   
   
   
   
 })
 
-### Reactive imputs
+### Reactive inputs
 yType<-reactive({input$groupOrHcpcsOrMod_})
 ySel<-reactive({input$yAxisSel})
  
@@ -1740,13 +1740,21 @@ ySel<-reactive({input$yAxisSel})
      group_by(!!as.symbol(org_type()),fy)%>%
      summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
    
+#   test_prov<<-input$provider_options 
+#   test_org<<-org_type()
+   
   
    df<-data404%>%
      filter((!!as.symbol(org_type())) %in% input$provider,
             fy %in% fy_filter(),
             population %in% pop_filter,
             (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$yAxisSel
-     )%>%
+     )
+#=====================   
+ #  test<<-df
+   df<-
+     df %>%
+#=====================
      select(!!as.symbol(org_type()), # Provider column 
             (!!as.symbol(groupOrHcpcsOrMod_())),
              fy,
@@ -1793,27 +1801,58 @@ output$heatmap<-renderPlot({
   xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
         else{'PIHP'}
   
-  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'svc grp'}else{"HCPCs"})
+  type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'svc type'}else{"HCPCs"})
   
   populations<-as.data.frame(list(popType()))%>%
     mutate(popType = as.character(.[[1]]))%>%
     pull(popType)
   
+
+  df<-heatmapDS() %>%
+    rename(
+      code_type = !!names(.[2]),
+    )
   
-  df<-heatmapDS()
-  
+heat_df<<-heatmapDS()
 # Sorting the heatmap  -- JOey 
-  
+
+# Filtering the dataframe to create a sorting dataframe for 
+# ordering the heatmap based on user selection. 
+
   sorted <-
     df%>%
-    filter(!!as.symbol(org_type()) == 'Northcare')
+    filter(!!as.symbol(org_type()) == input$sort_heatmap)
 
-   df$code_shortDesc = factor(df$code_shortDesc, levels = sorted$code_shortDesc[order(sorted$metric)])
   
+# Creating 3 new columns based on the single selection column 
+# of type, HCPCs or Modifier. This just makes it easier when passing 
+# to the plot. 
+  df<-
+    df %>%
+    mutate(
+      code_shortDesc = 
+             factor(code_type, 
+                    levels = sorted$code_type[  order(sorted$metric) ]), 
+      svc_type = 
+        factor(code_type, 
+               levels = sorted$code_type[ order(sorted$metric) ]),
+      codeM_shortDesc = 
+        factor(code_type, 
+               levels = sorted$code_type[ order(sorted$metric) ])
+) %>%
+    filter(is.na(code_type)==F,
+           str_detect(metric,'NaN')==F,
+           is.nan(metric)==F)
   
-  
+
    ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
     geom_tile(aes(fill = metric), colour = "white") + 
+     geom_tile(data = df%>%
+                 filter(!!as.symbol(org_type()) == input$sort_heatmap,
+                        is.na(code_type)==F,
+                        str_detect(code_type,'NaN')==F,
+                        is.nan(metric)==F),
+               aes(fill = metric), colour = "black", size = 1) +
     scale_fill_gradientn(colours = c("#98C4F6","#236AB9","#FE2712"),na.value = "white")+
     theme(panel.grid=element_blank()) +
     coord_cartesian(expand=FALSE)+
@@ -1841,7 +1880,7 @@ output$dt<-DT::renderDataTable({
   col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
   else{'PIHP'}
   
-  col2<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_grp"){'Service Group'}else{"HCPCS"})
+  col2<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'Service Type'}else{"HCPCS"})
   
   metric_lab = str_replace_all(input$metric,pattern = "_"," ")
   
