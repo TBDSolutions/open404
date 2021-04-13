@@ -239,7 +239,30 @@ tabsetPanel(id = "tabs",
      column(9,wellPanel(uiOutput("yAxisSel"))),
      column(3,p("Each row represents a “bell curve”, comparing a particular service across different organizations. Each organizations position on the “bell curve” is indicated by a percentile score which can range between 0 and 100 with 
     50 being the row average"))
-    ))
+    )),
+
+# Pareto 
+
+tabPanel("Pareto Chart",id = "pareto_chart",
+         tabsetPanel(
+             tabPanel("Pareto Plot",
+                      
+                      fluidRow(
+                          br(),
+                          fluidRow(column(5,offset = 1,
+                                          uiOutput('pareto_org'))),
+                          column(12,
+                                plotlyOutput('pareto_plot',height = '500px'),
+                           # plotOutput("pareto_plot", height = '400px')
+                          ))),
+             tabPanel("Table",
+                      DT::dataTableOutput('dyt'),
+                      downloadButton("heatreData", "Download Heat Map Table"))
+             
+            # column(9,wellPanel(uiOutput("yAxitsSel"))),
+            # column(3,p("Each row represents a “bell curve”, comparing a particular service across different organizations. Each organizations position on the “bell curve” is indicated by a percentile score which can range between 0 and 100 with 50 being the row average"))
+             
+         ))
     
     
     

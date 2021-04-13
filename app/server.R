@@ -21,6 +21,20 @@ server <- function(input, output, session) {
         if(input$tabs ==  "Line Chart"){
             
             tags$b("Use the selector on the Line Chart tab to choose orginizations")     
+        } else if(input$tabs == "Pareto Chart"){
+            
+            
+            selectInput(
+                
+                inputId = 'pareto_org',
+                label = 'Select a CMH?',
+                choices = levels(as.factor(data404$cmhsp)),
+                selected = levels(as.factor(data404$cmhsp))[1]
+                
+                
+            ) 
+            
+            
         }
         else{
             
@@ -1196,326 +1210,519 @@ server <- function(input, output, session) {
         
     })
     
-    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Distribution Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    ### UI Components
-    
-    output$yAxisSel<-renderUI({
-        
-        type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'svc_type'}
-                      else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
-                      else{"code_shortDesc"})
-        
-        org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
-        
-        grps<-if(input$groupOrHcpcsOrMod_ == 'svc_type'){"Service Type"}
-        else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'Code Modifiers'}
-        else{"HCPC Codes"}
-        
-        
-        options<-data404%>%
-            filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
-                                           TRUE ~ input$serviceType))%>%
-            distinct(!!type)%>%
-            pull(!!type)
-        
-        
-        selectizeInput(
-            inputId = 'yAxisSel',
-            label = paste('I want to compare ',org," across these ",grps,sep = ""),
-            choices = options,
-            multiple = TRUE,
-            selected = options[1:8])
-        # selected = "Peer Services"
-        
-        
-        
-        
-    })
-    
-    output$sort_heatmap<-renderUI({
-        
-        
-        if(input$CMHorPIHP == 'cmhsp'){
-            
-            
-            dropdownButton(
-                label = paste("Sort by a CMH"),
-                radioButtons(
-                    
-                    inputId = 'sort_heatmap',
-                    label = 'Sort by Which CMH?',
-                    choices = input$provider,
-                    selected = input$provider[1]
-                    
-                    
-                ), 
-                
-                
-                
-                circle = F,
-                right = F,
-                status = "info",
-                icon = icon("sort-amount-down"),
-                width = "300px",
-                size = 'xs',
-                tooltip = tooltipOptions(title = "Choose a CMH to Sort")
-                
-            )
-            
-        }else{
-            
-            dropdownButton(
-                label = "Sort by a PIHP",
-                
-                radioButtons(
-                    
-                    inputId = 'sort_heatmap',
-                    label = 'Sort by Which PIHP?',
-                    choices = input$provider,
-                    selected = input$provider[1]
-                    
-                    
-                ), 
-                
-                
-                circle = F,
-                right = F,
-                status = "info",
-                icon = icon("sort-amount-down"),
-                width = "300px",
-                size = 'xs',
-                tooltip = tooltipOptions(title = "Choose a PIHP to Sort")
-                
-            )
-            
-            
-            
-        } 
-        
-        
-        
-        
-    })
-    
-    ### Reactive inputs
-    yType<-reactive({input$groupOrHcpcsOrMod_})
-    ySel<-reactive({input$yAxisSel})
-    
-    ### Reactive datasets
-    heatmapDS<-reactive({
-        
-        pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
-            
-            data404[which(data404$population %in% popType()),'population']%>%
-                mutate(population = as.character(population))%>%
-                distinct(population)%>%
-                pull(population)
-        }
-        
-        stateAggData<-state_data%>%
-            group_by(!!as.symbol(org_type()),fy)%>%
-            summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+#===========================#
+# Distribution Heat map ====
+#===========================#  
 
-        
-        df<-data404%>%
-            filter((!!as.symbol(org_type())) %in% input$provider,
-                   fy %in% fy_filter(),
-                   population %in% pop_filter,
-                   (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$yAxisSel
-            )%>%
-        select(!!as.symbol(org_type()), # Provider column 
-               (!!as.symbol(groupOrHcpcsOrMod_())),
-               fy,
-               cost,units,cases
-        )%>%
-            group_by(
-                
-                !!as.symbol(org_type()), # Provider column 
-                (!!as.symbol(groupOrHcpcsOrMod_())),
-                fy
-            )%>%
-            summarise_at(
-                vars(cases,units,cost),
-                list(~sum(., na.rm = T))
-            )%>%
-            mutate(
-                cost_per_case = round(cost/cases,digits = 2),
-                cost_per_unit = round(cost/units,digits = 2),
-                unit_per_case = round(units/cases,digits = 1)
-            )%>%
-            left_join(
-                
-                stateAggData,by = c(org_type() ,"fy")
-            )%>%
-            mutate(
-                
-                cost_per_1K_served = round(((cost/TotalServed)*1000)),
-                pct._served = round(((cases/TotalServed)*100),3)
-            )
-        
-        
-        
-        # Transform into Z scores then turn Z scores into percentiles
-        df<-df%>%
-            select(!!as.symbol(org_type()),(!!as.symbol(groupOrHcpcsOrMod_())),!!as.symbol(metric()))%>%
-            group_by((!!as.symbol(groupOrHcpcsOrMod_())))%>%
-            mutate(metric = round((pnorm(scale_fun(!!as.symbol(metric())))*100),2))
-        
-    }) 
+### UI Components
+
+output$yAxisSel<-renderUI({
     
-    ### Graphs and tables 
-    output$heatmap<-renderPlot({
-        
-        xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
-        else{'PIHP'}
-        
-        type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'svc type'}else{"HCPCs"})
-        
-        populations<-as.data.frame(list(popType()))%>%
-            mutate(popType = as.character(.[[1]]))%>%
-            pull(popType)
-        
-        
-        df<-heatmapDS() %>%
-            rename(
-                code_type = !!names(.[2]),
-            )
-        
-        
-        # Filtering the dataframe to create a sorting dataframe for 
-        # ordering the heatmap based on user selection. 
-        
-        sorted <-
-            df%>%
-            filter(!!as.symbol(org_type()) == input$sort_heatmap)
-        
-        
-        # Creating 3 new columns based on the single selection column 
-        # of type, HCPCs or Modifier. This just makes it easier when passing 
-        # to the plot. 
-        df<-
-            df %>%
-            mutate(
-                code_shortDesc = 
-                    factor(code_type, 
-                           levels = sorted$code_type[  order(sorted$metric) ]), 
-                svc_type = 
-                    factor(code_type, 
-                           levels = sorted$code_type[ order(sorted$metric) ]),
-                codeM_shortDesc = 
-                    factor(code_type, 
-                           levels = sorted$code_type[ order(sorted$metric) ])
-            ) %>%
-            filter(is.na(code_type)==F,
-                   str_detect(metric,'NaN')==F,
-                   is.nan(metric)==F)
+    type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'svc_type'}
+                  else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
+                  else{"code_shortDesc"})
+    
+    org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
+    
+    grps<-if(input$groupOrHcpcsOrMod_ == 'svc_type'){"Service Type"}
+    else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'Code Modifiers'}
+    else{"HCPC Codes"}
+    
+    
+    options<-data404%>%
+        filter(svc_type %in% case_when('All' %in% input$serviceType ~ levels(as.factor(data404$svc_type)),
+                                       TRUE ~ input$serviceType))%>%
+        distinct(!!type)%>%
+        pull(!!type)
+    
+    
+    selectizeInput(
+        inputId = 'yAxisSel',
+        label = paste('I want to compare ',org," across these ",grps,sep = ""),
+        choices = options,
+        multiple = TRUE,
+        selected = options[1:8])
+    # selected = "Peer Services"
+    
+    
+    
+    
+})
+
+output$sort_heatmap<-renderUI({
+    
+    
+    if(input$CMHorPIHP == 'cmhsp'){
         
         
-        ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
-            geom_tile(aes(fill = metric), colour = "white") + 
-            geom_tile(data = df%>%
-                          filter(!!as.symbol(org_type()) == input$sort_heatmap,
-                                 is.na(code_type)==F,
-                                 str_detect(code_type,'NaN')==F,
-                                 is.nan(metric)==F),
-                      aes(fill = metric), colour = "black", size = 1) +
-            scale_fill_gradientn(colours = c("#98C4F6","#236AB9","#FE2712"),na.value = "white")+
-            theme(panel.grid=element_blank()) +
-            coord_cartesian(expand=FALSE)+
+        dropdownButton(
+            label = paste("Sort by a CMH"),
+            radioButtons(
+                
+                inputId = 'sort_heatmap',
+                label = 'Sort by Which CMH?',
+                choices = input$provider,
+                selected = input$provider[1]
+                
+                
+            ), 
+
+            circle = F,
+            right = F,
+            status = "primary",
+            icon = icon("sort-amount-down"),
+            width = "300px",
+            size = 'xs',
+            tooltip = tooltipOptions(title = "Choose a CMH to Sort")
             
-            xlab(xlabs)+
-            ylab(str_replace_all(input$metric,pattern = "_"," "))+
-            labs(fill=paste(type," Pctl.",sep = "")) +
-            theme_bw()+
-            theme_ipsum(grid = FALSE,
-                        plot_title_size = 15,
-                        axis_text_size = 11,
-                        axis_title_size = 13)+    
-            theme(axis.text.x = element_text(angle = 90, hjust = 1),
-                  axis.line = element_line(color = "black", 
-                                           size = .5, linetype = "solid"))+
-            labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))
-        
-        
-        
-        
-    })
-    
-    output$dt<-DT::renderDataTable({
-        
-        col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
-        else{'PIHP'}
-        
-        col2<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'Service Type'}else{"HCPCS"})
-        
-        metric_lab = str_replace_all(input$metric,pattern = "_"," ")
-        
-        foo<-data.frame(heatmapDS())
-        
-        DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
-                      colnames = c(col1,col2,metric_lab,'Pctl.'),
-                      options = list(pageLength = 5)
         )
         
-    })
+    }else{
+        
+        dropdownButton(
+            label = "Sort by a PIHP",
+            
+            radioButtons(
+                
+                inputId = 'sort_heatmap',
+                label = 'Sort by Which PIHP?',
+                choices = input$provider,
+                selected = input$provider[1]
+                
+                
+            ), 
+            
+            
+            circle = F,
+            right = F,
+            status = "primary",
+            icon = icon("sort-amount-down"),
+            width = "300px",
+            size = 'xs',
+            tooltip = tooltipOptions(title = "Choose a PIHP to Sort")
+            
+        )
+        
+        
+        
+    } 
     
     
-    # Tab selection test
-    #output$text <- renderText({paste0("You are viewing tab \"", input$tabs, "\"")})
     
-    ###Download handlers and bookmarks 
     
-    # Downloadable csv of selected dataset ----
+})
+
+### Reactive inputs
+yType<-reactive({input$groupOrHcpcsOrMod_})
+ySel<-reactive({input$yAxisSel})
+
+### Reactive datasets
+heatmapDS<-reactive({
     
-    # 404 Data
-    output$data404Download <- downloadHandler(
-        filename = function() {
-            paste("404Data", ".csv", sep = "")
-        },
-        content = function(file) {
-            write.csv(data404, file, row.names = FALSE)
-        }
+    pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
+        
+        data404[which(data404$population %in% popType()),'population']%>%
+            mutate(population = as.character(population))%>%
+            distinct(population)%>%
+            pull(population)
+    }
+    
+    stateAggData<-state_data%>%
+        group_by(!!as.symbol(org_type()),fy)%>%
+        summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
+
+    
+    df<-data404%>%
+        filter((!!as.symbol(org_type())) %in% input$provider,
+               fy %in% fy_filter(),
+               population %in% pop_filter,
+               (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$yAxisSel
+        )%>%
+    select(!!as.symbol(org_type()), # Provider column 
+           (!!as.symbol(groupOrHcpcsOrMod_())),
+           fy,
+           cost,units,cases
+    )%>%
+        group_by(
+            
+            !!as.symbol(org_type()), # Provider column 
+            (!!as.symbol(groupOrHcpcsOrMod_())),
+            fy
+        )%>%
+        summarise_at(
+            vars(cases,units,cost),
+            list(~sum(., na.rm = T))
+        )%>%
+        mutate(
+            cost_per_case = round(cost/cases,digits = 2),
+            cost_per_unit = round(cost/units,digits = 2),
+            unit_per_case = round(units/cases,digits = 1)
+        )%>%
+        left_join(
+            
+            stateAggData,by = c(org_type() ,"fy")
+        )%>%
+        mutate(
+            
+            cost_per_1K_served = round(((cost/TotalServed)*1000)),
+            pct._served = round(((cases/TotalServed)*100),3)
+        )
+    
+    
+    
+    # Transform into Z scores then turn Z scores into percentiles
+    df<-df%>%
+        select(!!as.symbol(org_type()),(!!as.symbol(groupOrHcpcsOrMod_())),!!as.symbol(metric()))%>%
+        group_by((!!as.symbol(groupOrHcpcsOrMod_())))%>%
+        mutate(metric = round((pnorm(scale_fun(!!as.symbol(metric())))*100),2))
+    
+}) 
+
+### Graphs and tables 
+output$heatmap<-renderPlot({
+    
+    xlabs<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+    else{'PIHP'}
+    
+    type<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'svc type'}else{"HCPCs"})
+    
+    populations<-as.data.frame(list(popType()))%>%
+        mutate(popType = as.character(.[[1]]))%>%
+        pull(popType)
+    
+    
+    df<-heatmapDS() %>%
+        rename(
+            code_type = !!names(.[2]),
+        )
+    
+    
+    # Filtering the dataframe to create a sorting dataframe for 
+    # ordering the heatmap based on user selection. 
+    
+    sorted <-
+        df%>%
+        filter(!!as.symbol(org_type()) == input$sort_heatmap)
+    
+    
+    # Creating 3 new columns based on the single selection column 
+    # of type, HCPCs or Modifier. This just makes it easier when passing 
+    # to the plot. 
+    df<-
+        df %>%
+        mutate(
+            code_shortDesc = 
+                factor(code_type, 
+                       levels = sorted$code_type[  order(sorted$metric) ]), 
+            svc_type = 
+                factor(code_type, 
+                       levels = sorted$code_type[ order(sorted$metric) ]),
+            codeM_shortDesc = 
+                factor(code_type, 
+                       levels = sorted$code_type[ order(sorted$metric) ])
+        ) %>%
+        filter(is.na(code_type)==F,
+               str_detect(metric,'NaN')==F,
+               is.nan(metric)==F)
+    
+    
+    ggplot(df,aes( y = (!!as.symbol(groupOrHcpcsOrMod_())),x = as.factor(!!as.symbol(org_type())))) + 
+        geom_tile(aes(fill = metric), colour = "white") + 
+        geom_tile(data = df%>%
+                      filter(!!as.symbol(org_type()) == input$sort_heatmap,
+                             is.na(code_type)==F,
+                             str_detect(code_type,'NaN')==F,
+                             is.nan(metric)==F),
+                  aes(fill = metric), colour = "black", size = 1) +
+        scale_fill_gradientn(colours = c("#98C4F6","#236AB9","#FE2712"),na.value = "white")+
+        theme(panel.grid=element_blank()) +
+        coord_cartesian(expand=FALSE)+
+        
+        xlab(xlabs)+
+        ylab(str_replace_all(input$metric,pattern = "_"," "))+
+        labs(fill=paste(type," Pctl.",sep = "")) +
+        theme_bw()+
+        theme_ipsum(grid = FALSE,
+                    plot_title_size = 15,
+                    axis_text_size = 11,
+                    axis_title_size = 13)+    
+        theme(axis.text.x = element_text(angle = 90, hjust = 1),
+              axis.line = element_line(color = "black", 
+                                       size = .5, linetype = "solid"))+
+        labs(caption =paste("Populations ",paste(populations,collapse = ","),sep = ""))
+    
+    
+    
+    
+})
+
+output$dt<-DT::renderDataTable({
+    
+    col1<-if(input$CMHorPIHP == 'cmhsp'){'CMH'}
+    else{'PIHP'}
+    
+    col2<-as.name(if(input$groupOrHcpcsOrMod_ == "svc_type"){'Service Type'}else{"HCPCS"})
+    
+    metric_lab = str_replace_all(input$metric,pattern = "_"," ")
+    
+    foo<-data.frame(heatmapDS())
+    
+    DT::datatable(foo,rownames = FALSE,class = 'cell-border stripe',
+                  colnames = c(col1,col2,metric_lab,'Pctl.'),
+                  options = list(pageLength = 5)
     )
     
-    # Service Groups 
-    output$ServiceGroups <- downloadHandler(
-        filename = function() {
-            paste("ServiceGroups", ".csv", sep = "")
-        },
-        content = function(file) {
-            write.csv(service_groups, file, row.names = FALSE)
-        }
-    )
+})
+
+
+# Tab selection test
+#output$text <- renderText({paste0("You are viewing tab \"", input$tabs, "\"")})
+
+###Download handlers and bookmarks 
+
+# Downloadable csv of selected dataset ----
+
+# 404 Data
+output$data404Download <- downloadHandler(
+    filename = function() {
+        paste("404Data", ".csv", sep = "")
+    },
+    content = function(file) {
+        write.csv(data404, file, row.names = FALSE)
+    }
+)
+
+# Service Groups 
+output$ServiceGroups <- downloadHandler(
+    filename = function() {
+        paste("ServiceGroups", ".csv", sep = "")
+    },
+    content = function(file) {
+        write.csv(service_groups, file, row.names = FALSE)
+    }
+)
+
+
+
+# heatData
+
+output$heatData <- downloadHandler(
+    filename = function() {
+        paste("heatMapData", ".csv", sep = "")
+    },
+    content = function(file) {
+        write.csv(heatmapDS(), file, row.names = FALSE)
+    }
+)
+
+# plot download
+output$plot <- downloadHandler(
+    filename = function() { paste("barchart", '.png', sep='') },
+    content = function(file) {
+        ggsave(file, plot = plotInput(),device = "png", width = 12 , height = 6
+        )
+    }
+)
     
     
     
-    # heatData
+#===================# 
+# Pareto Graph ====
+#===================#    
+
+### UI inputs 
+
+# output$pareto_org<-renderUI({
+#     
+#     
+#     if(input$CMHorPIHP == 'cmhsp'){
+#         
+#         
+#         dropdownButton(
+#             label = paste("Choose a CMH to Analyze"),
+#             
+#             
+#             selectInput(
+#                 inputId = 'pareto_year', 
+#                 label = 'Choose a Year', 
+#                 choices = levels(as.factor(data404$fy)), 
+#                 selected = 2019
+#             ),
+#             
+#             
+#             radioButtons(
+#                 
+#                 inputId = 'pareto_org',
+#                 label = 'Select a CMH?',
+#                 choices = levels(as.factor(data404$cmhsp)),
+#                 selected = levels(as.factor(data404$cmhsp))[1]
+#                 
+#                 
+#             ), 
+#             
+#             circle = F,
+#             right = F,
+#             status = "primary",
+#             icon = icon("sort-amount-down"),
+#             width = "300px",
+#             size = 'xs',
+#             tooltip = tooltipOptions(title = "Choose a CMH to Analyze")
+#             
+#         )
+#         
+#     }else{
+#         
+#         dropdownButton(
+#             label = "Sort by a PIHP",
+#             
+#             selectInput(
+#                 inputId = 'pareto_year', 
+#                 label = 'Choose a Year', 
+#                 choices = levels(as.factor(data404$fy)), 
+#                 selected = 2019
+#             ),
+#             
+#             radioButtons(
+#                 
+#                 inputId = 'pareto_org',
+#                 label = 'Choose a PIHP to Analyze?',
+#                 choices = levels(as.factor(data404$pihp_name)),
+#                 selected = levels(as.factor(data404$pihp_name))[1]
+#                 
+#                 
+#             ), 
+#             
+#             
+#             circle = F,
+#             right = F,
+#             status = "primary",
+#             icon = icon("sort-amount-down"),
+#             width = "300px",
+#             size = 'xs',
+#             tooltip = tooltipOptions(title = "Choose a PIHP to Analyze")
+#             
+#         )
+#         
+#         
+#         
+#     } 
+#     
+#     
+#     
+#     
+# })
+# 
+#     
+### Reactive datasets
+paretoDS<-reactive({
     
-    output$heatData <- downloadHandler(
-        filename = function() {
-            paste("heatMapData", ".csv", sep = "")
-        },
-        content = function(file) {
-            write.csv(heatmapDS(), file, row.names = FALSE)
-        }
-    )
     
-    # plot download
-    output$plot <- downloadHandler(
-        filename = function() { paste("barchart", '.png', sep='') },
-        content = function(file) {
-            ggsave(file, plot = plotInput(),device = "png", width = 12 , height = 6
-            )
-        }
-    )
+    pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
+        
+        data404[which(data404$population %in% popType()),'population']%>%
+            mutate(population = as.character(population))%>%
+            distinct(population)%>%
+            pull(population) }
     
     
+    data404DF<-data404%>%
+        # Here you can filter any column.
+        filter(
+            population %in% pop_filter,
+            !!as.symbol(org_type()) == input$pareto_org,
+            fy %in% fy_filter()
+            
+        )%>%
+        # You can group by multiple items. Here I'm choosing short desc, but you can use code. 
+        # group_by(short_desc)%>%
+        group_by(code) %>%
+        # Specifies the type of summarizing you would like accomplished. Here I would like to 
+        # summarize cost. If you wanted to add more metrics, you can do that as well 
+        # (see commented out example of cases).
+        summarise(
+            cost = sum(cost,na.rm = T)
+            #,cases = sum(cases,na.rm = T)
+            
+        )%>%
+        ungroup()%>%
+        arrange(desc(cost))%>%
+        # Mutate is a way to create new columns or modify existing columns.  
+        mutate(
+            pct_to_total = round((cost/sum(cost)) * 100,2),
+            running_total = cumsum(pct_to_total)
+        )
+    
+    
+    
+    code_bundle<-
+        data404%>%
+        select(short_desc,code) %>%
+        distinct()
+    
+    
+    
+    par_df<-data404DF %>% 
+        left_join(code_bundle, by = 'code') %>%
+        mutate(
+            cost = as.numeric(cost),
+            code = fct_reorder(as.factor(code),pct_to_total, .desc = F),
+            # The case_when should look familiar to SQL. Please not that the last 
+            # statement T~ 'Non-Pareto is equivalent in SQL to 'else'. 
+            `Pareto Service` = 
+                case_when(running_total <= 80 ~ 'Pareto',
+                          T ~ 'Non-Pareto'
+                )
+        )%>%
+        arrange(desc(pct_to_total))
+    
+    
+    
+  return(par_df)  
     
     
     
     
-    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CMH Cost Drivers Tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+}  )
+    
+    
+### Graphs and tables 
+output$pareto_plot<-renderPlotly({
+    
+    
+    par_df<-paretoDS()%>%
+        filter(pct_to_total>1) 
+    
+    title = paste('Percent Cost Contribution for',input$pareto_org,sep = " ")
+    
+    subtitle = paste(nrow(paretoDS()), "HCPC Codes Analyzed", sep = "-")
+    
+  p<-  
+      par_df%>%
+      ggplot(aes(x = code, pct_to_total, fill = `Pareto Service`)) +
+      geom_bar(stat="identity", position=position_dodge(width=2), alpha = .7,
+               color="black")+
+      xlab("Service")+
+      ylab("% Cost to Total")+
+      scale_fill_manual(values=c('Non-Pareto' = '#696969',"Pareto" = '#EA4335'))+
+      theme_minimal()+
+      ggtitle(title, subtitle = subtitle) +
+      labs(caption = "Visualizing Services with a Contribution of 1% or More")+
+      theme_ipsum(grid = 'FALSE')+
+      # coord_flip()+ 
+      theme(
+          plot.title = element_text(hjust = 0.5, size = 16),
+          plot.subtitle = element_text(hjust = 0.5),
+          axis.text.y=element_text(size = 7,face = 'bold',
+                                   margin = margin( r = -38,l = 0)),
+          axis.text.x = element_text(angle = 25),
+          legend.position = "bottom"
+      )
+ 
+  ggplotly(p)  
+    
+} )   
+    
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CMH Cost Drivers Tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     ### UI Components
     
