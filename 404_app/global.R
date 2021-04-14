@@ -8,7 +8,7 @@ scale_fun <- function(x) as.vector(scale(x))
 library(shiny)
 library(DT)
 library(shinythemes)
-
+library(shinyWidgets)
 
 #### Load packages ####
 library(scales)
