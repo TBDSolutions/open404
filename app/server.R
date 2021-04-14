@@ -97,7 +97,7 @@ output$groupOrHcpcsOrMod <-renderUI({
         
         radioButtons(
             inputId = "groupOrHcpcsOrMod_",
-            label = "Service Type, HCPCS Code or Modifier",
+            label = "HCPCS Code or Modifier",
             choices =  c("HCPCS" = "code_shortDesc","Code Mod" = 'codeM_shortDesc'),
             selected = c("code_shortDesc"),
             inline = TRUE)
@@ -186,8 +186,7 @@ output$metric<-renderUI({
     if(input$tabs == "Pareto Chart"){
         
         
-      choices<- c("Cost" = "cost",
-          'Cases' = "cases","Cost Per Case" = 'cost_per_case')
+      choices<- c("Cost" = "cost", 'Cases' = "cases")
         
         selectInput(
             inputId = 'metric',
@@ -1628,15 +1627,13 @@ paretoDS<-reactive({
         # summarize cost. If you wanted to add more metrics, you can do that as well 
         # (see commented out example of cases).
         summarise(
-            cost = sum(!!as.symbol(metric()),na.rm = T)
-            #,cases = sum(cases,na.rm = T)
-            
+            metric = sum(!!as.symbol(metric()),na.rm = T)
         )%>%
         ungroup()%>%
-        arrange(desc(cost))%>%
+        arrange(desc(metric))%>%
         # Mutate is a way to create new columns or modify existing columns.  
         mutate(
-            pct_to_total = round((cost/sum(cost)) * 100,2),
+            pct_to_total = round((metric/sum(metric)) * 100,2),
             running_total = cumsum(pct_to_total)
         )
     
@@ -1655,11 +1652,8 @@ paretoDS<-reactive({
             code = !!names(.[1]),
         ) %>%
         mutate(
-            cost = as.numeric(cost),
-          #  code = code_,
+            metric = as.numeric(metric),
             code = fct_reorder(as.factor(code),pct_to_total, .desc = F),
-            # The case_when should look familiar to SQL. Please not that the last 
-            # statement T~ 'Non-Pareto is equivalent in SQL to 'else'. 
             `Pareto Service` = 
                 case_when(running_total <= 80 ~ 'Pareto',
                           T ~ 'Non-Pareto'
@@ -1674,7 +1668,6 @@ paretoDS<-reactive({
     
     
 }  )
-    
     
 ### Graphs and tables 
 output$pareto_plot<-renderPlotly({
@@ -1693,7 +1686,6 @@ output$pareto_plot<-renderPlotly({
         ) 
     
     
-    test<<-par_df
     
     title = paste('Percent',metric_name,'Contribution for',input$pareto_org,sep = " ")
     
