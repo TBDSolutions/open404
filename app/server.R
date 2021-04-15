@@ -20,7 +20,31 @@ server <- function(input, output, session) {
         
         if(input$tabs ==  "Line Chart"){
             
-            tags$b("Use the selector on the Line Chart tab to choose orginizations")     
+            tags$b("Use the selector on the Line Chart tab to choose orginizations")  
+            
+        } else if(input$tabs == "Pareto Chart"){
+            
+            
+            if(input$CMHorPIHP == 'cmhsp'){
+                
+                selectInput(
+                    
+                    inputId = 'pareto_org',
+                    label = 'Select a CMH?',
+                    choices = levels(as.factor(data404$cmhsp)),
+                    selected = levels(as.factor(data404$cmhsp))[1]
+                ) 
+            }else{
+                
+                selectInput(
+                    inputId = 'pareto_org',
+                    label = 'Select a PIHP?',
+                    choices = levels(as.factor(data404$pihp_name)),
+                    selected = levels(as.factor(data404$pihp_name))[1]
+                )
+            }
+            
+            
         }
         else{
             
@@ -34,15 +58,21 @@ server <- function(input, output, session) {
             else{"MI"}
             
             
-            selectizeInput(
+            # selectizeInput(
+            #     inputId = "provider",
+            #     label =   paste("Which ",org,"are you interested in viewing?"),
+            #     choices =  prov_options,
+            #     selected = prov_options[1:8],
+            #     multiple = TRUE,
+            #     options =  list( placeholder = 'Search or Select'))
+            
+            pickerInput(
                 inputId = "provider",
                 label =   paste("Which ",org,"are you interested in viewing?"),
+                multiple = TRUE,
                 choices =  prov_options,
                 selected = prov_options[1:8],
-                #   selected = c("Genesee","St. Clair","Lapeer",'Sanilac',prov_options[1:12]),
-                
-                multiple = TRUE,
-                options =  list( placeholder = 'Search or Select'))
+            )
             
         } 
         
@@ -51,23 +81,44 @@ server <- function(input, output, session) {
     
     output$servType<-renderUI({
         req(org_type())
-        selectInput(
-            inputId = 'serviceType',
-            label = 'Any particular area of focus',
-            choices = c("All",levels(as.factor(data404$svc_type))),
-            selected = "All")
+        
+        if(input$tabs == "Pareto Chart"){
+            ""
+        } else{
+            
+            
+            selectInput(
+                inputId = 'serviceType',
+                label = 'Any particular area of focus',
+                choices = c("All",levels(as.factor(data404$svc_type))),
+                selected = "All")
+        }
     })
     
     output$groupOrHcpcsOrMod <-renderUI({
         
-        #Actual options     
+        #Actual options   
         
-        radioButtons(
-            inputId = "groupOrHcpcsOrMod_",
-            label = "Service Type, HCPCS Code or Modifier",
-            choices = c("Service Type" = "svc_type", "HCPCS" = "code_shortDesc","Code Mod" = 'codeM_shortDesc' ),
-            selected = c("code_shortDesc"),
-            inline = TRUE)
+        if(input$tabs == "Pareto Chart"){
+            
+            radioButtons(
+                inputId = "groupOrHcpcsOrMod_",
+                label = "HCPCS Code or Modifier",
+                choices =  c(
+                    #   "Service Type" = "svc_type",
+                    "HCPCS" = "code_shortDesc",
+                    "Code Mod" = 'codeM_shortDesc'),
+                selected = c("code_shortDesc"),
+                inline = TRUE)
+            
+        } else{
+            radioButtons(
+                inputId = "groupOrHcpcsOrMod_",
+                label = "Service Type, HCPCS Code or Modifier",
+                choices = c("Service Type" = "svc_type", "HCPCS" = "code_shortDesc","Code Mod" = 'codeM_shortDesc' ),
+                selected = c("code_shortDesc"),
+                inline = TRUE)
+        }
         
     })
     
@@ -77,12 +128,14 @@ server <- function(input, output, session) {
         
         if(input$tabs ==  "Distribution Heatmap"){
             
-            tags$b("Please choose a bundle of services using the selector 
-             on the distribution heatmap tab")
+            ''
+            
+        }else if(input$tabs == "Pareto Chart"){
+            
+            ""  
             
         }
         else{
-            
             
             type<-as.symbol(if(input$groupOrHcpcsOrMod_ == "svc_type"){"svc_type"}
                             else if(input$groupOrHcpcsOrMod_ == "codeM_shortDesc"){'codeM_shortDesc'}
@@ -139,30 +192,46 @@ server <- function(input, output, session) {
     
     output$metric<-renderUI({
         
-        org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
-        
-        choices<-if(input$groupOrHcpcsOrMod_ == 'svc_type'){
-            c("Cost" = "cost",'Units' = 'units',
-              #   'Cases' = "cases","Cost Per Case" = 'cost_per_case',
-              "Cost Per Unit" = 'cost_per_unit',
-              #    "Units Per Case" = "unit_per_case",
-              "Percent of Total Cost" = "cost_pct_tot",
-              "Cost Per 1K Served" = "cost_per_1K_served")
-        }else{
-            c("Cost" = "cost",'Units' = 'units',
-              'Cases' = "cases","Cost Per Case" = 'cost_per_case',
-              "Cost Per Unit" = 'cost_per_unit',
-              "Units Per Case" = "unit_per_case",
-              "Pct. Served" = "pct._served",
-              "Percent of Total Cost" = "cost_pct_tot",
-              "Cost Per 1K Served" = "cost_per_1K_served")
+        if(input$tabs == "Pareto Chart"){
+            
+            
+            choices<- c("Cost" = "cost", 'Cases' = "cases")
+            
+            selectInput(
+                inputId = 'metric',
+                label =  'Analyzing the pareto effect on which metric?',
+                choices = choices,
+                selected = "cost")
+            
+            
+        } else{
+            
+            org<-if(input$CMHorPIHP == 'cmhsp'){'CMHs'}else{"PIHPs"}
+            
+            choices<-if(input$groupOrHcpcsOrMod_ == 'svc_type'){
+                c("Cost" = "cost",'Units' = 'units',
+                  #   'Cases' = "cases","Cost Per Case" = 'cost_per_case',
+                  "Cost Per Unit" = 'cost_per_unit',
+                  #    "Units Per Case" = "unit_per_case",
+                  "Percent of Total Cost" = "cost_pct_tot",
+                  "Cost Per 1K Served" = "cost_per_1K_served")
+            }else{
+                c("Cost" = "cost",'Units' = 'units',
+                  'Cases' = "cases","Cost Per Case" = 'cost_per_case',
+                  "Cost Per Unit" = 'cost_per_unit',
+                  "Units Per Case" = "unit_per_case",
+                  "Pct. Served" = "pct._served",
+                  "Percent of Total Cost" = "cost_pct_tot",
+                  "Cost Per 1K Served" = "cost_per_1K_served")
+            }
+            
+            selectInput(
+                inputId = 'metric',
+                label =  paste("Benchmarking",org,"on which metric?"),
+                choices = choices,
+                selected = "units")
+            
         }
-        
-        selectInput(
-            inputId = 'metric',
-            label =  paste("Benchmarking",org,"on which metric?"),
-            choices = choices,
-            selected = "units")
     })
     
     output$popType<-renderUI({
@@ -1196,7 +1265,9 @@ server <- function(input, output, session) {
         
     })
     
-    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Distribution Heatmap tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    #===========================#
+    # Distribution Heat map ====
+    #===========================#  
     
     ### UI Components
     
@@ -1251,11 +1322,9 @@ server <- function(input, output, session) {
                     
                 ), 
                 
-                
-                
                 circle = F,
                 right = F,
-                status = "info",
+                status = "primary",
                 icon = icon("sort-amount-down"),
                 width = "300px",
                 size = 'xs',
@@ -1281,7 +1350,7 @@ server <- function(input, output, session) {
                 
                 circle = F,
                 right = F,
-                status = "info",
+                status = "primary",
                 icon = icon("sort-amount-down"),
                 width = "300px",
                 size = 'xs',
@@ -1316,7 +1385,7 @@ server <- function(input, output, session) {
         stateAggData<-state_data%>%
             group_by(!!as.symbol(org_type()),fy)%>%
             summarise(TotalServed = sum(TotalServed,na.rm = TRUE))
-
+        
         
         df<-data404%>%
             filter((!!as.symbol(org_type())) %in% input$provider,
@@ -1324,11 +1393,11 @@ server <- function(input, output, session) {
                    population %in% pop_filter,
                    (!!as.symbol(groupOrHcpcsOrMod_())) %in% input$yAxisSel
             )%>%
-        select(!!as.symbol(org_type()), # Provider column 
-               (!!as.symbol(groupOrHcpcsOrMod_())),
-               fy,
-               cost,units,cases
-        )%>%
+            select(!!as.symbol(org_type()), # Provider column 
+                   (!!as.symbol(groupOrHcpcsOrMod_())),
+                   fy,
+                   cost,units,cases
+            )%>%
             group_by(
                 
                 !!as.symbol(org_type()), # Provider column 
@@ -1512,8 +1581,176 @@ server <- function(input, output, session) {
     
     
     
+    #===================# 
+    # Pareto Graph ====
+    #===================#    
     
+    ### UI inputs 
     
+    ### Reactive datasets
+    paretoDS<-reactive({
+        
+        # Predefined Filters 
+        
+        pop_filter<-if('' %in% popType()){ as.character(unique(data404$population))}else{
+            
+            data404[which(data404$population %in% popType()),'population']%>%
+                mutate(population = as.character(population))%>%
+                distinct(population)%>%
+                pull(population) }
+        
+        
+        
+        code_desc_filter<-
+            if(input$groupOrHcpcsOrMod_ == "code_shortDesc"){"code_shortDesc"}
+        #   else if(input$groupOrHcpcsOrMod_ == "svc_type"){"svc_type"}
+        else{"codeM_shortDesc"}
+        
+        
+        code_<- if(input$groupOrHcpcsOrMod_ == "code_shortDesc"){"code"}
+        #    else if(input$groupOrHcpcsOrMod_ == "svc_type"){"svc_type"}
+        else{"code_mod"}
+        
+        
+        # Dataset creation 
+        
+        data404DF<-data404%>%
+            # Here you can filter any column.
+            filter(
+                population %in% pop_filter,
+                !!as.symbol(org_type()) == input$pareto_org,
+                fy %in% fy_filter()
+                
+            ) %>%
+            # You can group by multiple items. Here I'm choosing short desc, but you can use code. 
+            # group_by(short_desc)%>%
+            group_by_at(code_) %>%
+            # Specifies the type of summarizing you would like accomplished. Here I would like to 
+            # summarize cost. If you wanted to add more metrics, you can do that as well 
+            # (see commented out example of cases).
+            summarise(
+                metric = sum(!!as.symbol(metric()),na.rm = T)
+            )%>%
+            ungroup()%>%
+            arrange(desc(metric))%>%
+            # Mutate is a way to create new columns or modify existing columns.  
+            mutate(
+                pct_to_total = round((metric/sum(metric)) * 100,2),
+                running_total = cumsum(pct_to_total)
+            )
+        
+        
+        
+        code_bundle<-
+            data404%>%
+            select(input$groupOrHcpcsOrMod_,all_of(code_)) %>%
+            distinct()
+        
+        
+        
+        par_df<-data404DF %>% 
+            left_join(code_bundle, by = code_) %>%
+            rename(
+                code = !!names(.[1]),
+            ) %>%
+            mutate(
+                metric = as.numeric(metric),
+                code = fct_reorder(as.factor(code),pct_to_total, .desc = F),
+                `Pareto Service` = 
+                    case_when(running_total <= 80 ~ 'Pareto',
+                              T ~ 'Non-Pareto'
+                    )
+            )%>%
+            arrange(desc(pct_to_total))
+        
+        
+        return(par_df)  
+        
+        
+        
+        
+    }  )
+    
+    ### Graphs and tables 
+    output$pareto_plot<-renderPlotly({
+        
+        
+        
+        metric_name<- 
+            if(input$metric == "cost"){"Cost"}
+        else if(input$metric == "cases"){"Cases"}
+        else("Cost Per Case")
+        
+        par_df<-paretoDS()%>%
+            filter(pct_to_total>.5 |`Pareto Service` == 'Pareto') %>%
+            rename(
+                code_desc = !!names(.[5])
+            ) 
+        
+        test<<-paretoDS()
+        test1<<-par_df
+        
+        title = paste('Percent',metric_name,'Contribution for',input$pareto_org,sep = " ")
+        
+        subtitle = paste(nrow(paretoDS()), "Codes Analyzed", sep = "-")
+        
+        ps = "(Only visualizing codes with a contribution greater than .5%)"
+        
+        p<-  
+            par_df%>%
+            ggplot(aes(x = code, pct_to_total, fill = `Pareto Service`, 
+                       text = paste(
+                           "<b>Pct. to Total</b>:",pct_to_total, "\n",
+                           "<b>Code</b>:",code, "\n",
+                           "<b>Code Desc</b>:",code_desc, "\n")
+                       
+                       
+            )) +
+            geom_bar(stat="identity", position=position_dodge(width=2), alpha = .7,
+                     color="black")+
+            xlab("Service")+
+            ylab("% Cost to Total")+
+            scale_fill_manual(values=c('Non-Pareto' = '#696969',"Pareto" = '#EA4335'))+
+            theme_minimal()+
+            #  ggtitle(title, subtitle = subtitle) +
+            labs(caption = "Visualizing Services with a Contribution of 1% or More")+
+            theme_ipsum(grid = 'FALSE')+
+            # coord_flip()+ 
+            theme(
+                plot.title = element_text(hjust = 0.5, size = 16),
+                plot.subtitle = element_text(hjust = 0.5),
+                axis.text.y=element_text(size = 7,face = 'bold',
+                                         margin = margin( r = -38,l = 0)),
+                axis.text.x = element_text(angle = 45),
+                legend.position = "bottom"
+            )
+        
+        
+        
+        
+        
+        
+        ggplotly(p,tooltip = "text")  %>%
+            config(
+                displaylogo = FALSE,
+                modeBarButtonsToRemove = c(
+                    
+                    "zoom2d","pan2d","zoomIn2d","zoomOut2d",
+                    
+                    "toggleSpikelines","select2d","lasso2d","autoScale2d"
+                    
+                )) %>%
+            layout(title = list(text = paste0(title,
+                                              '<br>',
+                                              '<sup>',
+                                              subtitle,
+                                              '</sup>',
+                                              '<br>',
+                                              '<sup>',
+                                              ps,
+                                              '</sup>')))
+        
+    } )   
     
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CMH Cost Drivers Tab %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     

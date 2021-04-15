@@ -7,8 +7,7 @@ scale_fun <- function(x) as.vector(scale(x))
 #font_import()
 library(shiny)
 library(DT)
-library(shinythemes)
-library(shinyWidgets)
+
 
 #### Load packages ####
 library(scales)
@@ -27,6 +26,9 @@ library(shinycssloaders)
 
 #library(extrafont)
 library(hrbrthemes)
+library(shinythemes)
+library(shinyWidgets)
+
 #hrbrthemes::import_roboto_condensed()
 
 #loadfonts(device="win")
