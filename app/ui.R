@@ -2,13 +2,20 @@ source('global.R')
 
 
 # Define UI for application that draws a histogram
-ui <- function(requests){ navbarPage("Explore 404 Data",#id = 'tab',
+ui <- function(requests){ 
+  
+  
+  
+  
+  
+  
+  navbarPage("Explore 404 Data",#id = 'tab',
                                      
                                      theme = shinytheme("cerulean"),
                                      navbarMenu(
                                        "About",
                                        tabPanel(
-                                         "General",
+                                         "General",tags$head(includeHTML(("google-analytics.html"))),
                                          fluidRow(
                                            column(
                                              width = 5,
